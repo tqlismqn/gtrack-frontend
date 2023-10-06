@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { AuthService as Auth0Service } from '@auth0/auth0-angular';
-import { Observable, Subject } from 'rxjs';
+import { combineLatest, Observable, Subject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
 import { User, UserResponse } from '../types/user';
 import { CompanyService } from '../../../services/company.service';
+import { User as Auth0User } from '@auth0/auth0-angular';
 
 @Injectable({
   providedIn: 'root',
@@ -14,6 +15,7 @@ export class AuthService {
   protected _isApplicationReady?: boolean;
 
   public user?: User;
+  public auth0User?: Auth0User;
 
   constructor(
     public auth0: Auth0Service,
@@ -58,8 +60,12 @@ export class AuthService {
       if (!this._isApplicationReady$) {
         this._isApplicationReady$ = new Subject<boolean>();
 
-        this.getUserInfo().subscribe({
-          next: () => {
+        combineLatest([this.auth0.user$, this.getUserInfo()]).subscribe({
+          next: ([auth0User]) => {
+            if (auth0User) {
+              this.auth0User = auth0User;
+            }
+
             this.companyService.fetchCompanies().subscribe({
               next: () => {
                 this._isApplicationReady = true;

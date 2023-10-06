@@ -1,6 +1,7 @@
 import { AccessType } from './access.type';
 
 export interface Company {
+  id: number;
   name: string;
   employees_number: string;
   website: string;
@@ -12,6 +13,7 @@ export interface Company {
 }
 
 export interface CompanyResponse {
+  id: number;
   name: string;
   employees_number: string;
   website: string;

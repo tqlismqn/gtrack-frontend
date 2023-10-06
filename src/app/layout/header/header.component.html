@@ -1,0 +1,14 @@
+<mat-form-field subscriptSizing="dynamic" class="company-select">
+  <mat-label>Company</mat-label>
+  <mat-select
+    [ngModel]="companyService.selectedCompany?.id"
+    (ngModelChange)="companyService.selectCompanyById($event)"
+  >
+    <mat-option
+      [value]="company.id"
+      *ngFor="let company of companyService.companies"
+      >{{ company.name }}</mat-option
+    >
+  </mat-select>
+</mat-form-field>
+<img [src]="auth.auth0User?.picture" alt class="user-picture" />

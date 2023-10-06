@@ -10,6 +10,7 @@ import { isUserNotActive } from './guards/auth/is-user-not-active.guard';
 import { isUserHaveCompany } from './guards/auth/is-user-have-company.guard';
 import { isUserNotHaveCompany } from './guards/auth/is-user-not-have-company.guard';
 import { CompanySurveyComponent } from './modules/auth/components/company-survey/company-survey.component';
+import { MainComponent } from './layout/main/main.component';
 
 const routes: Routes = [
   {
@@ -33,6 +34,7 @@ const routes: Routes = [
       },
       {
         path: '',
+        component: MainComponent,
         canActivate: [isUserActive, isUserHaveCompany],
         children: [
           {
