@@ -1,0 +1,44 @@
+@use 'src/styles/includes/colors';
+
+:host {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  background: colors.$color-background-shadow;
+
+  .auth-form {
+    position: relative;
+    display: grid;
+    grid: {
+      row-gap: 16px;
+    }
+    background: colors.$color-background;
+    padding: 42px 55px 78px;
+    border-radius: 5px;
+    width: calc(100% - 40px);
+    max-width: 480px;
+
+    &__title {
+      text-align: center;
+    }
+
+    [type="submit"] {
+      justify-self: center;
+      width: 100%;
+      max-width: 200px;
+      display: grid;
+    }
+
+    &__progress-bar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      border-top: {
+        left-radius: 5px;
+        right-radius: 5px;
+      }
+    }
+  }
+}
