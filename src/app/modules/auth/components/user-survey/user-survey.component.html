@@ -1,0 +1,34 @@
+<app-auth-form title="User Information" (submit$)="submit()" #authForm>
+  <mat-form-field
+    *ngIf="form.controls.first_name as control"
+    subscriptSizing="dynamic"
+  >
+    <mat-label>First Name</mat-label>
+    <input type="text" matInput [formControl]="control" />
+    <mat-error *ngIf="control.hasError('required')"
+      >Please let us know your name</mat-error
+    >
+  </mat-form-field>
+
+  <mat-form-field
+    *ngIf="form.controls.last_name as control"
+    subscriptSizing="dynamic"
+  >
+    <mat-label>Last Name</mat-label>
+    <input type="text" matInput [formControl]="control" />
+    <mat-error *ngIf="control.hasError('required')"
+      >Please let us know your name</mat-error
+    >
+  </mat-form-field>
+
+  <mat-form-field
+    *ngIf="form.controls.phone as control"
+    subscriptSizing="dynamic"
+  >
+    <mat-label>Phone</mat-label>
+    <input type="tel" matInput [formControl]="control" />
+    <mat-error *ngIf="control.hasError('required')"
+      >Please let us know your phone</mat-error
+    >
+  </mat-form-field>
+</app-auth-form>

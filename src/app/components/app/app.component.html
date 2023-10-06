@@ -1,0 +1,4 @@
+<ng-container [ngSwitch]="loaded">
+  <mat-spinner class="global-loader" *ngSwitchCase="false"></mat-spinner>
+  <router-outlet *ngSwitchCase="true"></router-outlet>
+</ng-container>

@@ -1,0 +1,16 @@
+import { CanActivateFn, Router } from '@angular/router';
+import { inject } from '@angular/core';
+import { CompanyService } from '../../services/company.service';
+
+export const isUserHaveCompany: CanActivateFn = () => {
+  console.log('user have company');
+  const authService = inject(CompanyService);
+  const router = inject(Router);
+
+  const haveCompany = authService.companies.length > 0;
+  if (!haveCompany) {
+    router.navigate(['/company-survey']);
+  }
+
+  return haveCompany;
+};

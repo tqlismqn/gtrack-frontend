@@ -1,0 +1,18 @@
+<form class="auth-form" (ngSubmit)="submit$.emit()">
+  <mat-progress-bar
+    *ngIf="loading"
+    [color]="loadingState === 'error' ? 'warn' : 'primary'"
+    [mode]="
+      loadingState === 'error' || loadingState === 'success'
+        ? 'determinate'
+        : 'indeterminate'
+    "
+    [value]="100"
+    class="auth-form__progress-bar"
+  ></mat-progress-bar>
+  <h2 class="auth-form__title" *ngIf="title">{{ title }}</h2>
+  <ng-content></ng-content>
+  <button mat-flat-button type="submit" color="primary" [disabled]="loading">
+    {{ submitTitle }}
+  </button>
+</form>
