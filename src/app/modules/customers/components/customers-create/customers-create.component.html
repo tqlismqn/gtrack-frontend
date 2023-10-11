@@ -1,0 +1,11 @@
+<a routerLink="../" mat-flat-button>Back</a>
+<form [formGroup]="form" (ngSubmit)="submit()">
+  <mat-form-field *ngIf="form.controls.name as control">
+    <mat-label>Company Name</mat-label>
+    <input matInput [formControl]="control" />
+    <mat-error *ngIf="control.hasError('required')"
+      >This field is <b>required</b></mat-error
+    >
+  </mat-form-field>
+  <button mat-flat-button type="submit" [disabled]="loading">Create</button>
+</form>

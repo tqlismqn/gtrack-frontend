@@ -1,0 +1,13 @@
+:host {
+  form {
+    max-width: 300px;
+    display: grid;
+    grid: {
+      template-columns: 1fr;
+    }
+
+    [type="submit"] {
+      width: fit-content;
+    }
+  }
+}

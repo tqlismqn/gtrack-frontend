@@ -1,8 +1,13 @@
-<mat-form-field subscriptSizing="dynamic" class="company-select">
+<mat-form-field
+  subscriptSizing="dynamic"
+  class="company-select"
+  *ngIf="companyService.selectedCompany"
+>
   <mat-label>Company</mat-label>
   <mat-select
-    [ngModel]="companyService.selectedCompany?.id"
-    (ngModelChange)="companyService.selectCompanyById($event)"
+    #select
+    [ngModel]="companyService.selectedCompany.id"
+    (ngModelChange)="companyService.selectCompanyById(select.value)"
   >
     <mat-option
       [value]="company.id"
@@ -11,4 +16,12 @@
     >
   </mat-select>
 </mat-form-field>
-<img [src]="auth.auth0User?.picture" alt class="user-picture" />
+<img
+  [matMenuTriggerFor]="matMenu"
+  [src]="auth.auth0User?.picture"
+  alt
+  class="user-picture"
+/>
+<mat-menu #matMenu="matMenu">
+  <button mat-menu-item (click)="auth.logout()">Logout</button>
+</mat-menu>

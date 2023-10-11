@@ -11,6 +11,13 @@ import { isUserHaveCompany } from './guards/auth/is-user-have-company.guard';
 import { isUserNotHaveCompany } from './guards/auth/is-user-not-have-company.guard';
 import { CompanySurveyComponent } from './modules/auth/components/company-survey/company-survey.component';
 import { MainComponent } from './layout/main/main.component';
+import { haveReadAccess } from './guards/modules/have-read-access';
+import { Modules } from './constants/modules';
+import { haveWriteAccess } from './guards/modules/have-write-access';
+import { CustomersCreateComponent } from './modules/customers/components/customers-create/customers-create.component';
+import { CustomersTableComponent } from './modules/customers/components/customers-table/customers-table.component';
+import { PermissionsTableComponent } from './modules/permissions/components/permissions-table/permissions-table.component';
+import { PermissionsCreateComponent } from './modules/permissions/components/permissions-create/permissions-create.component';
 
 const routes: Routes = [
   {
@@ -41,6 +48,33 @@ const routes: Routes = [
             path: 'dashboard',
             component: DashboardComponent,
           },
+
+          {
+            canActivate: [haveReadAccess(Modules.CUSTOMERS)],
+            path: 'customers',
+            component: CustomersTableComponent,
+            runGuardsAndResolvers: 'always',
+          },
+          {
+            canActivate: [haveWriteAccess(Modules.CUSTOMERS)],
+            path: 'customers/create',
+            component: CustomersCreateComponent,
+            runGuardsAndResolvers: 'always',
+          },
+
+          {
+            canActivate: [haveReadAccess(Modules.PERMISSIONS)],
+            path: 'permissions',
+            component: PermissionsTableComponent,
+            runGuardsAndResolvers: 'always',
+          },
+          {
+            canActivate: [haveWriteAccess(Modules.PERMISSIONS)],
+            path: 'permissions/create',
+            component: PermissionsCreateComponent,
+            runGuardsAndResolvers: 'always',
+          },
+
           { path: '**', redirectTo: 'dashboard' },
         ],
       },
@@ -54,7 +88,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes, { onSameUrlNavigation: 'reload' })],
   exports: [RouterModule],
 })
 export class AppRoutingModule {}

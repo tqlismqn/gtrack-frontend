@@ -2,4 +2,11 @@
   <a routerLink="/dashboard" class="sidenav__item" routerLinkActive="active"
     >Dashboard</a
   >
+  <a
+    *ngFor="let link of links"
+    [routerLink]="link.link"
+    class="sidenav__item"
+    routerLinkActive="active"
+    >{{ link.name }}</a
+  >
 </div>

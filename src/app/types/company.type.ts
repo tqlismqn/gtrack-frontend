@@ -1,4 +1,4 @@
-import { AccessType } from './access.type';
+import { PermissionAccess } from '../constants/permission-access';
 
 export interface Company {
   id: number;
@@ -7,8 +7,8 @@ export interface Company {
   website: string;
   owner: boolean;
   access: {
-    read_access: AccessType;
-    write_access: AccessType;
+    read_access: PermissionAccess;
+    write_access: PermissionAccess;
   };
 }
 
@@ -19,7 +19,7 @@ export interface CompanyResponse {
   website: string;
   owner: boolean;
   access: {
-    read_access: AccessType;
-    write_access: AccessType;
+    read_access: PermissionAccess;
+    write_access: PermissionAccess;
   };
 }
