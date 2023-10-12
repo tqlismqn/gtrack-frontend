@@ -6,9 +6,13 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { RouterLink } from '@angular/router';
+import { EditFormComponent } from './components/edit-form/edit-form.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { EditComponentComponent } from './components/edit-component/edit-component.component';
 
 @NgModule({
-  declarations: [TableComponent],
+  declarations: [TableComponent, EditFormComponent],
   imports: [
     CommonModule,
     MatButtonModule,
@@ -16,7 +20,10 @@ import { RouterLink } from '@angular/router';
     MatSortModule,
     MatTableModule,
     RouterLink,
+    FormsModule,
+    MatProgressBarModule,
+    ReactiveFormsModule,
   ],
-  exports: [TableComponent],
+  exports: [TableComponent, EditFormComponent],
 })
 export class BaseModuleModule {}

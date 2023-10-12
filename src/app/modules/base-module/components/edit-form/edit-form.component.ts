@@ -6,35 +6,34 @@ import {
   Input,
   Output,
 } from '@angular/core';
+import { LoadingState } from '../../../auth/components/auth-form/auth-form.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
-
-export type LoadingState = 'loading' | 'success' | 'error';
+import { Location } from '@angular/common';
 
 @Component({
-  selector: 'app-auth-form',
-  templateUrl: './auth-form.component.html',
-  styleUrls: ['./auth-form.component.scss'],
+  selector: 'app-edit-form',
+  templateUrl: './edit-form.component.html',
+  styleUrls: ['./edit-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AuthFormComponent {
+export class EditFormComponent {
   @Output()
   submit$ = new EventEmitter<void>();
 
   @Input()
-  title?: string;
+  formTitle?: string;
 
   @Input()
-  submitTitle = 'Send';
+  submitTitle = 'Save';
 
-  @Input()
-  showActions = true;
+  errors?: { [key: string]: string };
 
   loading = false;
   loadingState: LoadingState = 'loading';
 
   constructor(
     protected cdr: ChangeDetectorRef,
-    protected snackBar: MatSnackBar,
+    protected location: Location,
   ) {}
 
   startLoading() {

@@ -22,10 +22,14 @@
   </ng-container>
   <ng-container matColumnDef="read_access">
     <th mat-header-cell *matHeaderCellDef mat-sort-header>Read</th>
-    <td mat-cell *matCellDef="let element">{{ element.read_access }}</td>
+    <td mat-cell *matCellDef="let element">
+      {{ getAccessName(element.read_access) }}
+    </td>
   </ng-container>
   <ng-container matColumnDef="write_access">
     <th mat-header-cell *matHeaderCellDef mat-sort-header>Write</th>
-    <td mat-cell *matCellDef="let element">{{ element.write_access }}</td>
+    <td mat-cell *matCellDef="let element">
+      {{ getAccessName(element.write_access) }}
+    </td>
   </ng-container>
 </app-table>

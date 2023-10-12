@@ -6,6 +6,7 @@ import {
   PermissionModuleResponse,
 } from '../../types/permissions.type';
 import { ModulesService } from '../../../../services/modules.service';
+import { PermissionAccess } from '../../../../constants/permission-access';
 
 @Component({
   selector: 'app-permissions-table',
@@ -28,6 +29,7 @@ export class PermissionsTableComponent {
     'user',
     'read_access',
     'write_access',
+    'actions',
   ];
 
   toDto(value: PermissionModuleResponse): PermissionModule {
@@ -40,5 +42,9 @@ export class PermissionsTableComponent {
 
   getModuleName(module: Modules) {
     return this.moduleService.moduleNames[module].singular;
+  }
+
+  getAccessName(access: PermissionAccess) {
+    return this.moduleService.moduleAccesses[access].name;
   }
 }

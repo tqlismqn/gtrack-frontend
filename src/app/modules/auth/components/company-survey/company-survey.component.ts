@@ -44,7 +44,10 @@ export class CompanySurveyComponent {
     }
     this.authForm?.startLoading();
     this.http
-      .post(`${environment.apiUrl}/api/v1/companies/pass-survey`, this.form.value)
+      .post(
+        `${environment.apiUrl}/api/v1/companies/pass-survey`,
+        this.form.value,
+      )
       .subscribe({
         next: () => {
           this.authForm?.endLoading('success');

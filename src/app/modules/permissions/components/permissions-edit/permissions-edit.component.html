@@ -1,5 +1,8 @@
-<a routerLink="../" mat-flat-button>Back</a>
-<form [formGroup]="form" (ngSubmit)="submit()">
+<app-edit-form
+  #editFormComponent
+  (submit$)="submit()"
+  formTitle="Create Permission"
+>
   <mat-form-field *ngIf="form.controls.module_id as control">
     <mat-label>Module</mat-label>
     <mat-select [formControl]="control">
@@ -53,6 +56,4 @@
       >This field is <b>required</b></mat-error
     >
   </mat-form-field>
-
-  <button mat-flat-button type="submit" [disabled]="loading">Create</button>
-</form>
+</app-edit-form>

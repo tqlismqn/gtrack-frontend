@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { RouterLink } from '@angular/router';
-import { CustomersCreateComponent } from './components/customers-create/customers-create.component';
+import { CustomersEditComponent } from './components/customers-edit/customers-edit.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -13,7 +13,7 @@ import { CustomersTableComponent } from './components/customers-table/customers-
 import { BaseModuleModule } from '../base-module/base-module.module';
 
 @NgModule({
-  declarations: [CustomersCreateComponent, CustomersTableComponent],
+  declarations: [CustomersEditComponent, CustomersTableComponent],
   imports: [
     CommonModule,
     MatTableModule,

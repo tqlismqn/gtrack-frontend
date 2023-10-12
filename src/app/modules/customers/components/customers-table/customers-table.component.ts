@@ -1,10 +1,8 @@
 import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
 import { Modules } from '../../../../constants/modules';
-import {
-  Customer,
-  CustomerResponse,
-} from '../../types/customers.type';
+import { Customer, CustomerResponse } from '../../types/customers.type';
 import { TableComponent } from '../../../base-module/components/table/table.component';
+import { CustomersUtils } from '../../utils/customers-utils';
 
 @Component({
   selector: 'app-customers-table',
@@ -25,13 +23,7 @@ export class CustomersTableComponent {
     'updated_by',
     'updated_at',
     'owned_by',
+    'actions',
   ];
-
-  toDto(value: CustomerResponse): Customer {
-    return {
-      ...value,
-      created_at: new Date(value.created_at),
-      updated_at: new Date(value.updated_at),
-    };
-  }
+  customerResponseToDTO = CustomersUtils.customerResponseToDTO;
 }

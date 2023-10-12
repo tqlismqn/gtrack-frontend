@@ -1,4 +1,4 @@
-import { NgModule, isDevMode } from '@angular/core';
+import { NgModule, isDevMode, ErrorHandler } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './components/app/app.component';
@@ -28,6 +28,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { CustomersModule } from './modules/customers/customers.module';
 import { MatMenuModule } from '@angular/material/menu';
 import { PermissionsModule } from './modules/permissions/permissions.module';
+import { GlobalErrorHandler } from './errors/global-error-handler';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
   declarations: [
@@ -82,6 +84,7 @@ import { PermissionsModule } from './modules/permissions/permissions.module';
     CustomersModule,
     MatMenuModule,
     PermissionsModule,
+    MatSnackBarModule,
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthHttpInterceptor, multi: true },
@@ -89,6 +92,10 @@ import { PermissionsModule } from './modules/permissions/permissions.module';
       provide: HTTP_INTERCEPTORS,
       useClass: WithCredentialsInterceptor,
       multi: true,
+    },
+    {
+      provide: ErrorHandler,
+      useClass: GlobalErrorHandler,
     },
   ],
   bootstrap: [AppComponent],

@@ -1,6 +1,5 @@
 import {
   AfterContentInit,
-  AfterViewInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
@@ -10,7 +9,6 @@ import {
   Input,
   OnDestroy,
   OnInit,
-  Output,
   QueryList,
   ViewChild,
 } from '@angular/core';
@@ -29,6 +27,7 @@ import { combineLatest, takeUntil, tap } from 'rxjs';
 import { environment } from '../../../../../environments/environment';
 import { Modules } from '../../../../constants/modules';
 import { MatColumnDef, MatTable } from '@angular/material/table';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-table',
@@ -43,6 +42,7 @@ export class TableComponent<B extends ModuleBaseResponse, F extends ModuleBase>
     public http: HttpClient,
     public companyService: CompanyService,
     public cdr: ChangeDetectorRef,
+    public router: Router,
   ) {
     this.companyService.companyChanged$
       .pipe(
@@ -62,10 +62,12 @@ export class TableComponent<B extends ModuleBaseResponse, F extends ModuleBase>
   };
   loading = false;
 
-  @Output()
   @ViewChild(MatSort)
   sort!: MatSort;
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
+
+  @ViewChild(MatPaginator)
+  paginator!: MatPaginator;
+
   @ViewChild('defaultColumns', { read: ElementRef })
   defaultColumns?: ElementRef;
 
@@ -162,9 +164,27 @@ export class TableComponent<B extends ModuleBaseResponse, F extends ModuleBase>
     });
   }
 
+  delete(item: F) {
+    this.http
+      .delete(
+        `${environment.apiUrl}/api/v1/${this.module}/delete/${item.id}?company_id=${this.companyService.selectedCompany?.id}`,
+      )
+      .subscribe(() => {
+        this.fetch();
+      });
+  }
+
   destroy$ = new EventEmitter<void>();
 
   ngOnDestroy() {
     this.destroy$.emit();
+  }
+
+  openUpdatePage(item: F) {
+    this.router.navigateByUrl(`${location.pathname}/update/${item.id}`, {
+      state: {
+        item,
+      },
+    });
   }
 }
