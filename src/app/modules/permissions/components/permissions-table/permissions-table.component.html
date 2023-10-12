@@ -1,0 +1,35 @@
+<app-table
+  #appTable
+  [module]="module"
+  moduleName="Permissions"
+  moduleItemName="Permission"
+  [toDto]="toDto"
+  [displayedColumns]="displayedColumns"
+  matSort="appTable.sort"
+  (matSortChange)="appTable.externalSortChange($event)"
+>
+  <ng-container matColumnDef="module">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Module</th>
+    <td mat-cell *matCellDef="let element">
+      {{ getModuleName(element.module_id) }}
+    </td>
+  </ng-container>
+  <ng-container matColumnDef="user">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>User</th>
+    <td mat-cell *matCellDef="let element">
+      ({{ element.user_id }}) {{ element.user.name }}
+    </td>
+  </ng-container>
+  <ng-container matColumnDef="read_access">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Read</th>
+    <td mat-cell *matCellDef="let element">
+      {{ getAccessName(element.read_access) }}
+    </td>
+  </ng-container>
+  <ng-container matColumnDef="write_access">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Write</th>
+    <td mat-cell *matCellDef="let element">
+      {{ getAccessName(element.write_access) }}
+    </td>
+  </ng-container>
+</app-table>

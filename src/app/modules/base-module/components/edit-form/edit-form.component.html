@@ -1,0 +1,19 @@
+<button mat-flat-button (click)="location.back()">Back</button>
+<form class="edit-form" (ngSubmit)="submit$.emit()">
+  <mat-progress-bar
+    *ngIf="loading"
+    [color]="loadingState === 'error' ? 'warn' : 'primary'"
+    [mode]="
+      loadingState === 'error' || loadingState === 'success'
+        ? 'determinate'
+        : 'indeterminate'
+    "
+    [value]="100"
+    class="edit-form__progress-bar"
+  ></mat-progress-bar>
+  <h2 class="edit-form__title" *ngIf="formTitle">{{ formTitle }}</h2>
+  <ng-content></ng-content>
+  <button mat-flat-button type="submit" color="primary" [disabled]="loading">
+    {{ submitTitle }}
+  </button>
+</form>

@@ -29,8 +29,6 @@ export class AuthFormComponent {
   @Input()
   showActions = true;
 
-  errors?: { [key: string]: string };
-
   loading = false;
   loadingState: LoadingState = 'loading';
 
@@ -55,13 +53,7 @@ export class AuthFormComponent {
   }
 
   processError(error: any) {
-    if (error?.error?.errors) {
-      this.errors = error?.error?.errors;
-      this.cdr.markForCheck();
-    }
-    if (error?.error?.message) {
-      this.snackBar.open(error?.error?.message, 'Ok');
-    }
     this.endLoading('error');
+    throw error;
   }
 }

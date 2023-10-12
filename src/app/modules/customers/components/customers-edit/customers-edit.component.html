@@ -1,0 +1,13 @@
+<app-edit-form
+  #editFormComponent
+  (submit$)="submit()"
+  formTitle="Create Customer"
+>
+  <mat-form-field *ngIf="form.controls.name as control">
+    <mat-label>Company Name</mat-label>
+    <input matInput [formControl]="control" />
+    <mat-error *ngIf="control.hasError('required')"
+      >This field is <b>required</b></mat-error
+    >
+  </mat-form-field>
+</app-edit-form>

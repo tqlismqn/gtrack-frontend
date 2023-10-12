@@ -3,7 +3,6 @@ import { inject } from '@angular/core';
 import { CompanyService } from '../../services/company.service';
 
 export const isUserHaveCompany: CanActivateFn = () => {
-  console.log('user have company');
   const authService = inject(CompanyService);
   const router = inject(Router);
 

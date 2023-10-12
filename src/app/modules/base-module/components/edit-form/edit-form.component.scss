@@ -1,0 +1,34 @@
+@use 'src/styles/includes/colors';
+
+:host {
+  .edit-form {
+    position: relative;
+    display: grid;
+    grid: {
+      row-gap: 16px;
+    }
+    background: colors.$color-background;
+    padding: 42px 55px 78px;
+    border-radius: 5px;
+    width: calc(100% - 40px);
+    max-width: 480px;
+
+    &__title {
+    }
+
+    [type="submit"] {
+      max-width: 120px;
+    }
+
+    &__progress-bar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      border-top: {
+        left-radius: 5px;
+        right-radius: 5px;
+      }
+    }
+  }
+}

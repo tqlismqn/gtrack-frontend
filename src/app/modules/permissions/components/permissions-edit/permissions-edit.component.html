@@ -1,0 +1,59 @@
+<app-edit-form
+  #editFormComponent
+  (submit$)="submit()"
+  formTitle="Create Permission"
+>
+  <mat-form-field *ngIf="form.controls.module_id as control">
+    <mat-label>Module</mat-label>
+    <mat-select [formControl]="control">
+      <mat-option
+        *ngFor="let module of modulesService.moduleNamesArray"
+        [value]="module.id"
+        >{{ module.singular }}</mat-option
+      >
+    </mat-select>
+    <mat-error *ngIf="control.hasError('required')"
+      >This field is <b>required</b></mat-error
+    >
+  </mat-form-field>
+
+  <mat-form-field *ngIf="form.controls.user_id as control">
+    <mat-label>User Id</mat-label>
+    <mat-select [formControl]="control">
+      <mat-option *ngFor="let user of userNames" [value]="user.id">{{
+        user.name
+      }}</mat-option>
+    </mat-select>
+    <mat-error *ngIf="control.hasError('required')"
+      >This field is <b>required</b></mat-error
+    >
+  </mat-form-field>
+
+  <mat-form-field *ngIf="form.controls.read_access as control">
+    <mat-label>Read access</mat-label>
+    <mat-select [formControl]="control">
+      <mat-option
+        *ngFor="let access of modulesService.moduleAccessesArray"
+        [value]="access.id"
+        >{{ access.name }}</mat-option
+      >
+    </mat-select>
+    <mat-error *ngIf="control.hasError('required')"
+      >This field is <b>required</b></mat-error
+    >
+  </mat-form-field>
+
+  <mat-form-field *ngIf="form.controls.write_access as control">
+    <mat-label>Write access</mat-label>
+    <mat-select [formControl]="control">
+      <mat-option
+        *ngFor="let access of modulesService.moduleAccessesArray"
+        [value]="access.id"
+        >{{ access.name }}</mat-option
+      >
+    </mat-select>
+    <mat-error *ngIf="control.hasError('required')"
+      >This field is <b>required</b></mat-error
+    >
+  </mat-form-field>
+</app-edit-form>

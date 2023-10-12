@@ -6,6 +6,7 @@ import { environment } from '../../../../environments/environment';
 import { User, UserResponse } from '../types/user';
 import { CompanyService } from '../../../services/company.service';
 import { User as Auth0User } from '@auth0/auth0-angular';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
@@ -21,7 +22,15 @@ export class AuthService {
     public auth0: Auth0Service,
     public http: HttpClient,
     public companyService: CompanyService,
-  ) {}
+    protected router: Router,
+  ) {
+    companyService.companyChanged$.subscribe(() => {
+      if (!this.router.navigated) {
+        return;
+      }
+      this.router.navigateByUrl(this.router.url);
+    });
+  }
 
   getUserInfo(): Observable<User> {
     return new Observable<User>((subscriber) => {
@@ -66,7 +75,7 @@ export class AuthService {
               this.auth0User = auth0User;
             }
 
-            this.companyService.fetchCompanies().subscribe({
+            this.companyService.fetch().subscribe({
               next: () => {
                 this._isApplicationReady = true;
                 if (this._isApplicationReady$) {
@@ -85,6 +94,14 @@ export class AuthService {
         subscriber.next(value);
         subscriber.complete();
       });
+    });
+  }
+
+  logout(returnTo?: string) {
+    this.auth0.logout({
+      logoutParams: {
+        returnTo: returnTo ?? location.origin,
+      },
     });
   }
 }
