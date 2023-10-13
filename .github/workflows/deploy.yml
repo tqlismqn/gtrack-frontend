@@ -3,16 +3,16 @@ name: g-track-frontend deployment
 on:
   push:
     branches: [ main ]
+  release:
+    types: [ published ]
 
 jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout main
+      - name: Checkout
         uses: actions/checkout@v3
-        with:
-          ref: main
 
       - name: Setup Node.js
         uses: actions/setup-node@v3
@@ -58,6 +58,12 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan g-track.eu > ~/.ssh/known_hosts
 
-      - name: Deploy
+      - name: Deploy Stage
+        if: ${{ github.event_name == 'push' }}
         run: |
-          rsync -avzuh -e 'ssh' ./dist/g-track-frontend/ gtrack@g-track.eu:/opt/gtrack/frontend/ --progress --delete
+          rsync -avzuh -e 'ssh' ./dist/g-track-frontend/ gtrack@g-track.eu:/opt/gtrack/stage/frontend/ --progress --delete
+
+      - name: Deploy Production
+        if: ${{ github.event_name == 'release' }}
+        run: |
+          rsync -avzuh -e 'ssh' ./dist/g-track-frontend/ gtrack@g-track.eu:/opt/gtrack/prod/frontend/ --progress --delete
