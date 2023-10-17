@@ -10,6 +10,8 @@ import { EditFormComponent } from './components/edit-form/edit-form.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { EditComponentComponent } from './components/edit-component/edit-component.component';
+import {MatFormFieldModule} from "@angular/material/form-field";
+import {MatSelectModule} from "@angular/material/select";
 
 @NgModule({
   declarations: [TableComponent, EditFormComponent],
@@ -23,6 +25,8 @@ import { EditComponentComponent } from './components/edit-component/edit-compone
     FormsModule,
     MatProgressBarModule,
     ReactiveFormsModule,
+    MatFormFieldModule,
+    MatSelectModule,
   ],
   exports: [TableComponent, EditFormComponent],
 })

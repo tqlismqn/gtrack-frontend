@@ -7,6 +7,7 @@ import {
 } from '../../types/permissions.type';
 import { ModulesService } from '../../../../services/modules.service';
 import { PermissionAccess } from '../../../../constants/permission-access';
+import { Selectable } from '../../../../types/selectable.type';
 
 @Component({
   selector: 'app-permissions-table',
@@ -20,6 +21,33 @@ export class PermissionsTableComponent {
     PermissionModuleResponse,
     PermissionModule
   >;
+
+  sortableColumns: Selectable[] = [
+    {
+      name: 'Default',
+      value: '',
+    },
+    {
+      name: 'ID',
+      value: 'id',
+    },
+    {
+      name: 'Module',
+      value: 'module',
+    },
+    {
+      name: 'User',
+      value: 'user',
+    },
+    {
+      name: 'Read',
+      value: 'read_access',
+    },
+    {
+      name: 'Write',
+      value: 'write_access',
+    },
+  ];
 
   module = Modules.PERMISSIONS;
 

@@ -21,13 +21,15 @@ import { HttpClient } from '@angular/common/http';
 import { CompanyService } from '../../../../services/company.service';
 import { SortType } from '../../types/soring.type';
 import { PaginationType } from '../../types/pagination.type';
-import { MatSort, Sort } from '@angular/material/sort';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { combineLatest, takeUntil, tap } from 'rxjs';
 import { environment } from '../../../../../environments/environment';
 import { Modules } from '../../../../constants/modules';
 import { MatColumnDef, MatTable } from '@angular/material/table';
 import { Router } from '@angular/router';
+import { Selectable } from '../../../../types/selectable.type';
+import { defaultSortableFields } from '../../constants/default-sortable-fields';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-table',
@@ -62,9 +64,6 @@ export class TableComponent<B extends ModuleBaseResponse, F extends ModuleBase>
   };
   loading = false;
 
-  @ViewChild(MatSort)
-  sort!: MatSort;
-
   @ViewChild(MatPaginator)
   paginator!: MatPaginator;
 
@@ -86,8 +85,19 @@ export class TableComponent<B extends ModuleBaseResponse, F extends ModuleBase>
   @Input()
   displayedColumns: string[] = [];
 
+  @Input()
+  sortableColumns: Selectable[] = defaultSortableFields;
+
+  sortingFieldControl = new FormControl<string | undefined>('', {
+    nonNullable: true,
+  });
+
   ngOnInit() {
     this.fetch();
+
+    this.sortingFieldControl.valueChanges.subscribe((value) => {
+      this.sortChange(value);
+    });
   }
 
   @ViewChild(MatTable, { static: true }) table!: MatTable<F>;
@@ -98,20 +108,11 @@ export class TableComponent<B extends ModuleBaseResponse, F extends ModuleBase>
     this.columnDefs.forEach((columnDef) => this.table.addColumnDef(columnDef));
   }
 
-  externalSortChange(sortState: Sort) {
-    this.sort.direction = '';
-    this.sort.sort({
-      id: sortState.active,
-      start: sortState.direction,
-      disableClear: false,
-    });
-  }
-
-  sortChange(sortState: Sort) {
-    if (sortState.direction) {
+  sortChange(field?: string) {
+    if (field) {
       this.sorting = {
-        field: sortState.active,
-        dir: sortState.direction,
+        field,
+        dir: 'desc',
       };
     } else {
       this.sorting = undefined;
