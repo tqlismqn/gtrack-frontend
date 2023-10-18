@@ -30,6 +30,9 @@ import { MatMenuModule } from '@angular/material/menu';
 import { PermissionsModule } from './modules/permissions/permissions.module';
 import { GlobalErrorHandler } from './errors/global-error-handler';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { AdminModule } from './modules/admin/admin.module';
+import {MatExpansionModule} from "@angular/material/expansion";
+import {MatRippleModule} from "@angular/material/core";
 
 @NgModule({
   declarations: [
@@ -85,6 +88,9 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     MatMenuModule,
     PermissionsModule,
     MatSnackBarModule,
+    AdminModule,
+    MatExpansionModule,
+    MatRippleModule,
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthHttpInterceptor, multi: true },

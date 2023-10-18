@@ -4,11 +4,11 @@ import {
 } from '../../base-module/types/module-base.type';
 
 export interface CustomerResponse extends ModuleBaseResponse {
-  id: number;
+  id: string;
   name: string;
 }
 
 export interface Customer extends ModuleBase {
-  id: number;
+  id: string;
   name: string;
 }

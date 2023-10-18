@@ -10,20 +10,26 @@ import { EditFormComponent } from './components/edit-form/edit-form.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { EditComponentComponent } from './components/edit-component/edit-component.component';
+import {MatFormFieldModule} from "@angular/material/form-field";
+import {MatSelectModule} from "@angular/material/select";
+import {MatInputModule} from "@angular/material/input";
 
 @NgModule({
   declarations: [TableComponent, EditFormComponent],
-  imports: [
-    CommonModule,
-    MatButtonModule,
-    MatPaginatorModule,
-    MatSortModule,
-    MatTableModule,
-    RouterLink,
-    FormsModule,
-    MatProgressBarModule,
-    ReactiveFormsModule,
-  ],
+    imports: [
+        CommonModule,
+        MatButtonModule,
+        MatPaginatorModule,
+        MatSortModule,
+        MatTableModule,
+        RouterLink,
+        FormsModule,
+        MatProgressBarModule,
+        ReactiveFormsModule,
+        MatFormFieldModule,
+        MatSelectModule,
+        MatInputModule,
+    ],
   exports: [TableComponent, EditFormComponent],
 })
 export class BaseModuleModule {}

@@ -7,7 +7,6 @@ import {
   Output,
 } from '@angular/core';
 import { LoadingState } from '../../../auth/components/auth-form/auth-form.component';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { Location } from '@angular/common';
 
 @Component({

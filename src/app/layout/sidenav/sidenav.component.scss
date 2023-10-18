@@ -3,23 +3,58 @@
 :host {
   background-color: #D6E2F3;
 
+  @mixin sidenav-item {
+    padding: 5px 32px;
+    color: colors.$color-black;
+    text-decoration: none;
+    font: {
+      size: 15px;
+      weight: 500;
+    }
+
+    &.active {
+      background-color: #9AB1D1;
+      border-left: 8px solid #5577A6;
+      padding-left: 24px;
+    }
+  }
+
   .sidenav {
     margin-top: 72px;
     display: grid;
 
     &__item {
-      padding: 5px 32px;
-      color: colors.$color-black;
-      text-decoration: none;
-      font: {
-        size: 15px;
-        weight: 500;
+      @include sidenav-item;
+    }
+
+    &__group {
+      border-radius: 0;
+      box-shadow: none;
+      background-color: #D6E2F3;
+
+      &__inner {
+        display: grid;
+
+        .sidenav__item {
+          padding: 5px 40px;
+
+          &.active {
+            padding-left: 32px;
+          }
+        }
       }
 
-      &.active {
-        background-color: #9AB1D1;
-        border-left: 8px solid #5577A6;
-        padding-left: 24px;
+      mat-expansion-panel-header {
+        padding: 0;
+        --mat-expansion-header-expanded-state-height: 30px;
+        --mat-expansion-header-collapsed-state-height: 30px;
+        @include sidenav-item;
+      }
+
+      ::ng-deep {
+        .mat-expansion-panel-body {
+          padding: 0;
+        }
       }
     }
   }

@@ -17,4 +17,21 @@
       width: 0;
     }
   }
+
+  .top-actions {
+    display: flex;
+    align-items: center;
+  }
+
+  .search-field {
+    min-width: 400px;
+  }
+
+  .sort-field {
+    margin-left: 24px;
+  }
+
+  .create-action {
+    margin-left: auto;
+  }
 }

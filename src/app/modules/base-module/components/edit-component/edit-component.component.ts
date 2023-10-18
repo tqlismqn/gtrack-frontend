@@ -3,14 +3,15 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  EventEmitter,
+  OnDestroy,
   OnInit,
   ViewChild,
 } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { CompanyService } from '../../../../services/company.service';
-import { ModuleBase, ModuleBaseResponse } from '../../types/module-base.type';
 import { EditFormComponent } from '../edit-form/edit-form.component';
-import { Modules } from '../../../../constants/modules';
+import { AdminModules, Modules } from '../../../../constants/modules';
 import { environment } from '../../../../../environments/environment';
 import { FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -21,10 +22,10 @@ import { ActivatedRoute, Router } from '@angular/router';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export abstract class EditComponentComponent<
-    B extends ModuleBaseResponse,
-    F extends ModuleBase,
+    B extends { id: string },
+    F extends { id: string },
   >
-  implements AfterViewInit, OnInit
+  implements AfterViewInit, OnInit, OnDestroy
 {
   constructor(
     protected http: HttpClient,
@@ -54,12 +55,14 @@ export abstract class EditComponentComponent<
     });
   }
 
+  protected destroy$ = new EventEmitter<void>();
+
   type: 'create' | 'update' = 'create';
   @ViewChild('editFormComponent') editFormComponent!: EditFormComponent;
 
   item?: F;
 
-  module!: Modules;
+  module!: Modules | AdminModules;
 
   form!: FormGroup;
 
@@ -140,6 +143,7 @@ export abstract class EditComponentComponent<
   }
 
   create() {
+    this.form.markAllAsTouched();
     if (!this.form.valid) {
       return;
     }
@@ -170,5 +174,9 @@ export abstract class EditComponentComponent<
     } else {
       this.update();
     }
+  }
+
+  ngOnDestroy() {
+    this.destroy$.emit();
   }
 }

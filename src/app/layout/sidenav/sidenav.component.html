@@ -1,12 +1,30 @@
 <div class="sidenav">
-  <a routerLink="/dashboard" class="sidenav__item" routerLinkActive="active"
+  <a
+    matRipple
+    routerLink="/dashboard"
+    class="sidenav__item"
+    routerLinkActive="active"
     >Dashboard</a
   >
   <a
+    matRipple
     *ngFor="let link of links"
     [routerLink]="link.link"
     class="sidenav__item"
     routerLinkActive="active"
     >{{ link.name }}</a
   >
+  <mat-expansion-panel class="sidenav__group" #adminGroup>
+    <mat-expansion-panel-header matRipple>Admin</mat-expansion-panel-header>
+    <div class="sidenav__group__inner">
+      <a
+        matRipple
+        *ngFor="let link of adminContainer"
+        [routerLink]="link.link"
+        class="sidenav__item"
+        routerLinkActive="active"
+        >{{ link.name }}</a
+      >
+    </div>
+  </mat-expansion-panel>
 </div>

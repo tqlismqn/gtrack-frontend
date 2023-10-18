@@ -1,48 +1,76 @@
-<a routerLink="./create" mat-flat-button color="primary"
-  >Create New {{ moduleItemName }}</a
->
-<table
-  mat-table
-  [dataSource]="data"
-  matSort
-  (matSortChange)="sortChange($event)"
-  class="table"
->
+<div class="top-actions">
+  <mat-form-field
+    *ngIf="searchableColumns.length > 0"
+    subscriptSizing="dynamic"
+  >
+    <mat-label>Search by</mat-label>
+    <mat-select [formControl]="searchingFieldControl">
+      <mat-option
+        *ngFor="let option of searchableColumns"
+        [value]="option.value"
+      >
+        {{ option.name }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field subscriptSizing="dynamic" class="search-field">
+    <mat-label>Search</mat-label>
+    <input matInput [formControl]="searchingValueControl" />
+  </mat-form-field>
+
+  <mat-form-field
+    *ngIf="sortableColumns.length > 0"
+    subscriptSizing="dynamic"
+    class="sort-field"
+  >
+    <mat-label>Sort by</mat-label>
+    <mat-select [formControl]="sortingFieldControl">
+      <mat-option *ngFor="let option of sortableColumns" [value]="option.value">
+        {{ option.name }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <a routerLink="./create" mat-flat-button color="primary" class="create-action"
+    >Create New {{ moduleItemName }}</a
+  >
+</div>
+<table mat-table [dataSource]="data" class="table">
   <ng-container matColumnDef="id">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
+    <th mat-header-cell *matHeaderCellDef>ID</th>
     <td mat-cell *matCellDef="let element">{{ element.id }}</td>
   </ng-container>
 
   <ng-container matColumnDef="created_by">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header>Created By</th>
+    <th mat-header-cell *matHeaderCellDef>Created By</th>
     <td mat-cell *matCellDef="let element">
       ({{ element.created_by?.id }}) {{ element.created_by?.name }}
     </td>
   </ng-container>
 
   <ng-container matColumnDef="created_at">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header>Created At</th>
+    <th mat-header-cell *matHeaderCellDef>Created At</th>
     <td mat-cell *matCellDef="let element">
       {{ element.created_at | date: "dd/MM/YYYY" }}
     </td>
   </ng-container>
 
   <ng-container matColumnDef="updated_by">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header>Updated By</th>
+    <th mat-header-cell *matHeaderCellDef>Updated By</th>
     <td mat-cell *matCellDef="let element">
       ({{ element.updated_by?.id }}) {{ element.updated_by?.name }}
     </td>
   </ng-container>
 
   <ng-container matColumnDef="updated_at">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header>Updated At</th>
+    <th mat-header-cell *matHeaderCellDef>Updated At</th>
     <td mat-cell *matCellDef="let element">
       {{ element.updated_at | date: "dd/MM/YYYY" }}
     </td>
   </ng-container>
 
   <ng-container matColumnDef="owned_by">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header>Owned By</th>
+    <th mat-header-cell *matHeaderCellDef>Owned By</th>
     <td mat-cell *matCellDef="let element">
       ({{ element.owned_by?.id }}) {{ element.owned_by?.name }}
     </td>

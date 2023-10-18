@@ -1,15 +1,24 @@
 import {
+  AfterViewInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  ElementRef,
   EventEmitter,
   OnDestroy,
   OnInit,
+  ViewChild,
 } from '@angular/core';
 import { CompanyService } from '../../services/company.service';
-import { Modules } from '../../constants/modules';
+import { AdminModules, Modules } from '../../constants/modules';
 import { PermissionAccessType } from '../../constants/permission-access';
 import { takeUntil, tap } from 'rxjs';
+import { AuthService } from '../../modules/auth/services/auth.service';
+
+type Link = {
+  name: string;
+  link: string;
+};
 
 @Component({
   selector: 'app-sidenav',
@@ -18,16 +27,19 @@ import { takeUntil, tap } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SidenavComponent implements OnInit, OnDestroy {
-  links: {
-    name: string;
-    link: string;
-  }[] = [];
+  links: Link[] = [];
+
+  adminContainer: Link[] = [];
 
   destroy$ = new EventEmitter();
+
+  @ViewChild('activeLink', { read: ElementRef })
+  activeLink?: ElementRef;
 
   constructor(
     public companyService: CompanyService,
     protected cdr: ChangeDetectorRef,
+    protected auth: AuthService,
   ) {
     companyService.companyChanged$
       .pipe(
@@ -49,6 +61,7 @@ export class SidenavComponent implements OnInit, OnDestroy {
 
   checkPermissions() {
     this.links = [];
+    this.adminContainer = [];
     if (this.checkPermission(Modules.CUSTOMERS)) {
       this.links.push({
         name: 'Address Book',
@@ -65,6 +78,16 @@ export class SidenavComponent implements OnInit, OnDestroy {
       this.links.push({
         name: 'Permissions',
         link: 'permissions',
+      });
+    }
+    if (this.auth.isSuperAdmin) {
+      this.adminContainer.push({
+        name: 'Users (admin)',
+        link: AdminModules.USERS,
+      });
+      this.adminContainer.push({
+        name: 'Companies (admin)',
+        link: AdminModules.COMPANIES,
       });
     }
 

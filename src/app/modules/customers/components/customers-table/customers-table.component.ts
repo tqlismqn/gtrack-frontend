@@ -3,6 +3,7 @@ import { Modules } from '../../../../constants/modules';
 import { Customer, CustomerResponse } from '../../types/customers.type';
 import { TableComponent } from '../../../base-module/components/table/table.component';
 import { CustomersUtils } from '../../utils/customers-utils';
+import { Selectable } from '../../../../types/selectable.type';
 
 @Component({
   selector: 'app-customers-table',
@@ -24,6 +25,28 @@ export class CustomersTableComponent {
     'updated_at',
     'owned_by',
     'actions',
+  ];
+  searchableColumns: Selectable[] = [
+    {
+      name: 'ID',
+      value: 'id',
+    },
+    {
+      name: 'Name',
+      value: 'name',
+    },
+    {
+      name: 'Created By',
+      value: 'created_by',
+    },
+    {
+      name: 'Updated By',
+      value: 'updated_by',
+    },
+    {
+      name: 'Owned By',
+      value: 'owned_by',
+    },
   ];
   customerResponseToDTO = CustomersUtils.customerResponseToDTO;
 }
