@@ -14,7 +14,12 @@
     routerLinkActive="active"
     >{{ link.name }}</a
   >
-  <mat-expansion-panel class="sidenav__group" #adminGroup>
+
+  <mat-expansion-panel
+    class="sidenav__group"
+    #adminGroup
+    *ngIf="adminContainer.length > 0"
+  >
     <mat-expansion-panel-header matRipple>Admin</mat-expansion-panel-header>
     <div class="sidenav__group__inner">
       <a
