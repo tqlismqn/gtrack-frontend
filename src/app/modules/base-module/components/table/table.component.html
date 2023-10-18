@@ -1,5 +1,29 @@
 <div class="top-actions">
-  <mat-form-field *ngIf="sortableColumns.length > 0" subscriptSizing="dynamic">
+  <mat-form-field
+    *ngIf="searchableColumns.length > 0"
+    subscriptSizing="dynamic"
+  >
+    <mat-label>Search by</mat-label>
+    <mat-select [formControl]="searchingFieldControl">
+      <mat-option
+        *ngFor="let option of searchableColumns"
+        [value]="option.value"
+      >
+        {{ option.name }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field subscriptSizing="dynamic" class="search-field">
+    <mat-label>Search</mat-label>
+    <input matInput [formControl]="searchingValueControl" />
+  </mat-form-field>
+
+  <mat-form-field
+    *ngIf="sortableColumns.length > 0"
+    subscriptSizing="dynamic"
+    class="sort-field"
+  >
     <mat-label>Sort by</mat-label>
     <mat-select [formControl]="sortingFieldControl">
       <mat-option *ngFor="let option of sortableColumns" [value]="option.value">
@@ -7,7 +31,7 @@
       </mat-option>
     </mat-select>
   </mat-form-field>
-  <a routerLink="./create" mat-flat-button color="primary"
+  <a routerLink="./create" mat-flat-button color="primary" class="create-action"
     >Create New {{ moduleItemName }}</a
   >
 </div>

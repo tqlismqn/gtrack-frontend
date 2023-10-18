@@ -104,4 +104,8 @@ export class AuthService {
       },
     });
   }
+
+  get isSuperAdmin() {
+    return this.user?.role_id === 'super_admin';
+  }
 }

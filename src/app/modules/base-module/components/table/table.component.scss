@@ -20,7 +20,18 @@
 
   .top-actions {
     display: flex;
-    justify-content: space-between;
     align-items: center;
+  }
+
+  .search-field {
+    min-width: 400px;
+  }
+
+  .sort-field {
+    margin-left: 24px;
+  }
+
+  .create-action {
+    margin-left: auto;
   }
 }

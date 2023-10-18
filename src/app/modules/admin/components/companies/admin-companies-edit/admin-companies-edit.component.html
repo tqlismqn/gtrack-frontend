@@ -1,0 +1,68 @@
+<app-edit-form
+  #editFormComponent
+  (submit$)="submit()"
+  formTitle="Create Company"
+>
+  <mat-form-field
+    *ngIf="form.controls.name as control"
+    subscriptSizing="dynamic"
+  >
+    <mat-label>Company Name</mat-label>
+    <input type="text" matInput [formControl]="control" />
+    <mat-error *ngIf="control.hasError('required')"
+      >Please let us know your company name</mat-error
+    >
+  </mat-form-field>
+
+  <mat-form-field
+    *ngIf="form.controls.employees_number as control"
+    subscriptSizing="dynamic"
+  >
+    <mat-label>Employees Number</mat-label>
+    <input type="text" matInput [formControl]="control" />
+    <mat-error *ngIf="control.hasError('required')"
+      >Please let us know your company employees number</mat-error
+    >
+  </mat-form-field>
+
+  <mat-form-field
+    *ngIf="form.controls.website as control"
+    subscriptSizing="dynamic"
+  >
+    <mat-label>Website</mat-label>
+    <input type="tel" matInput [formControl]="control" />
+    <mat-error *ngIf="control.hasError('required')"
+      >Please let us know your company website</mat-error
+    >
+  </mat-form-field>
+
+  <div class="with-button">
+    <mat-form-field
+      *ngIf="form.controls.owner_id as control"
+      subscriptSizing="dynamic"
+    >
+      <mat-label>Company Owner</mat-label>
+      <mat-select [formControl]="control">
+        <mat-option [value]="null">*Empty*</mat-option>
+        <mat-option *ngFor="let user of users" [value]="user.id"
+          >{{ user.first_name }} {{ user.last_name }}</mat-option
+        >
+      </mat-select>
+    </mat-form-field>
+    <button [routerLink]="'/admin/users/create'" mat-flat-button color="accent">
+      New
+    </button>
+  </div>
+
+  <mat-form-field
+    *ngIf="form.controls.user_ids as control"
+    subscriptSizing="dynamic"
+  >
+    <mat-label>Company Users</mat-label>
+    <mat-select multiple [formControl]="control">
+      <mat-option *ngFor="let user of users" [value]="user.id"
+        >{{ user.first_name }} {{ user.last_name }}</mat-option
+      >
+    </mat-select>
+  </mat-form-field>
+</app-edit-form>

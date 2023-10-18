@@ -11,7 +11,7 @@ export interface ModuleBaseReadRequest {
 }
 
 export interface ModuleBaseResponse {
-  id: number;
+  id: string;
   owned_by_id: number;
   created_by_id: number;
   updated_by_id: number;
@@ -23,7 +23,7 @@ export interface ModuleBaseResponse {
 }
 
 export interface ModuleBase {
-  id: number;
+  id: string;
   owned_by_id: number;
   created_by_id: number;
   updated_by_id: number;

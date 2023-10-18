@@ -3,3 +3,8 @@ export enum Modules {
   ORDERS = 'orders',
   PERMISSIONS = 'permissions',
 }
+
+export enum AdminModules {
+  USERS = 'admin/users',
+  COMPANIES = 'admin/companies',
+}

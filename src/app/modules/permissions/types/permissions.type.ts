@@ -7,7 +7,7 @@ import { Nameable } from '../../base-module/types/nameable.type';
 import { PermissionAccess } from '../../../constants/permission-access';
 
 export interface PermissionModuleResponse extends ModuleBaseResponse {
-  id: number;
+  id: string;
   module_id: Modules;
   user_id: number;
   user: Nameable;
@@ -16,7 +16,7 @@ export interface PermissionModuleResponse extends ModuleBaseResponse {
 }
 
 export interface PermissionModule extends ModuleBase {
-  id: number;
+  id: string;
   module_id: Modules;
   user_id: number;
   user: Nameable;

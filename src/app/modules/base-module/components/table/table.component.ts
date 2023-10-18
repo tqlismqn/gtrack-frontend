@@ -12,24 +12,31 @@ import {
   QueryList,
   ViewChild,
 } from '@angular/core';
-import {
-  ModuleBase,
-  ModuleBaseReadRequest,
-  ModuleBaseResponse,
-} from '../../types/module-base.type';
+import { ModuleBaseReadRequest } from '../../types/module-base.type';
 import { HttpClient } from '@angular/common/http';
 import { CompanyService } from '../../../../services/company.service';
 import { SortType } from '../../types/soring.type';
 import { PaginationType } from '../../types/pagination.type';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
-import { combineLatest, takeUntil, tap } from 'rxjs';
+import {
+  combineLatest,
+  debounce,
+  debounceTime,
+  merge,
+  takeUntil,
+  tap,
+  zip,
+  zipAll,
+} from 'rxjs';
 import { environment } from '../../../../../environments/environment';
-import { Modules } from '../../../../constants/modules';
+import { AdminModules, Modules } from '../../../../constants/modules';
 import { MatColumnDef, MatTable } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { Selectable } from '../../../../types/selectable.type';
 import { defaultSortableFields } from '../../constants/default-sortable-fields';
 import { FormControl } from '@angular/forms';
+import { defaultSearchableFields } from '../../constants/default-searchable-fields';
+import { SearchType } from '../../types/search.type';
 
 @Component({
   selector: 'app-table',
@@ -37,7 +44,7 @@ import { FormControl } from '@angular/forms';
   styleUrls: ['./table.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TableComponent<B extends ModuleBaseResponse, F extends ModuleBase>
+export class TableComponent<B extends { id: string }, F extends { id: string }>
   implements OnInit, AfterContentInit, OnDestroy
 {
   constructor(
@@ -74,7 +81,7 @@ export class TableComponent<B extends ModuleBaseResponse, F extends ModuleBase>
   toDto!: (item: B) => F;
 
   @Input()
-  module!: Modules;
+  module!: Modules | AdminModules;
 
   @Input()
   moduleName!: string;
@@ -88,12 +95,45 @@ export class TableComponent<B extends ModuleBaseResponse, F extends ModuleBase>
   @Input()
   sortableColumns: Selectable[] = defaultSortableFields;
 
+  @Input()
+  searchableColumns: Selectable[] = defaultSearchableFields;
+
   sortingFieldControl = new FormControl<string | undefined>('', {
+    nonNullable: true,
+  });
+
+  searchingFieldControl = new FormControl<string | undefined>('', {
+    nonNullable: true,
+  });
+
+  searchingValueControl = new FormControl<string | undefined>('', {
     nonNullable: true,
   });
 
   ngOnInit() {
     this.fetch();
+
+    this.sortingFieldControl.valueChanges
+      .pipe(
+        tap((value) => {
+          this.sortChange(value);
+        }),
+        takeUntil(this.destroy$),
+      )
+      .subscribe();
+
+    merge(
+      this.searchingFieldControl.valueChanges,
+      this.searchingValueControl.valueChanges,
+    )
+      .pipe(
+        debounceTime(300),
+        tap(() => {
+          this.fetch();
+        }),
+        takeUntil(this.destroy$),
+      )
+      .subscribe();
 
     this.sortingFieldControl.valueChanges.subscribe((value) => {
       this.sortChange(value);
@@ -139,6 +179,12 @@ export class TableComponent<B extends ModuleBaseResponse, F extends ModuleBase>
     }
     if (this.pagination) {
       body.pagination = this.pagination;
+    }
+    if (this.searchingValueControl.value && this.searchingFieldControl.value) {
+      body.search = {
+        field: this.searchingFieldControl.value,
+        value: this.searchingValueControl.value,
+      };
     }
 
     this.loading = true;
