@@ -1,9 +1,8 @@
-import { NgModule, isDevMode, ErrorHandler } from '@angular/core';
+import { NgModule, ErrorHandler } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './components/app/app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { ServiceWorkerModule } from '@angular/service-worker';
 import { AuthModule } from './modules/auth/auth.module';
 import { DashboardModule } from './modules/dashboard/dashboard.module';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
@@ -31,8 +30,8 @@ import { PermissionsModule } from './modules/permissions/permissions.module';
 import { GlobalErrorHandler } from './errors/global-error-handler';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { AdminModule } from './modules/admin/admin.module';
-import {MatExpansionModule} from "@angular/material/expansion";
-import {MatRippleModule} from "@angular/material/core";
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatRippleModule } from '@angular/material/core';
 
 @NgModule({
   declarations: [
@@ -45,12 +44,6 @@ import {MatRippleModule} from "@angular/material/core";
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
-    ServiceWorkerModule.register('ngsw-worker.js', {
-      enabled: !isDevMode(),
-      // Register the ServiceWorker as soon as the application is stable
-      // or after 30 seconds (whichever comes first).
-      registrationStrategy: 'registerWhenStable:30000',
-    }),
     AuthModule,
     DashboardModule,
     HttpClientModule,
