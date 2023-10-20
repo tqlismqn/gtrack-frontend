@@ -18,16 +18,7 @@ import { CompanyService } from '../../../../services/company.service';
 import { SortType } from '../../types/soring.type';
 import { PaginationType } from '../../types/pagination.type';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
-import {
-  combineLatest,
-  debounce,
-  debounceTime,
-  merge,
-  takeUntil,
-  tap,
-  zip,
-  zipAll,
-} from 'rxjs';
+import { combineLatest, debounceTime, merge, takeUntil, tap } from 'rxjs';
 import { environment } from '../../../../../environments/environment';
 import { AdminModules, Modules } from '../../../../constants/modules';
 import { MatColumnDef, MatTable } from '@angular/material/table';
@@ -36,7 +27,6 @@ import { Selectable } from '../../../../types/selectable.type';
 import { defaultSortableFields } from '../../constants/default-sortable-fields';
 import { FormControl } from '@angular/forms';
 import { defaultSearchableFields } from '../../constants/default-searchable-fields';
-import { SearchType } from '../../types/search.type';
 
 @Component({
   selector: 'app-table',
@@ -204,7 +194,7 @@ export class TableComponent<B extends { id: string }, F extends { id: string }>
         this.loading = false;
         this.cdr.markForCheck();
       },
-      error: (err) => {
+      error: () => {
         this.loading = false;
         this.cdr.markForCheck();
       },

@@ -1,0 +1,14 @@
+:host {
+  mat-form-field {
+    width: 100%;
+  }
+
+  .row {
+    display: grid;
+    grid: {
+      template-columns: 120px auto;
+      column-gap: 12px;
+    }
+    width: 100%;
+  }
+}

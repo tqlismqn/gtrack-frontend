@@ -75,7 +75,7 @@ export class CompanyService {
     });
   }
 
-  selectCompanyById(id: number): boolean {
+  selectCompanyById(id: string): boolean {
     const company = this.companies.find((item) => item.id === id);
     if (company) {
       this.selectedCompany = company;
@@ -116,15 +116,11 @@ export class CompanyService {
   }
 
   selectDefaultCompany() {
-    const storedId = Number(
+    const storedId = String(
       localStorage.getItem(CompanyService.selectedCompanyKey),
     );
 
-    if (Number.isInteger(storedId)) {
-      if (!this.selectCompanyById(Number(storedId))) {
-        this.selectFirstCompany();
-      }
-    } else {
+    if (!this.selectCompanyById(String(storedId))) {
       this.selectFirstCompany();
     }
   }

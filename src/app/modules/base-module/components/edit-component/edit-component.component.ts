@@ -15,6 +15,7 @@ import { AdminModules, Modules } from '../../../../constants/modules';
 import { environment } from '../../../../../environments/environment';
 import { FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-edit-component',
@@ -115,68 +116,104 @@ export abstract class EditComponentComponent<
   }
 
   update() {
-    if (!this.form.valid || !this.item) {
-      return;
-    }
+    return new Observable<F | undefined>((subscriber) => {
+      if (!this.formValid) {
+        subscriber.next(undefined);
+        subscriber.complete();
+        return;
+      }
 
-    this.editFormComponent.startLoading();
+      this.editFormComponent.startLoading();
 
-    this.http
-      .patch(
-        `${environment.apiUrl}/api/v1/${this.module}/update/${this.item?.id}`,
-        {
-          values: this.form.value,
-          company_id: this.companyService.selectedCompany?.id,
-        },
-      )
-      .subscribe({
-        next: (response) => {
-          this.editFormComponent.endLoading('success');
-          this.cdr.markForCheck();
-        },
-        error: (err) => {
-          this.editFormComponent.endLoading('error');
-          this.editFormComponent.processError(err);
-          this.cdr.markForCheck();
-        },
-      });
+      this.http
+        .patch(
+          `${environment.apiUrl}/api/v1/${this.module}/update/${this.item?.id}`,
+          {
+            values: this.values,
+            company_id: this.companyService.selectedCompany?.id,
+          },
+        )
+        .subscribe({
+          next: (response) => {
+            const item = response as B;
+            this.item = this.toDto(item);
+            this.updateFormView(this.item);
+            this.editFormComponent.endLoading('success');
+            this.cdr.markForCheck();
+            subscriber.next(this.item);
+            subscriber.complete();
+          },
+          error: (err) => {
+            this.editFormComponent.endLoading('error');
+            this.editFormComponent.processError(err);
+            this.cdr.markForCheck();
+            subscriber.next(undefined);
+            subscriber.complete();
+          },
+        });
+    });
   }
 
-  create() {
-    this.form.markAllAsTouched();
-    if (!this.form.valid) {
-      return;
-    }
+  create(values: any = this.values) {
+    return new Observable<F | undefined>((subscriber) => {
+      if (!this.formValid) {
+        subscriber.next(undefined);
+        subscriber.complete();
+        return;
+      }
 
-    this.editFormComponent.startLoading();
+      this.editFormComponent.startLoading();
 
-    this.http
-      .post(`${environment.apiUrl}/api/v1/${this.module}/create`, {
-        values: this.form.value,
-        company_id: this.companyService.selectedCompany?.id,
-      })
-      .subscribe({
-        next: (response) => {
-          this.editFormComponent.endLoading('success');
-          this.cdr.markForCheck();
-        },
-        error: (err) => {
-          this.editFormComponent.endLoading('error');
-          this.editFormComponent.processError(err);
-          this.cdr.markForCheck();
-        },
-      });
+      this.http
+        .post(`${environment.apiUrl}/api/v1/${this.module}/create`, {
+          values,
+          company_id: this.companyService.selectedCompany?.id,
+        })
+        .subscribe({
+          next: (response) => {
+            const item = response as B;
+            this.item = this.toDto(item);
+            this.toUpdatePage();
+            subscriber.next(this.item);
+            subscriber.complete();
+          },
+          error: (err) => {
+            this.editFormComponent.endLoading('error');
+            this.editFormComponent.processError(err);
+            this.cdr.markForCheck();
+            subscriber.next(undefined);
+            subscriber.complete();
+          },
+        });
+    });
+  }
+
+  toUpdatePage() {
+    this.router.navigateByUrl(`${this.module}/update/${this.item?.id}`, {
+      state: {
+        item: this.item,
+      },
+    });
   }
 
   submit() {
     if (this.type === 'create') {
-      this.create();
+      this.create().subscribe();
     } else {
-      this.update();
+      this.update().subscribe();
     }
   }
 
   ngOnDestroy() {
     this.destroy$.emit();
+  }
+
+  protected get formValid(): boolean {
+    this.form.markAllAsTouched();
+    return this.form.valid;
+  }
+
+  protected get values() {
+    return this.form.value;
   }
 }

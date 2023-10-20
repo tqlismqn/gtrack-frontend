@@ -82,12 +82,16 @@ export class SidenavComponent implements OnInit, OnDestroy {
     }
     if (this.auth.isSuperAdmin) {
       this.adminContainer.push({
-        name: 'Users (admin)',
+        name: 'Users',
         link: AdminModules.USERS,
       });
       this.adminContainer.push({
-        name: 'Companies (admin)',
+        name: 'Companies',
         link: AdminModules.COMPANIES,
+      });
+      this.adminContainer.push({
+        name: 'Bank Collection',
+        link: AdminModules.BANK_COLLECTIONS,
       });
     }
 

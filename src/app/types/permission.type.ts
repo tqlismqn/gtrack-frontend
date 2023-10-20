@@ -4,7 +4,7 @@ import { PermissionAccess } from '../constants/permission-access';
 export type Permission = {
   module_id: Modules;
   user_id: number;
-  company_id: number;
+  company_id: string;
   read_access: PermissionAccess;
   write_access: PermissionAccess;
 };
@@ -12,7 +12,7 @@ export type Permission = {
 export type PermissionResponse = {
   module_id: Modules;
   user_id: number;
-  company_id: number;
+  company_id: string;
   read_access: PermissionAccess;
   write_access: PermissionAccess;
 };

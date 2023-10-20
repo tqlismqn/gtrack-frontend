@@ -25,6 +25,9 @@ export class EditFormComponent {
   @Input()
   submitTitle = 'Save';
 
+  @Input()
+  disableGrid = false;
+
   errors?: { [key: string]: string };
 
   loading = false;

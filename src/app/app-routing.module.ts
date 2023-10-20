@@ -23,6 +23,8 @@ import { AdminUsersTableComponent } from './modules/admin/components/users/admin
 import { AdminUsersEditComponent } from './modules/admin/components/users/admin-users-edit/admin-users-edit.component';
 import { AdminCompaniesTableComponent } from './modules/admin/components/companies/admin-companies-table/admin-companies-table.component';
 import { AdminCompaniesEditComponent } from './modules/admin/components/companies/admin-companies-edit/admin-companies-edit.component';
+import { BankCollectionTableComponent } from './modules/admin/components/bank-collection/bank-collection-table/bank-collection-table.component';
+import { BankCollectionEditComponent } from './modules/admin/components/bank-collection/bank-collection-edit/bank-collection-edit.component';
 
 const modules = [
   {
@@ -53,6 +55,13 @@ const modules = [
     writeActivate: [isSuperAdmin],
     tableComponent: AdminCompaniesTableComponent,
     editComponent: AdminCompaniesEditComponent,
+  },
+  {
+    module: AdminModules.BANK_COLLECTIONS,
+    readActivate: [isSuperAdmin],
+    writeActivate: [isSuperAdmin],
+    tableComponent: BankCollectionTableComponent,
+    editComponent: BankCollectionEditComponent,
   },
 ];
 

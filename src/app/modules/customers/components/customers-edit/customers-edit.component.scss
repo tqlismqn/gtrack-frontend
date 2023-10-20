@@ -1,13 +1,108 @@
 :host {
-  form {
-    max-width: 300px;
+  .customers-edit-form {
     display: grid;
     grid: {
-      template-columns: 1fr;
+      template-columns: 400px auto;
+      column-gap: 48px;
     }
 
-    [type="submit"] {
+    .left-block {
+      height: fit-content;
+      display: grid;
+      max-width: 400px;
+      grid: {
+        template-columns: 100%;
+      };
+    }
+
+    .right-block {
+      height: fit-content;
+      display: grid;
+      max-width: 900px;
+      grid: {
+        template-columns: 100%;
+      };
+    }
+  }
+
+  .row {
+    display: grid;
+    grid: {
+      template-columns: repeat(3, auto);
+      column-gap: 12px;
+    }
+  }
+
+  .grid {
+    display: grid;
+    grid: {
+      template-columns: repeat(2, auto);
+      column-gap: 12px;
+      row-gap: 12px;
+    }
+  }
+
+  .upload-files {
+    min-height: 100px;
+    max-height: 300px;
+    overflow: auto;
+
+    &.dragging {
+      background: grey;
+    }
+
+    &__upload {
       width: fit-content;
+    }
+
+    &__file {
+      width: 100%;
+      display: flex;
+      align-items: center;
+
+      &__date {
+        margin-left: auto;
+      }
+    }
+  }
+
+  .banking-details {
+    &__add {
+      display: block;
+      margin-left: auto;
+      margin-top: 60px;
+    }
+  }
+
+  .raiting {
+    margin-top: 16px;
+    mat-form-field {
+      height: fit-content;
+    }
+
+    &__row {
+      display: grid;
+      grid: {
+        template-columns: 1fr 3fr;
+        column-gap: 12px;
+      }
+    }
+
+    &__add {
+      display: block;
+      margin-left: auto;
+    }
+
+    &__table {
+      &-wp {
+        max-height: 350px;
+        overflow-y: auto;
+      }
+
+      &__header {
+        position: sticky;
+        top: 0;
+      }
     }
   }
 }
