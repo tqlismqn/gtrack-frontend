@@ -73,4 +73,36 @@
       margin-top: 60px;
     }
   }
+
+  .raiting {
+    margin-top: 16px;
+    mat-form-field {
+      height: fit-content;
+    }
+
+    &__row {
+      display: grid;
+      grid: {
+        template-columns: 1fr 3fr;
+        column-gap: 12px;
+      }
+    }
+
+    &__add {
+      display: block;
+      margin-left: auto;
+    }
+
+    &__table {
+      &-wp {
+        max-height: 350px;
+        overflow-y: auto;
+      }
+
+      &__header {
+        position: sticky;
+        top: 0;
+      }
+    }
+  }
 }

@@ -92,7 +92,7 @@ export class CustomersBankCollectionComponent
   checkBankSelector() {
     const value = this.formGroup.controls.bank_template.value;
     let bank = this.banks.find((item) => item.id === value.id);
-    if (!bank && value) {
+    if (!bank && value && value.id && value.name && value.bic) {
       this.banks.push(value);
       bank = value;
     }

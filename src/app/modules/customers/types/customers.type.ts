@@ -59,9 +59,16 @@ export type CustomerDocument = {
   id?: string;
   file?: File;
 };
+
+export type CustomerRaitingType = 'red' | 'yellow' | 'green';
+
 export type CustomerRaiting = {
-  raiting: 'red' | 'yellow' | 'green';
+  raiting: CustomerRaitingType;
+  user: string;
+  comment: string;
+  date: string;
 };
+
 export type CustomerBank = {
   bank_template: {
     name: string;

@@ -11,6 +11,7 @@ import {
   CustomerBank,
   CustomerDocument,
   CustomerRaiting,
+  CustomerRaitingType,
   CustomerResponse,
 } from '../../types/customers.type';
 import { CustomersUtils } from '../../utils/customers-utils';
@@ -22,6 +23,8 @@ import {
   BankCollection,
   BankCollectionResponse,
 } from '../../../admin/types/bank-collection';
+import { AdminUser, AdminUserResponse } from '../../../admin/types/users';
+import { Nameable } from '../../../base-module/types/nameable.type';
 
 interface CustomersEditForm {
   id?: FormControl<string>;
@@ -40,7 +43,6 @@ interface CustomersEditForm {
   documents?: FormControl<CustomerDocument[]>;
   terms_of_payment?: FormControl<string>;
   pallet_balance?: FormControl<number>;
-  raiting?: FormControl<CustomerRaiting[]>;
   insurance_credit_limit?: FormControl<number>;
   available_insurance_limit?: FormControl<number>;
   internal_credit_limit?: FormControl<number>;
@@ -175,6 +177,10 @@ export class CustomersEditComponent
 
     this.bankForms = [];
     this.setBanks(item.banks ?? []);
+
+    if (this.item) {
+      this.item.raiting = this.sortRaiting(this.item.raiting);
+    }
   }
 
   isDragging = false;
@@ -278,6 +284,7 @@ export class CustomersEditComponent
       banks.push(this.getEmptyBank());
     }
 
+    this.bankForms = [];
     for (const bank of banks) {
       this.bankForms.push(this.getBankFormGroup(bank));
     }
@@ -427,6 +434,17 @@ export class CustomersEditComponent
   override ngOnInit() {
     super.ngOnInit();
     this.fetchBankCollections();
+
+    if (!this.bankForms || this.bankForms.length === 0) {
+      this.setBanks([]);
+    }
+    if (this.type === 'update') {
+      this.companyService.getUserSelections().subscribe((selections) => {
+        for (const user of selections) {
+          this.users[user.id] = user;
+        }
+      });
+    }
   }
 
   protected fetchBankCollections() {
@@ -463,5 +481,69 @@ export class CustomersEditComponent
     }
     this.cdr.markForCheck();
     return result;
+  }
+
+  raitings: CustomerRaitingType[] = ['red', 'yellow', 'green'];
+  raitingForm = new FormGroup({
+    raiting: new FormControl<string>('', {
+      nonNullable: true,
+      validators: [Validators.required],
+    }),
+    comment: new FormControl<string>('', {
+      nonNullable: true,
+      validators: [Validators.required],
+    }),
+  });
+  users: Record<string, Nameable> = {};
+
+  addRaiting() {
+    this.sendRaiting().subscribe();
+  }
+
+  protected sendRaiting() {
+    return new Observable<CustomerRaiting[] | undefined>((subscriber) => {
+      this.raitingForm.markAllAsTouched();
+      if (!this.raitingForm.valid) {
+        subscriber.next(undefined);
+        subscriber.complete();
+        return;
+      }
+
+      this.http
+        .post(
+          `${environment.apiUrl}/api/v1/${this.module}/raiting/add/${this.item?.id}?company_id=${this.companyService.selectedCompany?.id}`,
+          this.raitingForm.value,
+        )
+        .subscribe({
+          next: (response) => {
+            const data = this.sortRaiting(response as CustomerRaiting[]);
+
+            this.item!.raiting = data;
+            this.raitingForm.reset();
+            this.cdr.markForCheck();
+            subscriber.next(data);
+            subscriber.complete();
+          },
+          error: (err) => {
+            subscriber.error(err);
+            subscriber.complete();
+          },
+        });
+    });
+  }
+
+  sortRaiting(data: CustomerRaiting[]) {
+    return data.sort((a, b) => {
+      if (a.date === b.date) {
+        return 0;
+      }
+      const aDate = new Date(a.date);
+      const bDate = new Date(b.date);
+      return aDate > bDate ? -1 : 1;
+    });
+  }
+
+  getUserName(id: string) {
+    return this.users[id]?.name;
   }
 }

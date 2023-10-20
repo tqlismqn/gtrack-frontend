@@ -249,6 +249,86 @@
           Upload File
         </button>
       </div>
+
+      <div class="raiting" *ngIf="type === 'update'">
+        <h3>Raiting</h3>
+        <div class="raiting__row">
+          <mat-form-field *ngIf="raitingForm.controls.raiting as control">
+            <mat-label>Raiting</mat-label>
+            <mat-select [formControl]="control">
+              <mat-option *ngFor="let raiting of raitings" [value]="raiting">{{
+                raiting
+              }}</mat-option>
+            </mat-select>
+            <mat-error *ngIf="control.hasError('required')"
+              >This field is <b>required</b></mat-error
+            >
+          </mat-form-field>
+          <mat-form-field *ngIf="raitingForm.controls.comment as control">
+            <mat-label>Raiting description</mat-label>
+            <textarea matInput [formControl]="control"></textarea>
+            <mat-error *ngIf="control.hasError('required')"
+              >This field is <b>required</b></mat-error
+            >
+          </mat-form-field>
+        </div>
+        <button
+          class="raiting__add"
+          type="button"
+          mat-flat-button
+          color="accent"
+          (click)="addRaiting()"
+        >
+          Add
+        </button>
+
+        <h3>Raiting history</h3>
+        <div class="raiting__table-wp">
+          <table
+            class="raiting__table"
+            *ngIf="item"
+            mat-table
+            [dataSource]="item.raiting"
+          >
+            <ng-container matColumnDef="raiting">
+              <th mat-header-cell *matHeaderCellDef>Raiting</th>
+              <td mat-cell *matCellDef="let element">{{ element.raiting }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="user">
+              <th mat-header-cell *matHeaderCellDef>User</th>
+              <td mat-cell *matCellDef="let element">
+                {{ getUserName(element.user) }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="comment">
+              <th mat-header-cell *matHeaderCellDef>Comment</th>
+              <td mat-cell *matCellDef="let element">{{ element.comment }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="date">
+              <th mat-header-cell *matHeaderCellDef>Date</th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.date | date: "dd/MM/YYYY" }}
+              </td>
+            </ng-container>
+
+            <tr
+              class="raiting__table__header"
+              mat-header-row
+              *matHeaderRowDef="['raiting', 'user', 'comment', 'date']"
+            ></tr>
+            <tr
+              mat-row
+              *matRowDef="
+                let row;
+                columns: ['raiting', 'user', 'comment', 'date']
+              "
+            ></tr>
+          </table>
+        </div>
+      </div>
     </div>
   </div>
 </app-edit-form>
