@@ -1,5 +1,10 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import { EditComponentComponent } from '../../../base-module/components/edit-component/edit-component.component';
 import {
   Customer,
@@ -227,18 +232,37 @@ export class CustomersEditComponent
     });
   }
 
-  drop(event: DragEvent) {
+  downloadFile(doc: CustomerDocument) {
+    this.http
+      .get(
+        `${environment.apiUrl}/api/v1/${this.module}/download/${this.item?.id}?company_id=${this.companyService.selectedCompany?.id}&id=${doc.id}`,
+        { responseType: 'blob' },
+      )
+      .subscribe((response) => {
+        const blob = new Blob([response as BlobPart], {
+          type: 'application/octet-stream',
+        });
+
+        const a = document.createElement('a');
+        a.href = window.URL.createObjectURL(blob);
+        a.download = doc.name;
+        a.click();
+        a.remove();
+      });
+  }
+
+  async drop(event: DragEvent) {
     event.preventDefault();
     if (event.dataTransfer?.files) {
       for (const file of Array.from(event.dataTransfer.files)) {
-        this.addFile(file);
+        await this.addFile(file);
       }
     } else if (event.dataTransfer?.items) {
       for (const item of Array.from(event.dataTransfer.items)) {
         if (item.kind === 'file') {
           const file = item.getAsFile();
           if (file) {
-            this.addFile(file);
+            await this.addFile(file);
           }
         }
       }

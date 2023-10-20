@@ -221,6 +221,14 @@
                 {{ doc.lastModified | date: "dd/MM/YYYY" }}
               </div>
               <button
+                color="primary"
+                mat-icon-button
+                type="button"
+                (click)="downloadFile(doc)"
+              >
+                <mat-icon fontIcon="download"></mat-icon>
+              </button>
+              <button
                 color="warn"
                 mat-icon-button
                 type="button"
