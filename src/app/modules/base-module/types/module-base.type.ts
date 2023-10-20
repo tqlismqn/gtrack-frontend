@@ -4,7 +4,7 @@ import { SearchType } from './search.type';
 import { PaginationType } from './pagination.type';
 
 export interface ModuleBaseReadRequest {
-  company_id?: number;
+  company_id?: string;
   sort?: SortType;
   search?: SearchType;
   pagination?: PaginationType;

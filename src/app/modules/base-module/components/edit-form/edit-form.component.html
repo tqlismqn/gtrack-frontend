@@ -1,5 +1,9 @@
 <button mat-flat-button (click)="location.back()">Back</button>
-<form class="edit-form" (ngSubmit)="submit$.emit()">
+<form
+  class="edit-form"
+  [class]="{ 'disable-grid': disableGrid }"
+  (ngSubmit)="submit$.emit()"
+>
   <mat-progress-bar
     *ngIf="loading"
     [color]="loadingState === 'error' ? 'warn' : 'primary'"

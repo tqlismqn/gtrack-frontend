@@ -2,16 +2,19 @@
 
 :host {
   .edit-form {
-    position: relative;
-    display: grid;
-    grid: {
-      row-gap: 16px;
+    &:not(.disable-grid) {
+      display: grid;
+      grid: {
+        row-gap: 16px;
+      }
+      border-radius: 5px;
+      width: calc(100% - 40px);
+      max-width: 480px;
     }
+
+    position: relative;
     background: colors.$color-background;
     padding: 42px 55px 78px;
-    border-radius: 5px;
-    width: calc(100% - 40px);
-    max-width: 480px;
 
     &__title {
     }

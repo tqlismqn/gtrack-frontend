@@ -11,8 +11,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatRadioModule } from '@angular/material/radio';
 import { AdminCompaniesEditComponent } from './components/companies/admin-companies-edit/admin-companies-edit.component';
 import { AdminCompaniesTableComponent } from './components/companies/admin-companies-table/admin-companies-table.component';
-import {MatButtonModule} from "@angular/material/button";
-import {RouterLink} from "@angular/router";
+import { MatButtonModule } from '@angular/material/button';
+import { RouterLink } from '@angular/router';
 
 @NgModule({
   declarations: [

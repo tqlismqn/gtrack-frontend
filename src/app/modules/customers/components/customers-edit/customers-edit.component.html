@@ -2,12 +2,214 @@
   #editFormComponent
   (submit$)="submit()"
   formTitle="Create Customer"
+  [disableGrid]="true"
 >
-  <mat-form-field *ngIf="form.controls.name as control">
-    <mat-label>Company Name</mat-label>
-    <input matInput [formControl]="control" />
-    <mat-error *ngIf="control.hasError('required')"
-      >This field is <b>required</b></mat-error
-    >
-  </mat-form-field>
+  <div class="customers-edit-form">
+    <div class="left-block">
+      <mat-form-field *ngIf="form.controls.company_name as control">
+        <mat-label>Company Name</mat-label>
+        <input matInput [formControl]="control" />
+        <mat-error *ngIf="control.hasError('required')"
+          >This field is <b>required</b></mat-error
+        >
+      </mat-form-field>
+
+      <mat-form-field *ngIf="form.controls.vat_id as control">
+        <mat-label>VAT ID no.</mat-label>
+        <input matInput [formControl]="control" />
+        <mat-error *ngIf="control.hasError('required')"
+          >This field is <b>required</b></mat-error
+        >
+      </mat-form-field>
+
+      <mat-form-field *ngIf="form.controls.internal_company_id as control">
+        <mat-label>Company ID</mat-label>
+        <input readonly matInput [formControl]="control" />
+      </mat-form-field>
+
+      <mat-form-field *ngIf="form.controls.contact_name as control">
+        <mat-label>Contact person</mat-label>
+        <input matInput [formControl]="control" />
+        <mat-error *ngIf="control.hasError('required')"
+          >This field is <b>required</b></mat-error
+        >
+      </mat-form-field>
+
+      <mat-form-field *ngIf="form.controls.contact_phone as control">
+        <mat-label>Contact Phone</mat-label>
+        <input matInput [formControl]="control" />
+        <mat-error *ngIf="control.hasError('required')"
+          >This field is <b>required</b></mat-error
+        >
+      </mat-form-field>
+
+      <mat-form-field *ngIf="form.controls.contact_email as control">
+        <mat-label>Main contact Email</mat-label>
+        <input matInput [formControl]="control" />
+        <mat-error *ngIf="control.hasError('required')"
+          >This field is <b>required</b></mat-error
+        >
+        <mat-error *ngIf="control.hasError('email')"
+          >Enter valid email</mat-error
+        >
+      </mat-form-field>
+
+      <mat-form-field *ngIf="form.controls.accounting_email as control">
+        <mat-label>Email for accounting department</mat-label>
+        <input matInput [formControl]="control" />
+        <mat-error *ngIf="control.hasError('required')"
+          >This field is <b>required</b></mat-error
+        >
+        <mat-error *ngIf="control.hasError('email')"
+          >Enter valid email</mat-error
+        >
+      </mat-form-field>
+
+      <div class="row">
+        <mat-form-field *ngIf="form.controls.nation as control">
+          <mat-label>Nation</mat-label>
+          <mat-select [formControl]="control">
+            <mat-option *ngFor="let code of countries" [value]="code">{{
+              code
+            }}</mat-option>
+          </mat-select>
+          <mat-error *ngIf="control.hasError('required')"
+            >This field is <b>required</b></mat-error
+          >
+        </mat-form-field>
+        <mat-form-field *ngIf="form.controls.zip as control">
+          <mat-label>Zip Code</mat-label>
+          <input matInput [formControl]="control" />
+          <mat-error *ngIf="control.hasError('required')"
+            >This field is <b>required</b></mat-error
+          >
+        </mat-form-field>
+        <mat-form-field *ngIf="form.controls.city as control">
+          <mat-label>City</mat-label>
+          <input matInput [formControl]="control" />
+          <mat-error *ngIf="control.hasError('required')"
+            >This field is <b>required</b></mat-error
+          >
+        </mat-form-field>
+      </div>
+
+      <mat-form-field *ngIf="form.controls.street as control">
+        <mat-label>Street</mat-label>
+        <input matInput [formControl]="control" />
+        <mat-error *ngIf="control.hasError('required')"
+          >This field is <b>required</b></mat-error
+        >
+      </mat-form-field>
+
+      <h3>Payment Conditions</h3>
+
+      <mat-form-field *ngIf="form.controls.terms_of_payment as control">
+        <mat-label>Terms of Payment</mat-label>
+        <input matInput [formControl]="control" />
+        <mat-error *ngIf="control.hasError('required')"
+          >This field is <b>required</b></mat-error
+        >
+      </mat-form-field>
+
+      <mat-form-field *ngIf="form.controls.pallet_balance as control">
+        <mat-label>Pallet balance</mat-label>
+        <input matInput [formControl]="control" type="number" min="0" />
+        <mat-error *ngIf="control.hasError('required')"
+          >This field is <b>required</b></mat-error
+        >
+      </mat-form-field>
+
+      <h3>Credit limit</h3>
+
+      <div class="grid">
+        <mat-form-field *ngIf="form.controls.insurance_credit_limit as control">
+          <mat-label>Insurance Credit Limit</mat-label>
+          <input matInput [formControl]="control" type="number" min="0" />
+          <mat-error *ngIf="control.hasError('required')"
+            >This field is <b>required</b></mat-error
+          >
+        </mat-form-field>
+        <mat-form-field
+          *ngIf="form.controls.available_insurance_limit as control"
+        >
+          <mat-label>Available Insurance Limit</mat-label>
+          <input matInput [formControl]="control" type="number" min="0" />
+          <mat-error *ngIf="control.hasError('required')"
+            >This field is <b>required</b></mat-error
+          >
+        </mat-form-field>
+        <mat-form-field *ngIf="form.controls.internal_credit_limit as control">
+          <mat-label>Internal credit limit</mat-label>
+          <input matInput [formControl]="control" type="number" min="0" />
+          <mat-error *ngIf="control.hasError('required')"
+            >This field is <b>required</b></mat-error
+          >
+        </mat-form-field>
+        <mat-form-field
+          *ngIf="form.controls.total_available_credit_limit as control"
+        >
+          <mat-label>Total Available Credit Limit</mat-label>
+          <input matInput [formControl]="control" type="number" min="0" />
+          <mat-error *ngIf="control.hasError('required')"
+            >This field is <b>required</b></mat-error
+          >
+        </mat-form-field>
+      </div>
+
+      <h3>Banking details</h3>
+    </div>
+    <div class="right-block">
+      <mat-form-field *ngIf="form.controls.remark as control">
+        <mat-label>Remark</mat-label>
+        <textarea matInput [formControl]="control"></textarea>
+      </mat-form-field>
+
+      <div class="upload-files-wp" *ngIf="type === 'update'">
+        <div>Documents</div>
+        <input
+          hidden
+          type="file"
+          #file
+          [multiple]="true"
+          (change)="onFilesChange(file.files)"
+        />
+        <div
+          class="upload-files"
+          [class]="{ dragging: isDragging }"
+          (dragover)="isDragging = true; $event.preventDefault()"
+          (dragleave)="isDragging = false; $event.preventDefault()"
+          (drop)="isDragging = false; $event.preventDefault(); drop($event)"
+        >
+          <ng-container *ngIf="form.controls.documents?.value as documents">
+            <div
+              *ngFor="let doc of documents; let i = index"
+              class="upload-files__file"
+            >
+              <div class="upload-files__file__name">{{ doc.name }}</div>
+              <div class="upload-files__file__date" *ngIf="doc.lastModified">
+                {{ doc.lastModified | date: "dd/MM/YYYY" }}
+              </div>
+              <button
+                color="warn"
+                mat-icon-button
+                type="button"
+                (click)="removeFile(doc)"
+              >
+                <mat-icon fontIcon="delete"></mat-icon>
+              </button>
+            </div>
+          </ng-container>
+        </div>
+        <button
+          class="upload-files__upload"
+          mat-flat-button
+          color="accent"
+          (click)="file.click()"
+          type="button"
+        >
+          Upload File
+        </button>
+      </div>
+    </div>
+  </div>
 </app-edit-form>

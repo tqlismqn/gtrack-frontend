@@ -7,8 +7,18 @@
   [displayedColumns]="displayedColumns"
   [searchableColumns]="searchableColumns"
 >
-  <ng-container matColumnDef="name">
-    <th mat-header-cell *matHeaderCellDef>Name</th>
-    <td mat-cell *matCellDef="let element">{{ element.name }}</td>
+  <ng-container matColumnDef="internal_company_id">
+    <th mat-header-cell *matHeaderCellDef>Company Id</th>
+    <td mat-cell *matCellDef="let element">
+      {{ element.internal_company_id }}
+    </td>
+  </ng-container>
+  <ng-container matColumnDef="company_name">
+    <th mat-header-cell *matHeaderCellDef>Company Name</th>
+    <td mat-cell *matCellDef="let element">{{ element.company_name }}</td>
+  </ng-container>
+  <ng-container matColumnDef="contact_email">
+    <th mat-header-cell *matHeaderCellDef>Contact Email</th>
+    <td mat-cell *matCellDef="let element">{{ element.contact_email }}</td>
   </ng-container>
 </app-table>

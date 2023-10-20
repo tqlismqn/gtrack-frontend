@@ -1,7 +1,7 @@
 import { PermissionAccess } from '../constants/permission-access';
 
 export interface Company {
-  id: number;
+  id: string;
   name: string;
   employees_number: string;
   website: string;
@@ -13,7 +13,7 @@ export interface Company {
 }
 
 export interface CompanyResponse {
-  id: number;
+  id: string;
   name: string;
   employees_number: string;
   website: string;

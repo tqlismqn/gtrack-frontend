@@ -17,13 +17,11 @@ export class CustomersTableComponent {
   module = Modules.CUSTOMERS;
 
   displayedColumns: string[] = [
-    'id',
-    'name',
-    'created_by',
+    'internal_company_id',
+    'company_name',
+    'contact_email',
     'created_at',
-    'updated_by',
     'updated_at',
-    'owned_by',
     'actions',
   ];
   searchableColumns: Selectable[] = [

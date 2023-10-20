@@ -1,13 +1,68 @@
 :host {
-  form {
-    max-width: 300px;
+  .customers-edit-form {
     display: grid;
     grid: {
-      template-columns: 1fr;
+      template-columns: 400px auto;
+      column-gap: 48px;
     }
 
-    [type="submit"] {
+    .left-block {
+      height: fit-content;
+      display: grid;
+      max-width: 400px;
+      grid: {
+        template-columns: 100%;
+      };
+    }
+
+    .right-block {
+      height: fit-content;
+      display: grid;
+      max-width: 900px;
+      grid: {
+        template-columns: 100%;
+      };
+    }
+  }
+
+  .row {
+    display: grid;
+    grid: {
+      template-columns: repeat(3, auto);
+      column-gap: 12px;
+    }
+  }
+
+  .grid {
+    display: grid;
+    grid: {
+      template-columns: repeat(2, auto);
+      column-gap: 12px;
+      row-gap: 12px;
+    }
+  }
+
+  .upload-files {
+    min-height: 100px;
+    max-height: 300px;
+    overflow: auto;
+
+    &.dragging {
+      background: grey;
+    }
+
+    &__upload {
       width: fit-content;
+    }
+
+    &__file {
+      width: 100%;
+      display: flex;
+      align-items: center;
+
+      &__date {
+        margin-left: auto;
+      }
     }
   }
 }
