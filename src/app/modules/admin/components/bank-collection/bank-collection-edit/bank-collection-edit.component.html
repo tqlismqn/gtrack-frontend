@@ -1,0 +1,27 @@
+<app-edit-form
+  #editFormComponent
+  (submit$)="submit()"
+  formTitle="Create Company"
+>
+  <mat-form-field
+    *ngIf="form.controls.name as control"
+    subscriptSizing="dynamic"
+  >
+    <mat-label>Bank Name</mat-label>
+    <input type="text" matInput [formControl]="control" />
+    <mat-error *ngIf="control.hasError('required')"
+      >This field is <b>required</b></mat-error
+    >
+  </mat-form-field>
+
+  <mat-form-field
+    *ngIf="form.controls.bic as control"
+    subscriptSizing="dynamic"
+  >
+    <mat-label>BIC</mat-label>
+    <input type="text" matInput [formControl]="control" />
+    <mat-error *ngIf="control.hasError('required')"
+      >This field is <b>required</b></mat-error
+    >
+  </mat-form-field>
+</app-edit-form>

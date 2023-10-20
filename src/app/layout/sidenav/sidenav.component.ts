@@ -89,6 +89,10 @@ export class SidenavComponent implements OnInit, OnDestroy {
         name: 'Companies',
         link: AdminModules.COMPANIES,
       });
+      this.adminContainer.push({
+        name: 'Bank Collection',
+        link: AdminModules.BANK_COLLECTIONS,
+      });
     }
 
     this.cdr.markForCheck();

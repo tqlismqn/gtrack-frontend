@@ -156,7 +156,38 @@
         </mat-form-field>
       </div>
 
-      <h3>Banking details</h3>
+      <div class="banking-details">
+        <h3>Banking details</h3>
+
+        <app-customers-bank-collection
+          *ngIf="firstBank"
+          [formGroup]="firstBank"
+          [banks]="bankCollections"
+        ></app-customers-bank-collection>
+
+        <button
+          mat-flat-button
+          color="accent"
+          (click)="addBank()"
+          type="button"
+          class="banking-details__add"
+        >
+          Add New
+        </button>
+
+        <div class="banking-details__other">
+          <div
+            class="banking-details__other__item"
+            *ngFor="let form of otherBanks; let i = index"
+          >
+            <div>Bank {{ i + 1 }}</div>
+            <app-customers-bank-collection
+              [formGroup]="form"
+              [banks]="bankCollections"
+            ></app-customers-bank-collection>
+          </div>
+        </div>
+      </div>
     </div>
     <div class="right-block">
       <mat-form-field *ngIf="form.controls.remark as control">

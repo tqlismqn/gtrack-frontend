@@ -66,17 +66,12 @@ export type CustomerBank = {
   bank_template: {
     name: string;
     id: string;
+    bic: string;
   };
 
   currency: string;
   name: string;
   code: string;
   iban: string;
-  bic: string;
-};
-
-export type CustomerBankTemplate = {
-  id: string;
-  name: string;
   bic: string;
 };

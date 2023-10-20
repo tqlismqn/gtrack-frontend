@@ -65,4 +65,12 @@
       }
     }
   }
+
+  .banking-details {
+    &__add {
+      display: block;
+      margin-left: auto;
+      margin-top: 60px;
+    }
+  }
 }

@@ -117,8 +117,7 @@ export abstract class EditComponentComponent<
 
   update() {
     return new Observable<F | undefined>((subscriber) => {
-      this.form.markAllAsTouched();
-      if (!this.form.valid) {
+      if (!this.formValid) {
         subscriber.next(undefined);
         subscriber.complete();
         return;
@@ -130,7 +129,7 @@ export abstract class EditComponentComponent<
         .patch(
           `${environment.apiUrl}/api/v1/${this.module}/update/${this.item?.id}`,
           {
-            values: this.form.value,
+            values: this.values,
             company_id: this.companyService.selectedCompany?.id,
           },
         )
@@ -155,10 +154,9 @@ export abstract class EditComponentComponent<
     });
   }
 
-  create(values: any = this.form.value) {
+  create(values: any = this.values) {
     return new Observable<F | undefined>((subscriber) => {
-      this.form.markAllAsTouched();
-      if (!this.form.valid) {
+      if (!this.formValid) {
         subscriber.next(undefined);
         subscriber.complete();
         return;
@@ -208,5 +206,14 @@ export abstract class EditComponentComponent<
 
   ngOnDestroy() {
     this.destroy$.emit();
+  }
+
+  protected get formValid(): boolean {
+    this.form.markAllAsTouched();
+    return this.form.valid;
+  }
+
+  protected get values() {
+    return this.form.value;
   }
 }

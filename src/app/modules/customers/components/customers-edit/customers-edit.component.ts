@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import { EditComponentComponent } from '../../../base-module/components/edit-component/edit-component.component';
 import {
   Customer,
@@ -12,6 +12,11 @@ import { CustomersUtils } from '../../utils/customers-utils';
 import { countries } from 'countries-list';
 import { environment } from '../../../../../environments/environment';
 import { Observable } from 'rxjs';
+import { CustomerBankForm } from '../customers-bank-collection/customers-bank-collection.component';
+import {
+  BankCollection,
+  BankCollectionResponse,
+} from '../../../admin/types/bank-collection';
 
 interface CustomersEditForm {
   id?: FormControl<string>;
@@ -35,7 +40,6 @@ interface CustomersEditForm {
   available_insurance_limit?: FormControl<number>;
   internal_credit_limit?: FormControl<number>;
   total_available_credit_limit?: FormControl<number>;
-  banks?: FormControl<CustomerBank[]>;
 }
 
 @Component({
@@ -44,10 +48,10 @@ interface CustomersEditForm {
   styleUrls: ['./customers-edit.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CustomersEditComponent extends EditComponentComponent<
-  CustomerResponse,
-  Customer
-> {
+export class CustomersEditComponent
+  extends EditComponentComponent<CustomerResponse, Customer>
+  implements OnInit
+{
   override form = new FormGroup<CustomersEditForm>({
     company_name: new FormControl<string>('', {
       validators: [Validators.required],
@@ -122,6 +126,17 @@ export class CustomersEditComponent extends EditComponentComponent<
     }),
   });
 
+  bankForms: FormGroup<CustomerBankForm>[] = [];
+  bankCollections: BankCollection[] = [];
+
+  get firstBank(): FormGroup<CustomerBankForm> | undefined {
+    return this.bankForms[0];
+  }
+
+  get otherBanks(): FormGroup<CustomerBankForm>[] {
+    return this.bankForms.slice(1);
+  }
+
   countries = Object.keys(countries);
 
   updateFormView(item: Customer) {
@@ -152,6 +167,8 @@ export class CustomersEditComponent extends EditComponentComponent<
     this.form.controls.total_available_credit_limit?.setValue(
       item.total_available_credit_limit,
     );
+
+    this.bankForms = [];
     this.setBanks(item.banks ?? []);
   }
 
@@ -234,20 +251,62 @@ export class CustomersEditComponent extends EditComponentComponent<
     banks = this.parseBanks(banks);
 
     if (banks.length === 0) {
-      banks.push({
-        name: '',
-        code: '',
-        iban: '',
-        bic: '',
-        currency: '',
-        bank_template: {
-          name: '',
-          id: '',
-        },
-      });
+      banks.push(this.getEmptyBank());
     }
 
-    this.form.controls.banks?.setValue(banks);
+    for (const bank of banks) {
+      this.bankForms.push(this.getBankFormGroup(bank));
+    }
+  }
+
+  protected getBankFormGroup(bank: CustomerBank): FormGroup<CustomerBankForm> {
+    return new FormGroup({
+      name: new FormControl(bank.name, {
+        nonNullable: true,
+        validators: [Validators.required],
+      }),
+      code: new FormControl(bank.code, {
+        nonNullable: true,
+      }),
+      iban: new FormControl(bank.iban, {
+        nonNullable: true,
+        validators: [Validators.required],
+      }),
+      bic: new FormControl(bank.bic, {
+        nonNullable: true,
+        validators: [Validators.required],
+      }),
+      currency: new FormControl(bank.currency, {
+        nonNullable: true,
+        validators: [Validators.required],
+      }),
+      bank_template: new FormControl(
+        {
+          bic: bank.bank_template.bic,
+          name: bank.bank_template.name,
+          id: bank.bank_template.id,
+        },
+        {
+          nonNullable: true,
+          validators: [Validators.required],
+        },
+      ),
+    });
+  }
+
+  protected getEmptyBank(): CustomerBank {
+    return {
+      name: '',
+      code: '',
+      iban: '',
+      bic: '',
+      currency: '',
+      bank_template: {
+        name: '',
+        id: '',
+        bic: '',
+      },
+    };
   }
 
   protected parseBanks(banks: CustomerBank[]): CustomerBank[] {
@@ -256,6 +315,7 @@ export class CustomersEditComponent extends EditComponentComponent<
         bank.bank_template = {
           name: '',
           id: '',
+          bic: '',
         };
       }
       if (!bank.bank_template.id) {
@@ -263,6 +323,9 @@ export class CustomersEditComponent extends EditComponentComponent<
       }
       if (!bank.bank_template.name) {
         bank.bank_template.name = '';
+      }
+      if (!bank.bank_template.bic) {
+        bank.bank_template.bic = '';
       }
       if (!bank.bic) {
         bank.bic = '';
@@ -282,6 +345,10 @@ export class CustomersEditComponent extends EditComponentComponent<
     }
 
     return banks;
+  }
+
+  protected addBank() {
+    this.bankForms.push(this.getBankFormGroup(this.getEmptyBank()));
   }
 
   protected uploadDocument(document: CustomerDocument) {
@@ -331,5 +398,46 @@ export class CustomersEditComponent extends EditComponentComponent<
           },
         });
     });
+  }
+
+  override ngOnInit() {
+    super.ngOnInit();
+    this.fetchBankCollections();
+  }
+
+  protected fetchBankCollections() {
+    this.http
+      .post(`${environment.apiUrl}/api/v1/bank_collections/read`, {})
+      .subscribe((response) => {
+        this.bankCollections = (response as BankCollectionResponse[]).map(
+          (item) => ({ name: item.name, id: item.id, bic: item.bic }),
+        );
+        this.cdr.markForCheck();
+      });
+  }
+
+  protected get banksValue() {
+    return this.bankForms.map((item) => item.value);
+  }
+
+  protected override get values() {
+    const values = this.form.value;
+    delete values.documents;
+
+    return {
+      ...values,
+      banks: this.banksValue,
+    };
+  }
+
+  protected override get formValid(): boolean {
+    let result = super.formValid;
+    for (const form of this.bankForms) {
+      form.markAllAsTouched();
+      result &&= form.valid;
+      console.log(form.valid);
+    }
+    this.cdr.markForCheck();
+    return result;
   }
 }

@@ -14,9 +14,14 @@ import { BaseModuleModule } from '../base-module/base-module.module';
 import { MatSelectModule } from '@angular/material/select';
 import { MatRippleModule } from '@angular/material/core';
 import { MatIconModule } from '@angular/material/icon';
+import { CustomersBankCollectionComponent } from './components/customers-bank-collection/customers-bank-collection.component';
 
 @NgModule({
-  declarations: [CustomersEditComponent, CustomersTableComponent],
+  declarations: [
+    CustomersEditComponent,
+    CustomersTableComponent,
+    CustomersBankCollectionComponent,
+  ],
   imports: [
     CommonModule,
     MatTableModule,
