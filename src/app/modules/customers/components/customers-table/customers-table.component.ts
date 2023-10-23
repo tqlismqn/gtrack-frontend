@@ -40,6 +40,10 @@ export class CustomersTableComponent {
       name: 'Name',
       value: 'company_name',
     },
+    {
+      name: 'VAT Number',
+      value: 'vat_id',
+    },
   ];
   sortableColumns: Selectable[] = [
     {
@@ -49,6 +53,22 @@ export class CustomersTableComponent {
     {
       name: 'Name',
       value: 'company_name',
+    },
+    {
+      name: 'VAT Number',
+      value: 'vat_id',
+    },
+    {
+      name: 'Limit',
+      value: 'internal_credit_limit',
+    },
+    {
+      name: 'Available Limit',
+      value: 'total_available_credit_limit',
+    },
+    {
+      name: 'Raiting',
+      value: 'last_raiting',
     },
   ];
   customerResponseToDTO = CustomersUtils.customerResponseToDTO;
