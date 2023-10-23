@@ -4,6 +4,7 @@ import { Customer, CustomerResponse } from '../../types/customers.type';
 import { TableComponent } from '../../../base-module/components/table/table.component';
 import { CustomersUtils } from '../../utils/customers-utils';
 import { Selectable } from '../../../../types/selectable.type';
+import { CustomersEditComponent } from '../customers-edit/customers-edit.component';
 
 @Component({
   selector: 'app-customers-table',
@@ -19,32 +20,57 @@ export class CustomersTableComponent {
   displayedColumns: string[] = [
     'internal_company_id',
     'company_name',
-    'contact_email',
-    'created_at',
-    'updated_at',
+    'vat_id',
+    'address',
+    'invoices',
+    'open_invoices',
+    'internal_credit_limit',
+    'total_available_credit_limit',
+    'pallet_balance',
+    'claims',
+    'last_raiting',
     'actions',
   ];
   searchableColumns: Selectable[] = [
     {
       name: 'ID',
-      value: 'id',
+      value: 'internal_company_id',
     },
     {
       name: 'Name',
-      value: 'name',
+      value: 'company_name',
     },
     {
-      name: 'Created By',
-      value: 'created_by',
+      name: 'VAT Number',
+      value: 'vat_id',
+    },
+  ];
+  sortableColumns: Selectable[] = [
+    {
+      name: 'ID',
+      value: 'internal_company_id',
     },
     {
-      name: 'Updated By',
-      value: 'updated_by',
+      name: 'Name',
+      value: 'company_name',
     },
     {
-      name: 'Owned By',
-      value: 'owned_by',
+      name: 'VAT Number',
+      value: 'vat_id',
+    },
+    {
+      name: 'Limit',
+      value: 'internal_credit_limit',
+    },
+    {
+      name: 'Available Limit',
+      value: 'total_available_credit_limit',
+    },
+    {
+      name: 'Raiting',
+      value: 'last_raiting',
     },
   ];
   customerResponseToDTO = CustomersUtils.customerResponseToDTO;
+  getRaitingClassName = CustomersEditComponent._getRaitingClassName;
 }

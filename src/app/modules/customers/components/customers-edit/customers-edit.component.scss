@@ -1,15 +1,16 @@
+@use '../../../../../styles/includes/mixins/raiting';
+
 :host {
   .customers-edit-form {
     display: grid;
     grid: {
-      template-columns: 400px auto;
+      template-columns: 600px auto;
       column-gap: 48px;
     }
 
     .left-block {
       height: fit-content;
       display: grid;
-      max-width: 400px;
       grid: {
         template-columns: 100%;
       };
@@ -31,6 +32,27 @@
       template-columns: repeat(3, auto);
       column-gap: 12px;
     }
+
+    &--actions {
+      grid: {
+        template-columns: 1fr repeat(2, auto);
+        column-gap: 6px;
+      };
+
+      & > .mdc-icon-button {
+        margin-top: 4px;
+      }
+
+      & > .mdc-button {
+        margin-top: 10px;
+      }
+    }
+
+    &--2 {
+      grid: {
+        template-columns: 1fr auto;
+      }
+    }
   }
 
   .grid {
@@ -43,8 +65,8 @@
   }
 
   .upload-files {
-    min-height: 100px;
-    max-height: 300px;
+    min-height: 118px;
+    max-height: 374px;
     overflow: auto;
 
     &.dragging {
@@ -52,7 +74,13 @@
     }
 
     &__upload {
+      display: block;
+      margin-left: auto;
       width: fit-content;
+      margin: {
+        left: auto;
+        top: 22px;
+      };
     }
 
     &__file {
@@ -74,8 +102,24 @@
     }
   }
 
+  .inactive {
+    opacity: .5;
+    position: relative;
+
+    &:before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 10;
+    }
+  }
+
   .raiting {
     margin-top: 16px;
+
     mat-form-field {
       height: fit-content;
     }
@@ -103,6 +147,22 @@
         position: sticky;
         top: 0;
       }
+    }
+
+    &__element {
+      @include raiting.raiting-element;
+    }
+  }
+
+  textarea {
+    min-height: 78px * 3 - 22px - 24px - 8px;
+  }
+}
+
+::ng-deep {
+  .raiting__panel {
+    .raiting__element {
+      @include raiting.raiting-element;
     }
   }
 }

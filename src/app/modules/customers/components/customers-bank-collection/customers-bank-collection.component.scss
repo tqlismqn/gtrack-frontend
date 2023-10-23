@@ -6,7 +6,7 @@
   .row {
     display: grid;
     grid: {
-      template-columns: 120px auto;
+      template-columns: 120px auto 180px;
       column-gap: 12px;
     }
     width: 100%;

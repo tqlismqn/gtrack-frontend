@@ -4,10 +4,15 @@ import {
   Component,
   EventEmitter,
   Input,
+  OnInit,
   Output,
 } from '@angular/core';
 import { LoadingState } from '../../../auth/components/auth-form/auth-form.component';
-import { Location } from '@angular/common';
+import { History } from '../../types/history.type';
+import { CompanyService } from '../../../../services/company.service';
+import { ModulesService } from '../../../../services/modules.service';
+import { AdminModules, Modules } from '../../../../constants/modules';
+import { ModuleBase } from '../../types/module-base.type';
 
 @Component({
   selector: 'app-edit-form',
@@ -15,7 +20,7 @@ import { Location } from '@angular/common';
   styleUrls: ['./edit-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class EditFormComponent {
+export class EditFormComponent implements OnInit {
   @Output()
   submit$ = new EventEmitter<void>();
 
@@ -33,10 +38,45 @@ export class EditFormComponent {
   loading = false;
   loadingState: LoadingState = 'loading';
 
+  @Input()
+  history?: History[] = [];
+  displayedColumns = ['user', 'field', 'from', 'to', 'date'];
+
+  users: Record<string, string> = {};
+
+  @Input()
+  module?: Modules | AdminModules;
+
   constructor(
     protected cdr: ChangeDetectorRef,
-    protected location: Location,
+    protected companyService: CompanyService,
+    protected modulesService: ModulesService,
   ) {}
+
+  ngOnInit() {
+    this.companyService.getUserSelections().subscribe((items) => {
+      for (const user of items) {
+        this.users[user.id] = user.name;
+      }
+      this.cdr.markForCheck();
+    });
+  }
+
+  getFieldName(field: keyof ModuleBase) {
+    if (this.module) {
+      const moduleFieldNames =
+        this.modulesService.modulesFieldNames[`${this.module}`];
+      if (moduleFieldNames) {
+        // @ts-ignore
+        const fieldName = moduleFieldNames[field];
+        if (fieldName) {
+          return fieldName;
+        }
+      }
+    }
+
+    return field;
+  }
 
   startLoading() {
     this.loading = true;

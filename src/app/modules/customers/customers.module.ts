@@ -15,6 +15,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatRippleModule } from '@angular/material/core';
 import { MatIconModule } from '@angular/material/icon';
 import { CustomersBankCollectionComponent } from './components/customers-bank-collection/customers-bank-collection.component';
+import {MatTooltipModule} from "@angular/material/tooltip";
 
 @NgModule({
   declarations: [
@@ -22,21 +23,22 @@ import { CustomersBankCollectionComponent } from './components/customers-bank-co
     CustomersTableComponent,
     CustomersBankCollectionComponent,
   ],
-  imports: [
-    CommonModule,
-    MatTableModule,
-    MatButtonModule,
-    RouterLink,
-    ReactiveFormsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatSortModule,
-    MatPaginatorModule,
-    BaseModuleModule,
-    MatSelectModule,
-    MatRippleModule,
-    MatIconModule,
-    FormsModule,
-  ],
+    imports: [
+        CommonModule,
+        MatTableModule,
+        MatButtonModule,
+        RouterLink,
+        ReactiveFormsModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatSortModule,
+        MatPaginatorModule,
+        BaseModuleModule,
+        MatSelectModule,
+        MatRippleModule,
+        MatIconModule,
+        FormsModule,
+        MatTooltipModule,
+    ],
 })
 export class CustomersModule {}

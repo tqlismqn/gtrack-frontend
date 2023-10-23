@@ -26,6 +26,7 @@ export interface CustomerResponse extends ModuleBaseResponse {
   internal_credit_limit: number;
   total_available_credit_limit: number;
   banks: CustomerBank[];
+  last_raiting: number;
 }
 
 export interface Customer extends ModuleBase {
@@ -51,6 +52,7 @@ export interface Customer extends ModuleBase {
   internal_credit_limit: number;
   total_available_credit_limit: number;
   banks: CustomerBank[];
+  last_raiting: number;
 }
 
 export type CustomerDocument = {
@@ -60,7 +62,11 @@ export type CustomerDocument = {
   file?: File;
 };
 
-export type CustomerRaitingType = 'red' | 'yellow' | 'green';
+export enum CustomerRaitingType {
+  RED,
+  YELLOW,
+  GREEN,
+}
 
 export type CustomerRaiting = {
   raiting: CustomerRaitingType;
@@ -74,6 +80,7 @@ export type CustomerBank = {
     name: string;
     id: string;
     bic: string;
+    code: string;
   };
 
   currency: string;

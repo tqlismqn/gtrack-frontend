@@ -3,29 +3,47 @@
   (submit$)="submit()"
   formTitle="Create Customer"
   [disableGrid]="true"
+  [history]="item?.history"
+  [module]="module"
 >
   <div class="customers-edit-form">
     <div class="left-block">
-      <mat-form-field *ngIf="form.controls.company_name as control">
-        <mat-label>Company Name</mat-label>
-        <input matInput [formControl]="control" />
-        <mat-error *ngIf="control.hasError('required')"
-          >This field is <b>required</b></mat-error
-        >
-      </mat-form-field>
+      <div class="row row--actions row--2">
+        <mat-form-field *ngIf="form.controls.company_name as control">
+          <mat-label>Company Name</mat-label>
+          <input matInput [formControl]="control" />
+          <mat-error *ngIf="control.hasError('required')"
+            >This field is <b>required</b></mat-error
+          >
+        </mat-form-field>
+        <button color="primary" mat-icon-button type="button">
+          <mat-icon fontIcon="file_copy"></mat-icon>
+        </button>
+      </div>
 
-      <mat-form-field *ngIf="form.controls.vat_id as control">
-        <mat-label>VAT ID no.</mat-label>
-        <input matInput [formControl]="control" />
-        <mat-error *ngIf="control.hasError('required')"
-          >This field is <b>required</b></mat-error
-        >
-      </mat-form-field>
+      <div class="row row--actions">
+        <mat-form-field *ngIf="form.controls.vat_id as control">
+          <mat-label>VAT ID no.</mat-label>
+          <input matInput [formControl]="control" />
+          <mat-error *ngIf="control.hasError('required')"
+            >This field is <b>required</b></mat-error
+          >
+        </mat-form-field>
+        <button color="primary" mat-icon-button type="button">
+          <mat-icon fontIcon="file_copy"></mat-icon>
+        </button>
+        <button type="button" color="accent" mat-flat-button>Check</button>
+      </div>
 
-      <mat-form-field *ngIf="form.controls.internal_company_id as control">
-        <mat-label>Company ID</mat-label>
-        <input readonly matInput [formControl]="control" />
-      </mat-form-field>
+      <div class="row row--actions row--2">
+        <mat-form-field *ngIf="form.controls.internal_company_id as control">
+          <mat-label>Company ID</mat-label>
+          <input readonly matInput [formControl]="control" />
+        </mat-form-field>
+        <button color="primary" mat-icon-button type="button">
+          <mat-icon fontIcon="file_copy"></mat-icon>
+        </button>
+      </div>
 
       <mat-form-field *ngIf="form.controls.contact_name as control">
         <mat-label>Contact person</mat-label>
@@ -35,35 +53,53 @@
         >
       </mat-form-field>
 
-      <mat-form-field *ngIf="form.controls.contact_phone as control">
-        <mat-label>Contact Phone</mat-label>
-        <input matInput [formControl]="control" />
-        <mat-error *ngIf="control.hasError('required')"
-          >This field is <b>required</b></mat-error
-        >
-      </mat-form-field>
+      <div class="row row--actions">
+        <mat-form-field *ngIf="form.controls.contact_phone as control">
+          <mat-label>Contact Phone</mat-label>
+          <input matInput [formControl]="control" />
+          <mat-error *ngIf="control.hasError('required')"
+            >This field is <b>required</b></mat-error
+          >
+        </mat-form-field>
+        <button color="primary" mat-icon-button type="button">
+          <mat-icon fontIcon="file_copy"></mat-icon>
+        </button>
+        <button color="primary" mat-icon-button type="button">
+          <mat-icon fontIcon="phone"></mat-icon>
+        </button>
+      </div>
 
-      <mat-form-field *ngIf="form.controls.contact_email as control">
-        <mat-label>Main contact Email</mat-label>
-        <input matInput [formControl]="control" />
-        <mat-error *ngIf="control.hasError('required')"
-          >This field is <b>required</b></mat-error
-        >
-        <mat-error *ngIf="control.hasError('email')"
-          >Enter valid email</mat-error
-        >
-      </mat-form-field>
+      <div class="row row--actions">
+        <mat-form-field *ngIf="form.controls.contact_email as control">
+          <mat-label>Main contact Email</mat-label>
+          <input matInput [formControl]="control" />
+          <mat-error *ngIf="control.hasError('required')"
+            >This field is <b>required</b></mat-error
+          >
+          <mat-error *ngIf="control.hasError('email')"
+            >Enter valid email</mat-error
+          >
+        </mat-form-field>
+        <button color="primary" mat-icon-button type="button">
+          <mat-icon fontIcon="file_copy"></mat-icon>
+        </button>
+      </div>
 
-      <mat-form-field *ngIf="form.controls.accounting_email as control">
-        <mat-label>Email for accounting department</mat-label>
-        <input matInput [formControl]="control" />
-        <mat-error *ngIf="control.hasError('required')"
-          >This field is <b>required</b></mat-error
-        >
-        <mat-error *ngIf="control.hasError('email')"
-          >Enter valid email</mat-error
-        >
-      </mat-form-field>
+      <div class="row row--actions">
+        <mat-form-field *ngIf="form.controls.accounting_email as control">
+          <mat-label>Email for accounting department</mat-label>
+          <input matInput [formControl]="control" />
+          <mat-error *ngIf="control.hasError('required')"
+            >This field is <b>required</b></mat-error
+          >
+          <mat-error *ngIf="control.hasError('email')"
+            >Enter valid email</mat-error
+          >
+        </mat-form-field>
+        <button color="primary" mat-icon-button type="button">
+          <mat-icon fontIcon="file_copy"></mat-icon>
+        </button>
+      </div>
 
       <div class="row">
         <mat-form-field *ngIf="form.controls.nation as control">
@@ -195,8 +231,17 @@
         <textarea matInput [formControl]="control"></textarea>
       </mat-form-field>
 
-      <div class="upload-files-wp" *ngIf="type === 'update'">
-        <div>Documents</div>
+      <div
+        class="upload-files-wp"
+        [class]="{ inactive: type === 'create' }"
+        [matTooltip]="
+          type === 'create'
+            ? 'Documents is inactive until the Customer is created'
+            : ''
+        "
+        matTooltipPosition="right"
+      >
+        <h3>Documents</h3>
         <input
           hidden
           type="file"
@@ -250,15 +295,35 @@
         </button>
       </div>
 
-      <div class="raiting" *ngIf="type === 'update'">
+      <div
+        class="raiting"
+        [class]="{ inactive: type === 'create' }"
+        [matTooltip]="
+          type === 'create'
+            ? 'Raiting is inactive until the Customer is created'
+            : ''
+        "
+        matTooltipPosition="right"
+      >
         <h3>Raiting</h3>
         <div class="raiting__row">
           <mat-form-field *ngIf="raitingForm.controls.raiting as control">
             <mat-label>Raiting</mat-label>
-            <mat-select [formControl]="control">
-              <mat-option *ngFor="let raiting of raitings" [value]="raiting">{{
-                raiting
-              }}</mat-option>
+            <mat-select [formControl]="control" panelClass="raiting__panel">
+              <mat-select-trigger>
+                <span
+                  class="raiting__element"
+                  [class]="getRaitingClassName(control.value)"
+                >
+                </span>
+              </mat-select-trigger>
+              <mat-option *ngFor="let raiting of raitings" [value]="raiting">
+                <span
+                  class="raiting__element"
+                  [class]="getRaitingClassName(raiting)"
+                >
+                </span>
+              </mat-option>
             </mat-select>
             <mat-error *ngIf="control.hasError('required')"
               >This field is <b>required</b></mat-error
@@ -282,8 +347,13 @@
           Add
         </button>
 
-        <h3>Raiting history</h3>
-        <div class="raiting__table-wp">
+        <h3 *ngIf="item && item.raiting && item.raiting.length > 0">
+          Raiting history
+        </h3>
+        <div
+          class="raiting__table-wp"
+          *ngIf="item && item.raiting && item.raiting.length > 0"
+        >
           <table
             class="raiting__table"
             *ngIf="item"
@@ -292,7 +362,13 @@
           >
             <ng-container matColumnDef="raiting">
               <th mat-header-cell *matHeaderCellDef>Raiting</th>
-              <td mat-cell *matCellDef="let element">{{ element.raiting }}</td>
+              <td mat-cell *matCellDef="let element">
+                <span
+                  class="raiting__element"
+                  [class]="getRaitingClassName(element.raiting)"
+                >
+                </span>
+              </td>
             </ng-container>
 
             <ng-container matColumnDef="user">

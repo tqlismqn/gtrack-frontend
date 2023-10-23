@@ -1,0 +1,16 @@
+@mixin raiting-element {
+  display: block;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+
+  &.red {
+    background: #D90000;
+  }
+  &.yellow {
+    background: #FFBD3C;
+  }
+  &.green {
+    background: #83D35D;
+  }
+}

@@ -6,19 +6,70 @@
   [toDto]="customerResponseToDTO"
   [displayedColumns]="displayedColumns"
   [searchableColumns]="searchableColumns"
+  [sortableColumns]="sortableColumns"
 >
   <ng-container matColumnDef="internal_company_id">
-    <th mat-header-cell *matHeaderCellDef>Company Id</th>
+    <th mat-header-cell *matHeaderCellDef>ID</th>
     <td mat-cell *matCellDef="let element">
       {{ element.internal_company_id }}
     </td>
   </ng-container>
   <ng-container matColumnDef="company_name">
-    <th mat-header-cell *matHeaderCellDef>Company Name</th>
+    <th mat-header-cell *matHeaderCellDef>Name</th>
     <td mat-cell *matCellDef="let element">{{ element.company_name }}</td>
   </ng-container>
-  <ng-container matColumnDef="contact_email">
-    <th mat-header-cell *matHeaderCellDef>Contact Email</th>
-    <td mat-cell *matCellDef="let element">{{ element.contact_email }}</td>
+  <ng-container matColumnDef="vat_id">
+    <th mat-header-cell *matHeaderCellDef>VAT Number</th>
+    <td mat-cell *matCellDef="let element">{{ element.vat_id }}</td>
+  </ng-container>
+  <ng-container matColumnDef="address">
+    <th mat-header-cell *matHeaderCellDef>Address</th>
+    <td mat-cell *matCellDef="let element">
+      {{ element.nation }} {{ element.zip }} {{ element.city }}
+      {{ element.street }}
+    </td>
+  </ng-container>
+  <ng-container matColumnDef="invoices">
+    <th mat-header-cell *matHeaderCellDef>Invoices</th>
+    <td mat-cell *matCellDef="let element">0</td>
+  </ng-container>
+  <ng-container matColumnDef="open_invoices">
+    <th mat-header-cell *matHeaderCellDef>Open Invoices</th>
+    <td mat-cell *matCellDef="let element">0</td>
+  </ng-container>
+  <ng-container matColumnDef="internal_credit_limit">
+    <th mat-header-cell *matHeaderCellDef>Limit</th>
+    <td mat-cell *matCellDef="let element">
+      {{ element.internal_credit_limit }}
+    </td>
+  </ng-container>
+  <ng-container matColumnDef="total_available_credit_limit">
+    <th mat-header-cell *matHeaderCellDef>Available Limit</th>
+    <td mat-cell *matCellDef="let element">
+      {{ element.total_available_credit_limit }}
+    </td>
+  </ng-container>
+  <ng-container matColumnDef="pallet_balance">
+    <th mat-header-cell *matHeaderCellDef>Pallet Balance</th>
+    <td mat-cell *matCellDef="let element">
+      {{ element.pallet_balance }}
+    </td>
+  </ng-container>
+  <ng-container matColumnDef="claims">
+    <th mat-header-cell *matHeaderCellDef>Claims</th>
+    <td mat-cell *matCellDef="let element">0</td>
+  </ng-container>
+  <ng-container matColumnDef="last_raiting">
+    <th mat-header-cell *matHeaderCellDef>Raiting</th>
+    <td mat-cell *matCellDef="let element">
+      <span style="display: none">{{
+        getRaitingClassName(element.last_raiting)
+      }}</span>
+      <span
+        class="raiting__element"
+        [class]="getRaitingClassName(element.last_raiting)"
+      >
+      </span>
+    </td>
   </ng-container>
 </app-table>

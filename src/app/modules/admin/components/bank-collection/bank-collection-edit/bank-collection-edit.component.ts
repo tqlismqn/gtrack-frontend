@@ -10,6 +10,7 @@ import {
 type BankCollectionFormGroup = {
   name: FormControl<string>;
   bic: FormControl<string>;
+  code: FormControl<string>;
 };
 
 @Component({
@@ -31,6 +32,10 @@ export class BankCollectionEditComponent
       validators: [Validators.required],
       nonNullable: true,
     }),
+    code: new FormControl<string>('', {
+      validators: [Validators.required],
+      nonNullable: true,
+    }),
   });
 
   users: AdminUser[] = [];
@@ -42,5 +47,6 @@ export class BankCollectionEditComponent
   updateFormView(item: BankCollection): void {
     this.form.controls.name.setValue(item.name);
     this.form.controls.bic.setValue(item.bic);
+    this.form.controls.code.setValue(item.code);
   }
 }

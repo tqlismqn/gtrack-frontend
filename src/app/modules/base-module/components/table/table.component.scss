@@ -7,12 +7,14 @@
 
     td.table__actions {
       white-space: nowrap;
+
       > * {
         &:not(:last-child) {
           margin-right: 14px;
         }
       }
     }
+
     th.table__actions {
       width: 0;
     }
@@ -33,5 +35,12 @@
 
   .create-action {
     margin-left: auto;
+  }
+
+  .export-btn {
+    float: right;
+    margin: {
+      top: 16px
+    };
   }
 }

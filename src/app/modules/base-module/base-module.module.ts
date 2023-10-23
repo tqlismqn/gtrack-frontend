@@ -13,6 +13,8 @@ import { EditComponentComponent } from './components/edit-component/edit-compone
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
+import {MatIconModule} from "@angular/material/icon";
+import {MatTabsModule} from "@angular/material/tabs";
 
 @NgModule({
   declarations: [TableComponent, EditFormComponent],
@@ -29,6 +31,8 @@ import { MatInputModule } from '@angular/material/input';
     MatFormFieldModule,
     MatSelectModule,
     MatInputModule,
+    MatIconModule,
+    MatTabsModule,
   ],
   exports: [TableComponent, EditFormComponent],
 })

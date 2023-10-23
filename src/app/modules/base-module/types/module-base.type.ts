@@ -2,6 +2,7 @@ import { Nameable } from './nameable.type';
 import { SortType } from './soring.type';
 import { SearchType } from './search.type';
 import { PaginationType } from './pagination.type';
+import { History } from './history.type';
 
 export interface ModuleBaseReadRequest {
   company_id?: string;
@@ -20,6 +21,7 @@ export interface ModuleBaseResponse {
   owned_by: Nameable;
   created_by: Nameable;
   updated_by: Nameable;
+  history: History[];
 }
 
 export interface ModuleBase {
@@ -32,4 +34,5 @@ export interface ModuleBase {
   owned_by: Nameable;
   created_by: Nameable;
   updated_by: Nameable;
+  history: History[];
 }

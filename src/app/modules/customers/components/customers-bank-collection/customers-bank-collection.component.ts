@@ -18,6 +18,7 @@ export interface CustomerBankForm {
     name: string;
     id: string;
     bic: string;
+    code: string;
   }>;
 
   currency: FormControl<string>;
@@ -41,7 +42,7 @@ export class CustomersBankCollectionComponent
   @Input()
   formGroup = new FormGroup<CustomerBankForm>({
     bank_template: new FormControl(
-      { name: '', id: '', bic: '' },
+      { name: '', id: '', bic: '', code: '' },
       {
         nonNullable: true,
       },
@@ -65,15 +66,18 @@ export class CustomersBankCollectionComponent
   }
 
   ngOnInit() {
+    this.destroy$.emit();
     this.formGroup.controls.bank_template.valueChanges
       .pipe(
         takeUntil(this.destroy$),
         tap((value) => {
-          const bank = this.banks.find((item) => item.id === value.id);
+          let bank = this.banks.find((item) => item.id === value.id);
           if (!bank) {
-            return;
+            bank = value;
           }
+
           this.formGroup.controls.bic.setValue(bank.bic);
+          this.formGroup.controls.code.setValue(bank.code);
           this.cdr.markForCheck();
         }),
       )
@@ -83,16 +87,18 @@ export class CustomersBankCollectionComponent
       this.checkBankSelector();
     }
   }
+
   ngOnChanges(changes: SimpleChanges) {
     if (changes['banks'] || changes['formGroup']) {
-      this.checkBankSelector();
+      this.ngOnInit();
     }
   }
 
   checkBankSelector() {
     const value = this.formGroup.controls.bank_template.value;
     let bank = this.banks.find((item) => item.id === value.id);
-    if (!bank && value && value.id && value.name && value.bic) {
+    if (!bank && value && value.id && value.name && value.bic && value.code) {
+      this.banks = [...this.banks];
       this.banks.push(value);
       bank = value;
     }

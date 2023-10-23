@@ -1,23 +1,61 @@
-<button mat-flat-button (click)="location.back()">Back</button>
-<form
-  class="edit-form"
-  [class]="{ 'disable-grid': disableGrid }"
-  (ngSubmit)="submit$.emit()"
->
-  <mat-progress-bar
-    *ngIf="loading"
-    [color]="loadingState === 'error' ? 'warn' : 'primary'"
-    [mode]="
-      loadingState === 'error' || loadingState === 'success'
-        ? 'determinate'
-        : 'indeterminate'
-    "
-    [value]="100"
-    class="edit-form__progress-bar"
-  ></mat-progress-bar>
-  <h2 class="edit-form__title" *ngIf="formTitle">{{ formTitle }}</h2>
-  <ng-content></ng-content>
-  <button mat-flat-button type="submit" color="primary" [disabled]="loading">
-    {{ submitTitle }}
-  </button>
-</form>
+<mat-tab-group mat-stretch-tabs="false" animationDuration="0ms">
+  <mat-tab [label]="formTitle ?? 'Base Data'">
+    <form
+      class="edit-form"
+      (ngSubmit)="submit$.emit()"
+      [class]="{ 'disable-grid': disableGrid }"
+    >
+      <mat-progress-bar
+        *ngIf="loading"
+        [color]="loadingState === 'error' ? 'warn' : 'primary'"
+        [mode]="
+          loadingState === 'error' || loadingState === 'success'
+            ? 'determinate'
+            : 'indeterminate'
+        "
+        [value]="100"
+        class="edit-form__progress-bar"
+      ></mat-progress-bar>
+      <ng-content></ng-content>
+      <button
+        mat-flat-button
+        type="submit"
+        color="primary"
+        [disabled]="loading"
+      >
+        {{ submitTitle }}
+      </button>
+    </form>
+  </mat-tab>
+  <mat-tab label="History" *ngIf="history">
+    <table mat-table [dataSource]="history">
+      <ng-container matColumnDef="user">
+        <th mat-header-cell *matHeaderCellDef>User</th>
+        <td mat-cell *matCellDef="let element">{{ users[element.user] }}</td>
+      </ng-container>
+      <ng-container matColumnDef="field">
+        <th mat-header-cell *matHeaderCellDef>Field name</th>
+        <td mat-cell *matCellDef="let element">
+          {{ getFieldName(element.field) }}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="from">
+        <th mat-header-cell *matHeaderCellDef>From</th>
+        <td mat-cell *matCellDef="let element">{{ element.from }}</td>
+      </ng-container>
+      <ng-container matColumnDef="to">
+        <th mat-header-cell *matHeaderCellDef>To</th>
+        <td mat-cell *matCellDef="let element">{{ element.to }}</td>
+      </ng-container>
+      <ng-container matColumnDef="date">
+        <th mat-header-cell *matHeaderCellDef>Date</th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.date | date: "HH:mm dd/MM/YYYY" }}
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+  </mat-tab>
+</mat-tab-group>

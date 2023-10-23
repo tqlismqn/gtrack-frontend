@@ -1,10 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import {
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  Validators,
-} from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { EditComponentComponent } from '../../../base-module/components/edit-component/edit-component.component';
 import {
   Customer,
@@ -23,7 +18,6 @@ import {
   BankCollection,
   BankCollectionResponse,
 } from '../../../admin/types/bank-collection';
-import { AdminUser, AdminUserResponse } from '../../../admin/types/users';
 import { Nameable } from '../../../base-module/types/nameable.type';
 
 interface CustomersEditForm {
@@ -50,7 +44,7 @@ interface CustomersEditForm {
 }
 
 @Component({
-  selector: 'app-customers-create',
+  selector: 'app-customers-edit',
   templateUrl: './customers-edit.component.html',
   styleUrls: ['./customers-edit.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -178,7 +172,7 @@ export class CustomersEditComponent
     this.bankForms = [];
     this.setBanks(item.banks ?? []);
 
-    if (this.item) {
+    if (this.item?.raiting) {
       this.item.raiting = this.sortRaiting(this.item.raiting);
     }
   }
@@ -316,6 +310,7 @@ export class CustomersEditComponent
           bic: bank.bank_template.bic,
           name: bank.bank_template.name,
           id: bank.bank_template.id,
+          code: bank.bank_template.code,
         },
         {
           nonNullable: true,
@@ -336,6 +331,7 @@ export class CustomersEditComponent
         name: '',
         id: '',
         bic: '',
+        code: '',
       },
     };
   }
@@ -347,6 +343,7 @@ export class CustomersEditComponent
           name: '',
           id: '',
           bic: '',
+          code: '',
         };
       }
       if (!bank.bank_template.id) {
@@ -443,6 +440,7 @@ export class CustomersEditComponent
         for (const user of selections) {
           this.users[user.id] = user;
         }
+        this.cdr.markForCheck();
       });
     }
   }
@@ -452,7 +450,12 @@ export class CustomersEditComponent
       .post(`${environment.apiUrl}/api/v1/bank_collections/read`, {})
       .subscribe((response) => {
         this.bankCollections = (response as BankCollectionResponse[]).map(
-          (item) => ({ name: item.name, id: item.id, bic: item.bic }),
+          (item) => ({
+            name: item.name,
+            id: item.id,
+            bic: item.bic,
+            code: item.code,
+          }),
         );
         this.cdr.markForCheck();
       });
@@ -477,13 +480,16 @@ export class CustomersEditComponent
     for (const form of this.bankForms) {
       form.markAllAsTouched();
       result &&= form.valid;
-      console.log(form.valid);
     }
     this.cdr.markForCheck();
     return result;
   }
 
-  raitings: CustomerRaitingType[] = ['red', 'yellow', 'green'];
+  raitings: CustomerRaitingType[] = [
+    CustomerRaitingType.RED,
+    CustomerRaitingType.YELLOW,
+    CustomerRaitingType.GREEN,
+  ];
   raitingForm = new FormGroup({
     raiting: new FormControl<string>('', {
       nonNullable: true,
@@ -545,5 +551,21 @@ export class CustomersEditComponent
 
   getUserName(id: string) {
     return this.users[id]?.name;
+  }
+
+  getRaitingClassName = CustomersEditComponent._getRaitingClassName;
+
+  static _getRaitingClassName(raiting: CustomerRaitingType | string) {
+    if (typeof raiting === 'string') {
+      raiting = Number(raiting);
+    }
+    switch (raiting) {
+      case CustomerRaitingType.GREEN:
+        return 'green';
+      case CustomerRaitingType.RED:
+        return 'red';
+      case CustomerRaitingType.YELLOW:
+        return 'yellow';
+    }
   }
 }
