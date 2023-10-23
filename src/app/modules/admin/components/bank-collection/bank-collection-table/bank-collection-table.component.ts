@@ -37,6 +37,10 @@ export class BankCollectionTableComponent {
       name: 'BIC',
       value: 'bic',
     },
+    {
+      name: 'Code',
+      value: 'code',
+    },
   ];
 
   searchableColumns: Selectable[] = [
@@ -52,11 +56,15 @@ export class BankCollectionTableComponent {
       name: 'BIC',
       value: 'bic',
     },
+    {
+      name: 'Code',
+      value: 'code',
+    },
   ];
 
   module = AdminModules.BANK_COLLECTIONS;
 
-  displayedColumns: string[] = ['name', 'bic', 'actions'];
+  displayedColumns: string[] = ['name', 'bic', 'code', 'actions'];
 
   toDto(value: AdminUserResponse): AdminUser {
     return value;

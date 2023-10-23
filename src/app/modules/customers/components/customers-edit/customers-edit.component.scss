@@ -4,14 +4,13 @@
   .customers-edit-form {
     display: grid;
     grid: {
-      template-columns: 400px auto;
+      template-columns: 600px auto;
       column-gap: 48px;
     }
 
     .left-block {
       height: fit-content;
       display: grid;
-      max-width: 400px;
       grid: {
         template-columns: 100%;
       };
@@ -45,8 +44,8 @@
   }
 
   .upload-files {
-    min-height: 100px;
-    max-height: 300px;
+    min-height: 118px;
+    max-height: 374px;
     overflow: auto;
 
     &.dragging {
@@ -54,7 +53,13 @@
     }
 
     &__upload {
+      display: block;
+      margin-left: auto;
       width: fit-content;
+      margin: {
+        left: auto;
+        top: 22px;
+      };
     }
 
     &__file {

@@ -29,6 +29,14 @@
       >This field is <b>required</b></mat-error
     >
   </mat-form-field>
+
+  <mat-form-field *ngIf="formGroup.controls.code as control">
+    <mat-label>Code</mat-label>
+    <input matInput [formControl]="control" readonly />
+    <mat-error *ngIf="control.hasError('required')"
+      >This field is <b>required</b></mat-error
+    >
+  </mat-form-field>
 </div>
 
 <mat-form-field *ngIf="formGroup.controls.iban as control">

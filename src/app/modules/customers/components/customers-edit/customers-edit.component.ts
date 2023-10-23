@@ -44,7 +44,7 @@ interface CustomersEditForm {
 }
 
 @Component({
-  selector: 'app-customers-create',
+  selector: 'app-customers-edit',
   templateUrl: './customers-edit.component.html',
   styleUrls: ['./customers-edit.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -310,6 +310,7 @@ export class CustomersEditComponent
           bic: bank.bank_template.bic,
           name: bank.bank_template.name,
           id: bank.bank_template.id,
+          code: bank.bank_template.code,
         },
         {
           nonNullable: true,
@@ -330,6 +331,7 @@ export class CustomersEditComponent
         name: '',
         id: '',
         bic: '',
+        code: '',
       },
     };
   }
@@ -341,6 +343,7 @@ export class CustomersEditComponent
           name: '',
           id: '',
           bic: '',
+          code: '',
         };
       }
       if (!bank.bank_template.id) {
@@ -447,7 +450,12 @@ export class CustomersEditComponent
       .post(`${environment.apiUrl}/api/v1/bank_collections/read`, {})
       .subscribe((response) => {
         this.bankCollections = (response as BankCollectionResponse[]).map(
-          (item) => ({ name: item.name, id: item.id, bic: item.bic }),
+          (item) => ({
+            name: item.name,
+            id: item.id,
+            bic: item.bic,
+            code: item.code,
+          }),
         );
         this.cdr.markForCheck();
       });
