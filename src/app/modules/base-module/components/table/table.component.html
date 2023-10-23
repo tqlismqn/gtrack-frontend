@@ -101,3 +101,14 @@
   (page)="pageChange($event)"
   showFirstLastButtons
 ></mat-paginator>
+
+<button
+  class="export-btn"
+  mat-flat-button
+  color="primary"
+  type="button"
+  (click)="toCsv()"
+>
+  <mat-icon fontIcon="download"></mat-icon>
+  Export
+</button>

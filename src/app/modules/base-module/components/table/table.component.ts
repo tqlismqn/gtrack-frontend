@@ -64,9 +64,6 @@ export class TableComponent<B extends { id: string }, F extends { id: string }>
   @ViewChild(MatPaginator)
   paginator!: MatPaginator;
 
-  @ViewChild('defaultColumns', { read: ElementRef })
-  defaultColumns?: ElementRef;
-
   @Input()
   toDto!: (item: B) => F;
 
@@ -131,6 +128,7 @@ export class TableComponent<B extends { id: string }, F extends { id: string }>
   }
 
   @ViewChild(MatTable, { static: true }) table!: MatTable<F>;
+  @ViewChild(MatTable, { read: ElementRef }) tableRef!: ElementRef;
   @ContentChildren(MatColumnDef) columnDefs: QueryList<MatColumnDef> =
     new QueryList<MatColumnDef>();
 
@@ -223,5 +221,67 @@ export class TableComponent<B extends { id: string }, F extends { id: string }>
         item,
       },
     });
+  }
+
+  toCsv() {
+    const table = this.tableRef.nativeElement as HTMLTableElement;
+    const header: { index: number; text: string }[] = [];
+    const body: string[][] = [];
+
+    for (const [index, th] of Array.from(
+      table.querySelectorAll('th'),
+    ).entries()) {
+      if (!th) {
+        continue;
+      }
+      const text = th.textContent?.trim();
+      if (!text) {
+        continue;
+      }
+      header.push({ index, text });
+    }
+
+    for (const [, tr] of Array.from(
+      table.querySelectorAll('tbody tr'),
+    ).entries()) {
+      const row: string[] = [];
+
+      for (const { index: colIndex } of header) {
+        const cell = tr.querySelector(
+          `td:nth-child(${colIndex + 1})`,
+        ) as HTMLDivElement;
+        const text = cell.textContent?.trim();
+        row.push(text ?? '');
+      }
+
+      body.push(row);
+    }
+
+    this.downloadCsv(
+      this.arrayToCsv([header.map((item) => item.text), ...body]),
+    );
+  }
+
+  protected arrayToCsv(data: string[][]) {
+    return data
+      .map((row) =>
+        row
+          .map(String)
+          .map((v) => v.replaceAll('"', '""'))
+          .map((v) => `"${v}"`)
+          .join(','),
+      )
+      .join('\r\n');
+  }
+
+  protected downloadCsv(content: string) {
+    const blob = new Blob([content], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${this.moduleName}-export`;
+    a.click();
+    a.remove();
   }
 }
