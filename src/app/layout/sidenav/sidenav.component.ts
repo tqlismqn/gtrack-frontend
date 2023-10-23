@@ -68,12 +68,6 @@ export class SidenavComponent implements OnInit, OnDestroy {
         link: 'customers',
       });
     }
-    if (this.checkPermission(Modules.ORDERS)) {
-      this.links.push({
-        name: 'Orders',
-        link: 'orders',
-      });
-    }
     if (this.checkPermission(Modules.PERMISSIONS)) {
       this.links.push({
         name: 'Permissions',

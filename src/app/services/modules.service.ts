@@ -1,6 +1,13 @@
 import { Injectable } from '@angular/core';
-import { Modules } from '../constants/modules';
+import { AdminModules, Modules } from '../constants/modules';
 import { PermissionAccess } from '../constants/permission-access';
+import { ModuleBase } from '../modules/base-module/types/module-base.type';
+import { Customer } from '../modules/customers/types/customers.type';
+import { Permission } from '../types/permission.type';
+import { PermissionModule } from '../modules/permissions/types/permissions.type';
+import { BankCollection } from '../modules/admin/types/bank-collection';
+import { User } from '../modules/auth/types/user';
+import { Company } from '../types/company.type';
 
 @Injectable({ providedIn: 'root' })
 export class ModulesService {
@@ -16,11 +23,6 @@ export class ModulesService {
       id: Modules.CUSTOMERS,
       plural: 'Customers',
       singular: 'Customer',
-    },
-    [Modules.ORDERS]: {
-      id: Modules.ORDERS,
-      plural: 'Orders',
-      singular: 'Order',
     },
     [Modules.PERMISSIONS]: {
       id: Modules.PERMISSIONS,
@@ -49,6 +51,45 @@ export class ModulesService {
     [PermissionAccess.ACCESS_ALL]: {
       id: PermissionAccess.ACCESS_ALL,
       name: 'All',
+    },
+  };
+
+  public readonly modulesFieldNames: {
+    [Modules.CUSTOMERS]?: { [key in keyof Customer]?: string };
+    [Modules.PERMISSIONS]?: { [key in keyof PermissionModule]?: string };
+    [AdminModules.BANK_COLLECTIONS]?: {
+      [key in keyof BankCollection]?: string;
+    };
+    [AdminModules.USERS]?: {
+      [key in keyof User]?: string;
+    };
+    [AdminModules.COMPANIES]?: {
+      [key in keyof Company]?: string;
+    };
+  } = {
+    [Modules.CUSTOMERS]: {
+      company_name: 'Company Name',
+      vat_id: 'VAT ID no.',
+      internal_company_id: 'Company ID',
+      contact_name: 'Contact Person',
+      contact_phone: 'Contact Phone',
+      contact_email: 'Main contact Email',
+      accounting_email: 'Email for accounting department',
+      nation: 'Nation',
+      zip: 'Zip Code',
+      city: 'City',
+      street: 'Street',
+      remark: 'Remark',
+      documents: 'Documents',
+      terms_of_payment: 'Terms of Payment',
+      pallet_balance: 'Pallet balance',
+      raiting: 'Raiting',
+      insurance_credit_limit: 'Insurance Credit Limit ',
+      available_insurance_limit: 'Available Insurance  Limit',
+      internal_credit_limit: 'Internal credit limit',
+      total_available_credit_limit: 'Total Available Credit Limit',
+      banks: 'Banking details',
+      last_raiting: 'Raiting',
     },
   };
 

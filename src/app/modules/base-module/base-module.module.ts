@@ -14,24 +14,26 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import {MatIconModule} from "@angular/material/icon";
+import {MatTabsModule} from "@angular/material/tabs";
 
 @NgModule({
   declarations: [TableComponent, EditFormComponent],
-    imports: [
-        CommonModule,
-        MatButtonModule,
-        MatPaginatorModule,
-        MatSortModule,
-        MatTableModule,
-        RouterLink,
-        FormsModule,
-        MatProgressBarModule,
-        ReactiveFormsModule,
-        MatFormFieldModule,
-        MatSelectModule,
-        MatInputModule,
-        MatIconModule,
-    ],
+  imports: [
+    CommonModule,
+    MatButtonModule,
+    MatPaginatorModule,
+    MatSortModule,
+    MatTableModule,
+    RouterLink,
+    FormsModule,
+    MatProgressBarModule,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatSelectModule,
+    MatInputModule,
+    MatIconModule,
+    MatTabsModule,
+  ],
   exports: [TableComponent, EditFormComponent],
 })
 export class BaseModuleModule {}

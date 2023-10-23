@@ -26,6 +26,7 @@ export interface CustomerResponse extends ModuleBaseResponse {
   internal_credit_limit: number;
   total_available_credit_limit: number;
   banks: CustomerBank[];
+  last_raiting: number;
 }
 
 export interface Customer extends ModuleBase {
@@ -51,6 +52,7 @@ export interface Customer extends ModuleBase {
   internal_credit_limit: number;
   total_available_credit_limit: number;
   banks: CustomerBank[];
+  last_raiting: number;
 }
 
 export type CustomerDocument = {

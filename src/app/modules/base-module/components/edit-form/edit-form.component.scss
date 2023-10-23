@@ -1,6 +1,9 @@
 @use 'src/styles/includes/colors';
 
 :host {
+  padding: 32px 55px 0;
+  display: block;
+
   .edit-form {
     &:not(.disable-grid) {
       display: grid;
@@ -14,15 +17,16 @@
 
     position: relative;
     background: colors.$color-background;
-    padding: 42px 55px 78px;
+    padding: 42px 0 78px;
 
     &__title {
     }
 
     [type="submit"] {
-      min-width: 440px;
+      min-width: 220px;
       margin-left: auto;
       display: block;
+      margin-bottom: 6px;
     }
 
     &__progress-bar {

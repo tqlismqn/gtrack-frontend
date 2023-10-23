@@ -172,7 +172,7 @@ export class CustomersEditComponent
     this.bankForms = [];
     this.setBanks(item.banks ?? []);
 
-    if (this.item) {
+    if (this.item?.raiting) {
       this.item.raiting = this.sortRaiting(this.item.raiting);
     }
   }
@@ -480,7 +480,6 @@ export class CustomersEditComponent
     for (const form of this.bankForms) {
       form.markAllAsTouched();
       result &&= form.valid;
-      console.log(form.valid);
     }
     this.cdr.markForCheck();
     return result;
