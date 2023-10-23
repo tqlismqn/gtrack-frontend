@@ -1,3 +1,5 @@
+@use '../../../../../styles/includes/mixins/raiting';
+
 :host {
   .customers-edit-form {
     display: grid;
@@ -76,6 +78,7 @@
 
   .raiting {
     margin-top: 16px;
+
     mat-form-field {
       height: fit-content;
     }
@@ -103,6 +106,22 @@
         position: sticky;
         top: 0;
       }
+    }
+
+    &__element {
+      @include raiting.raiting-element;
+    }
+  }
+
+  textarea {
+    min-height: 78px * 3 - 22px - 24px - 8px;
+  }
+}
+
+::ng-deep {
+  .raiting__panel {
+    .raiting__element {
+      @include raiting.raiting-element;
     }
   }
 }

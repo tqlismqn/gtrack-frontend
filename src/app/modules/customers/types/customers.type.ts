@@ -60,7 +60,11 @@ export type CustomerDocument = {
   file?: File;
 };
 
-export type CustomerRaitingType = 'red' | 'yellow' | 'green';
+export enum CustomerRaitingType {
+  RED,
+  YELLOW,
+  GREEN,
+}
 
 export type CustomerRaiting = {
   raiting: CustomerRaitingType;

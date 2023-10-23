@@ -1,10 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import {
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  Validators,
-} from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { EditComponentComponent } from '../../../base-module/components/edit-component/edit-component.component';
 import {
   Customer,
@@ -23,7 +18,6 @@ import {
   BankCollection,
   BankCollectionResponse,
 } from '../../../admin/types/bank-collection';
-import { AdminUser, AdminUserResponse } from '../../../admin/types/users';
 import { Nameable } from '../../../base-module/types/nameable.type';
 
 interface CustomersEditForm {
@@ -443,6 +437,7 @@ export class CustomersEditComponent
         for (const user of selections) {
           this.users[user.id] = user;
         }
+        this.cdr.markForCheck();
       });
     }
   }
@@ -483,7 +478,11 @@ export class CustomersEditComponent
     return result;
   }
 
-  raitings: CustomerRaitingType[] = ['red', 'yellow', 'green'];
+  raitings: CustomerRaitingType[] = [
+    CustomerRaitingType.RED,
+    CustomerRaitingType.YELLOW,
+    CustomerRaitingType.GREEN,
+  ];
   raitingForm = new FormGroup({
     raiting: new FormControl<string>('', {
       nonNullable: true,
@@ -545,5 +544,21 @@ export class CustomersEditComponent
 
   getUserName(id: string) {
     return this.users[id]?.name;
+  }
+
+  getRaitingClassName = CustomersEditComponent._getRaitingClassName;
+
+  static _getRaitingClassName(raiting: CustomerRaitingType | string) {
+    if (typeof raiting === 'string') {
+      raiting = Number(raiting);
+    }
+    switch (raiting) {
+      case CustomerRaitingType.GREEN:
+        return 'green';
+      case CustomerRaitingType.RED:
+        return 'red';
+      case CustomerRaitingType.YELLOW:
+        return 'yellow';
+    }
   }
 }
