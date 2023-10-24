@@ -12,3 +12,17 @@
     width: 100%;
   }
 }
+::ng-deep {
+  .customers-bank-collection-panel {
+    .bank {
+      padding: {
+        top: 4px;
+        bottom: 4px;
+      };
+      &__underline {
+        font-size: .8em;
+        color: grey;
+      }
+    }
+  }
+}

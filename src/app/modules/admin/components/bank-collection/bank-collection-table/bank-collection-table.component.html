@@ -15,7 +15,7 @@
     </td>
   </ng-container>
   <ng-container matColumnDef="bic">
-    <th mat-header-cell *matHeaderCellDef>BIC</th>
+    <th mat-header-cell *matHeaderCellDef>BIC / SWIFT</th>
     <td mat-cell *matCellDef="let element">
       {{ element.bic }}
     </td>
@@ -24,6 +24,18 @@
     <th mat-header-cell *matHeaderCellDef>Code</th>
     <td mat-cell *matCellDef="let element">
       {{ element.code }}
+    </td>
+  </ng-container>
+  <ng-container matColumnDef="address">
+    <th mat-header-cell *matHeaderCellDef>Address</th>
+    <td mat-cell *matCellDef="let element">
+      {{ element.address }}
+    </td>
+  </ng-container>
+  <ng-container matColumnDef="city">
+    <th mat-header-cell *matHeaderCellDef>City</th>
+    <td mat-cell *matCellDef="let element">
+      {{ element.city }}
     </td>
   </ng-container>
 </app-table>

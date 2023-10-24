@@ -34,12 +34,20 @@ export class BankCollectionTableComponent {
       value: 'name',
     },
     {
-      name: 'BIC',
+      name: 'BIC / SWIFT',
       value: 'bic',
     },
     {
       name: 'Code',
       value: 'code',
+    },
+    {
+      name: 'Address',
+      value: 'address',
+    },
+    {
+      name: 'City',
+      value: 'city',
     },
   ];
 
@@ -53,18 +61,33 @@ export class BankCollectionTableComponent {
       value: 'name',
     },
     {
-      name: 'BIC',
+      name: 'BIC / SWIFT',
       value: 'bic',
     },
     {
       name: 'Code',
       value: 'code',
     },
+    {
+      name: 'Address',
+      value: 'address',
+    },
+    {
+      name: 'City',
+      value: 'city',
+    },
   ];
 
   module = AdminModules.BANK_COLLECTIONS;
 
-  displayedColumns: string[] = ['name', 'bic', 'code', 'actions'];
+  displayedColumns: string[] = [
+    'name',
+    'bic',
+    'code',
+    'address',
+    'city',
+    'actions',
+  ];
 
   toDto(value: AdminUserResponse): AdminUser {
     return value;

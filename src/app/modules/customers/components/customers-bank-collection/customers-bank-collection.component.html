@@ -1,9 +1,29 @@
 <mat-form-field *ngIf="formGroup.controls.bank_template as control">
-  <mat-label>Bank Name</mat-label>
-  <mat-select [formControl]="control">
-    <mat-option *ngFor="let bank of banks" [value]="bank">{{
-      bank.name
-    }}</mat-option>
+  <mat-label>Bank</mat-label>
+  <mat-select
+    [formControl]="control"
+    panelClass="customers-bank-collection-panel"
+    #matSelect
+  >
+    <mat-select-trigger>
+      {{ control.value.name }}
+    </mat-select-trigger>
+    <mat-option>
+      <ngx-mat-select-search
+        [formControl]="bankFilterControl"
+        placeholderLabel="Search"
+      ></ngx-mat-select-search>
+    </mat-option>
+    <mat-option *ngFor="let bank of banksFiltered | async" [value]="bank">
+      <div class="bank">
+        <div class="bank__name">
+          {{ bank.name }}
+        </div>
+        <div class="bank__underline">
+          {{ bank.bic }} / {{ bank.city }} / {{ bank.address }}
+        </div>
+      </div>
+    </mat-option>
   </mat-select>
   <mat-error *ngIf="control.hasError('required')"
     >This field is <b>required</b></mat-error
@@ -48,7 +68,7 @@
 </mat-form-field>
 
 <mat-form-field *ngIf="formGroup.controls.bic as control">
-  <mat-label>BIC</mat-label>
+  <mat-label>BIC / SWIFT</mat-label>
   <input matInput [formControl]="control" readonly />
   <mat-error *ngIf="control.hasError('required')"
     >This field is <b>required</b></mat-error

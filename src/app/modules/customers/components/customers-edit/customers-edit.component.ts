@@ -311,6 +311,8 @@ export class CustomersEditComponent
           name: bank.bank_template.name,
           id: bank.bank_template.id,
           code: bank.bank_template.code,
+          address: bank.bank_template.address,
+          city: bank.bank_template.city,
         },
         {
           nonNullable: true,
@@ -332,6 +334,8 @@ export class CustomersEditComponent
         id: '',
         bic: '',
         code: '',
+        address: '',
+        city: '',
       },
     };
   }
@@ -344,6 +348,8 @@ export class CustomersEditComponent
           id: '',
           bic: '',
           code: '',
+          address: '',
+          city: '',
         };
       }
       if (!bank.bank_template.id) {
@@ -455,6 +461,8 @@ export class CustomersEditComponent
             id: item.id,
             bic: item.bic,
             code: item.code,
+            address: item.address,
+            city: item.city,
           }),
         );
         this.cdr.markForCheck();

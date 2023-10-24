@@ -1,8 +1,4 @@
-<app-edit-form
-  #editFormComponent
-  (submit$)="submit()"
-  formTitle="Create Company"
->
+<app-edit-form #editFormComponent (submit$)="submit()" formTitle="Create Bank">
   <mat-form-field
     *ngIf="form.controls.name as control"
     subscriptSizing="dynamic"
@@ -18,7 +14,7 @@
     *ngIf="form.controls.bic as control"
     subscriptSizing="dynamic"
   >
-    <mat-label>BIC</mat-label>
+    <mat-label>BIC / SWIFT</mat-label>
     <input type="text" matInput [formControl]="control" />
     <mat-error *ngIf="control.hasError('required')"
       >This field is <b>required</b></mat-error
@@ -30,6 +26,28 @@
     subscriptSizing="dynamic"
   >
     <mat-label>Code</mat-label>
+    <input type="text" matInput [formControl]="control" />
+    <mat-error *ngIf="control.hasError('required')"
+      >This field is <b>required</b></mat-error
+    >
+  </mat-form-field>
+
+  <mat-form-field
+    *ngIf="form.controls.address as control"
+    subscriptSizing="dynamic"
+  >
+    <mat-label>Address</mat-label>
+    <input type="text" matInput [formControl]="control" />
+    <mat-error *ngIf="control.hasError('required')"
+      >This field is <b>required</b></mat-error
+    >
+  </mat-form-field>
+
+  <mat-form-field
+    *ngIf="form.controls.city as control"
+    subscriptSizing="dynamic"
+  >
+    <mat-label>City</mat-label>
     <input type="text" matInput [formControl]="control" />
     <mat-error *ngIf="control.hasError('required')"
       >This field is <b>required</b></mat-error

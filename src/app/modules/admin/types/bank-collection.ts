@@ -3,6 +3,8 @@ export type BankCollection = {
   name: string;
   bic: string;
   code: string;
+  address: string;
+  city: string;
 };
 
 export type BankCollectionResponse = {
@@ -10,4 +12,6 @@ export type BankCollectionResponse = {
   name: string;
   bic: string;
   code: string;
+  address: string;
+  city: string;
 };

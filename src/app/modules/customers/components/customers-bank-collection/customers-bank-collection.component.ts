@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { BankCollection } from '../../../admin/types/bank-collection';
-import { takeUntil, tap } from 'rxjs';
+import { ReplaySubject, startWith, takeUntil, tap } from 'rxjs';
 
 export interface CustomerBankForm {
   bank_template: FormControl<{
@@ -19,6 +19,8 @@ export interface CustomerBankForm {
     id: string;
     bic: string;
     code: string;
+    address: string;
+    city: string;
   }>;
 
   currency: FormControl<string>;
@@ -42,7 +44,7 @@ export class CustomersBankCollectionComponent
   @Input()
   formGroup = new FormGroup<CustomerBankForm>({
     bank_template: new FormControl(
-      { name: '', id: '', bic: '', code: '' },
+      { name: '', id: '', bic: '', code: '', address: '', city: '' },
       {
         nonNullable: true,
       },
@@ -58,6 +60,12 @@ export class CustomersBankCollectionComponent
   banks: BankCollection[] = [];
 
   currencies = ['USD', 'EUR'];
+
+  bankFilterControl = new FormControl<string>('');
+
+  banksFiltered: ReplaySubject<BankCollection[]> = new ReplaySubject<
+    BankCollection[]
+  >(1);
 
   constructor(protected cdr: ChangeDetectorRef) {}
 
@@ -78,7 +86,18 @@ export class CustomersBankCollectionComponent
 
           this.formGroup.controls.bic.setValue(bank.bic);
           this.formGroup.controls.code.setValue(bank.code);
+          this.formGroup.controls.name.setValue(bank.name);
           this.cdr.markForCheck();
+        }),
+      )
+      .subscribe();
+
+    this.bankFilterControl.valueChanges
+      .pipe(
+        takeUntil(this.destroy$),
+        startWith(null),
+        tap((value) => {
+          this.filterBanks(value);
         }),
       )
       .subscribe();
@@ -86,6 +105,28 @@ export class CustomersBankCollectionComponent
     if (this.formGroup.controls.bank_template.value) {
       this.checkBankSelector();
     }
+  }
+
+  protected filterBanks(value: string | null) {
+    if (!this.banks || this.banks.length === 0) {
+      return;
+    }
+
+    if (!value || value.length === 0) {
+      this.banksFiltered.next([...this.banks]);
+      return;
+    }
+
+    value = value.toLowerCase();
+    this.banksFiltered.next(
+      this.banks.filter((bank) =>
+        !value ? true : this.getSearchString(bank).indexOf(value) > -1,
+      ),
+    );
+  }
+
+  protected getSearchString(bank: BankCollection) {
+    return `${bank.name} ${bank.bic} ${bank.city} ${bank.address}`.toLowerCase();
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -97,7 +138,16 @@ export class CustomersBankCollectionComponent
   checkBankSelector() {
     const value = this.formGroup.controls.bank_template.value;
     let bank = this.banks.find((item) => item.id === value.id);
-    if (!bank && value && value.id && value.name && value.bic && value.code) {
+    if (
+      !bank &&
+      value &&
+      value.id &&
+      value.name &&
+      value.bic &&
+      value.code &&
+      value.address &&
+      value.city
+    ) {
       this.banks = [...this.banks];
       this.banks.push(value);
       bank = value;

@@ -81,6 +81,8 @@ export type CustomerBank = {
     id: string;
     bic: string;
     code: string;
+    address: string;
+    city: string;
   };
 
   currency: string;
