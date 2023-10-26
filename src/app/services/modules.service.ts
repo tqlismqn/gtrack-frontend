@@ -1,9 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AdminModules, Modules } from '../constants/modules';
 import { PermissionAccess } from '../constants/permission-access';
-import { ModuleBase } from '../modules/base-module/types/module-base.type';
 import { Customer } from '../modules/customers/types/customers.type';
-import { Permission } from '../types/permission.type';
 import { PermissionModule } from '../modules/permissions/types/permissions.type';
 import { BankCollection } from '../modules/admin/types/bank-collection';
 import { User } from '../modules/auth/types/user';

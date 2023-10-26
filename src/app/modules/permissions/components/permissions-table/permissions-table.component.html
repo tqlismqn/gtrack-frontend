@@ -1,11 +1,8 @@
 <app-table
   #appTable
-  [module]="module"
-  moduleName="Permissions"
-  moduleItemName="Permission"
-  [toDto]="toDto"
   [displayedColumns]="displayedColumns"
   [sortableColumns]="sortableColumns"
+  [service]="service"
 >
   <ng-container matColumnDef="module">
     <th mat-header-cell *matHeaderCellDef>Module</th>

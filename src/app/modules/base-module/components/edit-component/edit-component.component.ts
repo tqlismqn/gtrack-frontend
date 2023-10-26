@@ -4,6 +4,7 @@ import {
   ChangeDetectorRef,
   Component,
   EventEmitter,
+  Injectable,
   OnDestroy,
   OnInit,
   ViewChild,
@@ -11,11 +12,19 @@ import {
 import { HttpClient } from '@angular/common/http';
 import { CompanyService } from '../../../../services/company.service';
 import { EditFormComponent } from '../edit-form/edit-form.component';
-import { AdminModules, Modules } from '../../../../constants/modules';
-import { environment } from '../../../../../environments/environment';
 import { FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable } from 'rxjs';
+import { Observable, takeUntil, tap } from 'rxjs';
+import { BaseModuleService } from '../../services/base-module-service';
+
+@Injectable()
+export class EditComponentDeps {
+  constructor(
+    public http: HttpClient,
+    public companyService: CompanyService,
+    public router: Router,
+  ) {}
+}
 
 @Component({
   selector: 'app-edit-component',
@@ -29,11 +38,10 @@ export abstract class EditComponentComponent<
   implements AfterViewInit, OnInit, OnDestroy
 {
   constructor(
-    protected http: HttpClient,
+    protected service: BaseModuleService<B, F>,
+    protected deps: EditComponentDeps,
     protected cdr: ChangeDetectorRef,
-    protected companyService: CompanyService,
-    protected route: ActivatedRoute,
-    protected router: Router,
+    public route: ActivatedRoute,
   ) {
     this.route.data.subscribe((data) => {
       if (
@@ -48,7 +56,7 @@ export abstract class EditComponentComponent<
       }
 
       if (this.type === 'update') {
-        const extras = this.router.getCurrentNavigation()?.extras;
+        const extras = this.deps.router.getCurrentNavigation()?.extras;
         if (extras?.state && extras.state['item']) {
           this.item = extras.state['item'];
         }
@@ -61,16 +69,38 @@ export abstract class EditComponentComponent<
   type: 'create' | 'update' = 'create';
   @ViewChild('editFormComponent') editFormComponent!: EditFormComponent;
 
-  item?: F;
-
-  module!: Modules | AdminModules;
-
   form!: FormGroup;
 
+  get item() {
+    return this.service.item;
+  }
+  set item(item) {
+    this.service.item = item;
+  }
+
+  get module() {
+    return this.service.module;
+  }
+  set module(module) {
+    this.service.module = module;
+  }
+
   ngOnInit() {
-    if (this.type === 'update' && this.item) {
-      this.updateFormView(this.item);
-      this.cdr.markForCheck();
+    if (this.type === 'update') {
+      this.service.item$
+        .pipe(
+          takeUntil(this.destroy$),
+          tap((item) => {
+            this.updateFormView(item);
+            this.cdr.markForCheck();
+          }),
+        )
+        .subscribe();
+
+      if (this.item) {
+        this.updateFormView(this.item);
+        this.cdr.markForCheck();
+      }
     }
   }
 
@@ -95,24 +125,18 @@ export abstract class EditComponentComponent<
   fetchItem(id: number | string) {
     this.editFormComponent.startLoading();
 
-    this.http
-      .get(
-        `${environment.apiUrl}/api/v1/${this.module}/read/${id}?company_id=${this.companyService.selectedCompany?.id}`,
-      )
-      .subscribe({
-        next: (response) => {
-          const data = response as B;
-          this.item = this.toDto(data);
-          this.editFormComponent.endLoading('success');
-          this.updateFormView(this.item);
-          this.cdr.markForCheck();
-        },
-        error: (err) => {
-          this.editFormComponent.endLoading('error');
-          this.editFormComponent.processError(err);
-          this.cdr.markForCheck();
-        },
-      });
+    this.service.readOne(id).subscribe({
+      next: (item) => {
+        this.editFormComponent.endLoading('success');
+        this.updateFormView(item);
+        this.cdr.markForCheck();
+      },
+      error: (err) => {
+        this.editFormComponent.endLoading('error');
+        this.editFormComponent.processError(err);
+        this.cdr.markForCheck();
+      },
+    });
   }
 
   update() {
@@ -125,32 +149,22 @@ export abstract class EditComponentComponent<
 
       this.editFormComponent.startLoading();
 
-      this.http
-        .patch(
-          `${environment.apiUrl}/api/v1/${this.module}/update/${this.item?.id}`,
-          {
-            values: this.values,
-            company_id: this.companyService.selectedCompany?.id,
-          },
-        )
-        .subscribe({
-          next: (response) => {
-            const item = response as B;
-            this.item = this.toDto(item);
-            this.updateFormView(this.item);
-            this.editFormComponent.endLoading('success');
-            this.cdr.markForCheck();
-            subscriber.next(this.item);
-            subscriber.complete();
-          },
-          error: (err) => {
-            this.editFormComponent.endLoading('error');
-            this.editFormComponent.processError(err);
-            this.cdr.markForCheck();
-            subscriber.next(undefined);
-            subscriber.complete();
-          },
-        });
+      this.service.update(this.values).subscribe({
+        next: (item) => {
+          this.updateFormView(item);
+          this.editFormComponent.endLoading('success');
+          this.cdr.markForCheck();
+          subscriber.next(item);
+          subscriber.complete();
+        },
+        error: (err) => {
+          this.editFormComponent.endLoading('error');
+          this.editFormComponent.processError(err);
+          this.cdr.markForCheck();
+          subscriber.next(undefined);
+          subscriber.complete();
+        },
+      });
     });
   }
 
@@ -164,32 +178,26 @@ export abstract class EditComponentComponent<
 
       this.editFormComponent.startLoading();
 
-      this.http
-        .post(`${environment.apiUrl}/api/v1/${this.module}/create`, {
-          values,
-          company_id: this.companyService.selectedCompany?.id,
-        })
-        .subscribe({
-          next: (response) => {
-            const item = response as B;
-            this.item = this.toDto(item);
-            this.toUpdatePage();
-            subscriber.next(this.item);
-            subscriber.complete();
-          },
-          error: (err) => {
-            this.editFormComponent.endLoading('error');
-            this.editFormComponent.processError(err);
-            this.cdr.markForCheck();
-            subscriber.next(undefined);
-            subscriber.complete();
-          },
-        });
+      this.service.create(values).subscribe({
+        next: (item) => {
+          console.log(item);
+          this.toUpdatePage();
+          subscriber.next(item);
+          subscriber.complete();
+        },
+        error: (err) => {
+          this.editFormComponent.endLoading('error');
+          this.editFormComponent.processError(err);
+          this.cdr.markForCheck();
+          subscriber.next(undefined);
+          subscriber.complete();
+        },
+      });
     });
   }
 
   toUpdatePage() {
-    this.router.navigateByUrl(`${this.module}/update/${this.item?.id}`, {
+    this.deps.router.navigateByUrl(`${this.module}/update/${this.item?.id}`, {
       state: {
         item: this.item,
       },

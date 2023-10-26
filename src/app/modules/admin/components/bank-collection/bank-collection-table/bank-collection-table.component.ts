@@ -7,6 +7,7 @@ import {
   BankCollection,
   BankCollectionResponse,
 } from '../../../types/bank-collection';
+import { AdminBankCollectionService } from '../../../services/admin-bank-collection.service';
 
 @Component({
   selector: 'app-bank-collection-table',
@@ -19,6 +20,8 @@ export class BankCollectionTableComponent {
     BankCollectionResponse,
     BankCollection
   >;
+
+  constructor(protected service: AdminBankCollectionService) {}
 
   sortableColumns: Selectable[] = [
     {

@@ -18,15 +18,14 @@ import { CompanyService } from '../../../../services/company.service';
 import { SortType } from '../../types/soring.type';
 import { PaginationType } from '../../types/pagination.type';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
-import { combineLatest, debounceTime, merge, takeUntil, tap } from 'rxjs';
-import { environment } from '../../../../../environments/environment';
-import { AdminModules, Modules } from '../../../../constants/modules';
+import { debounceTime, merge, takeUntil, tap } from 'rxjs';
 import { MatColumnDef, MatTable } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { Selectable } from '../../../../types/selectable.type';
 import { defaultSortableFields } from '../../constants/default-sortable-fields';
 import { FormControl } from '@angular/forms';
 import { defaultSearchableFields } from '../../constants/default-searchable-fields';
+import { BaseModuleService } from '../../services/base-module-service';
 
 @Component({
   selector: 'app-table',
@@ -53,7 +52,9 @@ export class TableComponent<B extends { id: string }, F extends { id: string }>
       .subscribe();
   }
 
-  data: F[] = [];
+  @Input()
+  service!: BaseModuleService<B, F>;
+
   sorting?: SortType;
   pagination: PaginationType = {
     page: 1,
@@ -63,18 +64,6 @@ export class TableComponent<B extends { id: string }, F extends { id: string }>
 
   @ViewChild(MatPaginator)
   paginator!: MatPaginator;
-
-  @Input()
-  toDto!: (item: B) => F;
-
-  @Input()
-  module!: Modules | AdminModules;
-
-  @Input()
-  moduleName!: string;
-
-  @Input()
-  moduleItemName!: string;
 
   @Input()
   displayedColumns: string[] = [];
@@ -96,6 +85,13 @@ export class TableComponent<B extends { id: string }, F extends { id: string }>
   searchingValueControl = new FormControl<string | undefined>('', {
     nonNullable: true,
   });
+
+  get moduleName() {
+    return this.service.moduleName;
+  }
+  get moduleItemName() {
+    return this.service.moduleItemName;
+  }
 
   ngOnInit() {
     this.fetch();
@@ -125,6 +121,16 @@ export class TableComponent<B extends { id: string }, F extends { id: string }>
     this.sortingFieldControl.valueChanges.subscribe((value) => {
       this.sortChange(value);
     });
+
+    this.service.data$
+      .pipe(
+        takeUntil(this.destroy$),
+        tap(() => {
+          console.log('tap');
+          this.cdr.markForCheck();
+        }),
+      )
+      .subscribe();
   }
 
   @ViewChild(MatTable, { static: true }) table!: MatTable<F>;
@@ -177,17 +183,8 @@ export class TableComponent<B extends { id: string }, F extends { id: string }>
 
     this.loading = true;
 
-    combineLatest([
-      this.http.post(`${environment.apiUrl}/api/v1/${this.module}/read`, body),
-      this.http.post(`${environment.apiUrl}/api/v1/${this.module}/read`, {
-        ...body,
-        count: true,
-      }),
-    ]).subscribe({
-      next: ([dataResponse, countResponse]) => {
-        const data = dataResponse as B[];
-        const count = Number(countResponse as string);
-        this.data = data.map((item) => this.toDto(item));
+    this.service.read(body).subscribe({
+      next: ([data, count]) => {
         this.paginator.length = count;
         this.loading = false;
         this.cdr.markForCheck();
@@ -200,13 +197,9 @@ export class TableComponent<B extends { id: string }, F extends { id: string }>
   }
 
   delete(item: F) {
-    this.http
-      .delete(
-        `${environment.apiUrl}/api/v1/${this.module}/delete/${item.id}?company_id=${this.companyService.selectedCompany?.id}`,
-      )
-      .subscribe(() => {
-        this.fetch();
-      });
+    this.service.delete(item.id).subscribe(() => {
+      this.fetch();
+    });
   }
 
   destroy$ = new EventEmitter<void>();

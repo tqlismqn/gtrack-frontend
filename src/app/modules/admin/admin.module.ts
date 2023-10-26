@@ -15,6 +15,9 @@ import { MatButtonModule } from '@angular/material/button';
 import { RouterLink } from '@angular/router';
 import { BankCollectionTableComponent } from './components/bank-collection/bank-collection-table/bank-collection-table.component';
 import { BankCollectionEditComponent } from './components/bank-collection/bank-collection-edit/bank-collection-edit.component';
+import { AdminBankCollectionService } from './services/admin-bank-collection.service';
+import { AdminCompaniesService } from './services/admin-companies.service';
+import { AdminUsersService } from './services/admin-users.service';
 
 @NgModule({
   declarations: [
@@ -36,6 +39,11 @@ import { BankCollectionEditComponent } from './components/bank-collection/bank-c
     MatRadioModule,
     MatButtonModule,
     RouterLink,
+  ],
+  providers: [
+    AdminBankCollectionService,
+    AdminCompaniesService,
+    AdminUsersService,
   ],
 })
 export class AdminModule {}

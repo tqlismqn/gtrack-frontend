@@ -10,6 +10,7 @@ import {
   PermissionAccessType,
 } from '../constants/permission-access';
 import { Nameable } from '../modules/base-module/types/nameable.type';
+import { SseService } from './sse.service';
 
 @Injectable({ providedIn: 'root' })
 export class CompanyService {
@@ -21,7 +22,10 @@ export class CompanyService {
 
   companyChanged$ = new EventEmitter<Company>();
 
-  constructor(protected http: HttpClient) {}
+  constructor(
+    protected http: HttpClient,
+    protected sse: SseService,
+  ) {}
 
   protected fetchCompanies(): Observable<Company[]> {
     return new Observable<Company[]>((subscriber) => {

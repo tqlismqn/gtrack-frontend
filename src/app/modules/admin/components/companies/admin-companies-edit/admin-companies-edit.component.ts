@@ -1,9 +1,19 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { EditComponentComponent } from '../../../../base-module/components/edit-component/edit-component.component';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+} from '@angular/core';
+import {
+  EditComponentComponent,
+  EditComponentDeps,
+} from '../../../../base-module/components/edit-component/edit-component.component';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AdminCompany, AdminCompanyResponse } from '../../../types/companies';
 import { environment } from '../../../../../../environments/environment';
 import { AdminUser, AdminUserResponse } from '../../../types/users';
+import { ActivatedRoute } from '@angular/router';
+import { AdminCompaniesService } from '../../../services/admin-companies.service';
 
 type AdminCompaniesFormGroup = {
   name: FormControl<string>;
@@ -44,6 +54,15 @@ export class AdminCompaniesEditComponent
     }),
   });
 
+  constructor(
+    deps: EditComponentDeps,
+    cdr: ChangeDetectorRef,
+    route: ActivatedRoute,
+    service: AdminCompaniesService,
+  ) {
+    super(service, deps, cdr, route);
+  }
+
   users: AdminUser[] = [];
 
   toDto(value: AdminCompanyResponse): AdminCompany {
@@ -67,7 +86,7 @@ export class AdminCompaniesEditComponent
   }
 
   fetchUserNames() {
-    this.http
+    this.deps.http
       .post(`${environment.apiUrl}/api/v1/admin/users/read/`, {})
       .subscribe({
         next: (response) => {

@@ -5,6 +5,7 @@ import { TableComponent } from '../../../base-module/components/table/table.comp
 import { CustomersUtils } from '../../utils/customers-utils';
 import { Selectable } from '../../../../types/selectable.type';
 import { CustomersEditComponent } from '../customers-edit/customers-edit.component';
+import { CustomersService } from '../../services/customers.service';
 
 @Component({
   selector: 'app-customers-table',
@@ -14,6 +15,8 @@ import { CustomersEditComponent } from '../customers-edit/customers-edit.compone
 })
 export class CustomersTableComponent {
   @ViewChild('appTable') appTable!: TableComponent<CustomerResponse, Customer>;
+
+  constructor(protected service: CustomersService) {}
 
   module = Modules.CUSTOMERS;
 
