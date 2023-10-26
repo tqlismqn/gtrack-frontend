@@ -8,6 +8,7 @@ import {
 import { ModulesService } from '../../../../services/modules.service';
 import { PermissionAccess } from '../../../../constants/permission-access';
 import { Selectable } from '../../../../types/selectable.type';
+import { PermissionsService } from '../../services/permissions.service';
 
 @Component({
   selector: 'app-permissions-table',
@@ -16,7 +17,10 @@ import { Selectable } from '../../../../types/selectable.type';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PermissionsTableComponent {
-  constructor(protected moduleService: ModulesService) {}
+  constructor(
+    protected moduleService: ModulesService,
+    protected service: PermissionsService,
+  ) {}
   @ViewChild('appTable') appTable!: TableComponent<
     PermissionModuleResponse,
     PermissionModule

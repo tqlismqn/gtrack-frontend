@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
-import { ModulesService } from '../../../../../services/modules.service';
 import { TableComponent } from '../../../../base-module/components/table/table.component';
 import { Selectable } from '../../../../../types/selectable.type';
 import { AdminModules } from '../../../../../constants/modules';
 import { AdminUser, AdminUserResponse } from '../../../types/users';
 import { AdminCompany, AdminCompanyResponse } from '../../../types/companies';
+import { AdminCompaniesService } from '../../../services/admin-companies.service';
 
 @Component({
   selector: 'app-admin-companies-table',
@@ -13,7 +13,7 @@ import { AdminCompany, AdminCompanyResponse } from '../../../types/companies';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminCompaniesTableComponent {
-  constructor(protected moduleService: ModulesService) {}
+  constructor(protected service: AdminCompaniesService) {}
 
   @ViewChild('appTable') appTable!: TableComponent<
     AdminCompanyResponse,

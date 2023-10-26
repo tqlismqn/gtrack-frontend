@@ -9,12 +9,13 @@ import { RouterLink } from '@angular/router';
 import { EditFormComponent } from './components/edit-form/edit-form.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { EditComponentComponent } from './components/edit-component/edit-component.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
-import {MatIconModule} from "@angular/material/icon";
-import {MatTabsModule} from "@angular/material/tabs";
+import { MatIconModule } from '@angular/material/icon';
+import { MatTabsModule } from '@angular/material/tabs';
+import { BaseModuleServiceDeps } from './services/base-module-service';
+import { EditComponentDeps } from './components/edit-component/edit-component.component';
 
 @NgModule({
   declarations: [TableComponent, EditFormComponent],
@@ -35,5 +36,6 @@ import {MatTabsModule} from "@angular/material/tabs";
     MatTabsModule,
   ],
   exports: [TableComponent, EditFormComponent],
+  providers: [BaseModuleServiceDeps, EditComponentDeps],
 })
 export class BaseModuleModule {}

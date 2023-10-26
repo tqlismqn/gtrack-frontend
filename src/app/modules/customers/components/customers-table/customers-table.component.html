@@ -1,12 +1,9 @@
 <app-table
   #appTable
-  [module]="module"
-  moduleName="Customers"
-  moduleItemName="Customer"
-  [toDto]="customerResponseToDTO"
   [displayedColumns]="displayedColumns"
   [searchableColumns]="searchableColumns"
   [sortableColumns]="sortableColumns"
+  [service]="service"
 >
   <ng-container matColumnDef="internal_company_id">
     <th mat-header-cell *matHeaderCellDef>ID</th>

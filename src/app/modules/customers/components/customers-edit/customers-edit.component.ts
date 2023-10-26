@@ -1,6 +1,14 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+} from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { EditComponentComponent } from '../../../base-module/components/edit-component/edit-component.component';
+import {
+  EditComponentComponent,
+  EditComponentDeps,
+} from '../../../base-module/components/edit-component/edit-component.component';
 import {
   Customer,
   CustomerBank,
@@ -19,6 +27,8 @@ import {
   BankCollectionResponse,
 } from '../../../admin/types/bank-collection';
 import { Nameable } from '../../../base-module/types/nameable.type';
+import { CustomersService } from '../../services/customers.service';
+import { ActivatedRoute } from '@angular/router';
 
 interface CustomersEditForm {
   id?: FormControl<string>;
@@ -53,6 +63,14 @@ export class CustomersEditComponent
   extends EditComponentComponent<CustomerResponse, Customer>
   implements OnInit
 {
+  constructor(
+    service: CustomersService,
+    deps: EditComponentDeps,
+    cdr: ChangeDetectorRef,
+    route: ActivatedRoute,
+  ) {
+    super(service, deps, cdr, route);
+  }
   override form = new FormGroup<CustomersEditForm>({
     company_name: new FormControl<string>('', {
       validators: [Validators.required],
@@ -233,9 +251,9 @@ export class CustomersEditComponent
   }
 
   downloadFile(doc: CustomerDocument) {
-    this.http
+    this.deps.http
       .get(
-        `${environment.apiUrl}/api/v1/${this.module}/download/${this.item?.id}?company_id=${this.companyService.selectedCompany?.id}&id=${doc.id}`,
+        `${environment.apiUrl}/api/v1/${this.module}/download/${this.item?.id}?company_id=${this.deps.companyService.selectedCompany?.id}&id=${doc.id}`,
         { responseType: 'blob' },
       )
       .subscribe((response) => {
@@ -392,9 +410,9 @@ export class CustomersEditComponent
       formData.append('name', document.name);
       formData.append('last_modified', String(document.lastModified));
 
-      this.http
+      this.deps.http
         .post(
-          `${environment.apiUrl}/api/v1/${this.module}/upload/create/${this.item?.id}?company_id=${this.companyService.selectedCompany?.id}`,
+          `${environment.apiUrl}/api/v1/${this.module}/upload/create/${this.item?.id}?company_id=${this.deps.companyService.selectedCompany?.id}`,
           formData,
         )
         .subscribe({
@@ -416,9 +434,9 @@ export class CustomersEditComponent
       const formData = new FormData();
       formData.append('id', document.id ?? '');
 
-      this.http
+      this.deps.http
         .post(
-          `${environment.apiUrl}/api/v1/${this.module}/upload/delete/${this.item?.id}?company_id=${this.companyService.selectedCompany?.id}`,
+          `${environment.apiUrl}/api/v1/${this.module}/upload/delete/${this.item?.id}?company_id=${this.deps.companyService.selectedCompany?.id}`,
           formData,
         )
         .subscribe({
@@ -442,7 +460,7 @@ export class CustomersEditComponent
       this.setBanks([]);
     }
     if (this.type === 'update') {
-      this.companyService.getUserSelections().subscribe((selections) => {
+      this.deps.companyService.getUserSelections().subscribe((selections) => {
         for (const user of selections) {
           this.users[user.id] = user;
         }
@@ -452,7 +470,7 @@ export class CustomersEditComponent
   }
 
   protected fetchBankCollections() {
-    this.http
+    this.deps.http
       .post(`${environment.apiUrl}/api/v1/bank_collections/read`, {})
       .subscribe((response) => {
         this.bankCollections = (response as BankCollectionResponse[]).map(
@@ -523,9 +541,9 @@ export class CustomersEditComponent
         return;
       }
 
-      this.http
+      this.deps.http
         .post(
-          `${environment.apiUrl}/api/v1/${this.module}/raiting/add/${this.item?.id}?company_id=${this.companyService.selectedCompany?.id}`,
+          `${environment.apiUrl}/api/v1/${this.module}/raiting/add/${this.item?.id}?company_id=${this.deps.companyService.selectedCompany?.id}`,
           this.raitingForm.value,
         )
         .subscribe({

@@ -1,11 +1,21 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { EditComponentComponent } from '../../../../base-module/components/edit-component/edit-component.component';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+} from '@angular/core';
+import {
+  EditComponentComponent,
+  EditComponentDeps,
+} from '../../../../base-module/components/edit-component/edit-component.component';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AdminUser } from '../../../types/users';
 import {
   BankCollection,
   BankCollectionResponse,
 } from '../../../types/bank-collection';
+import { ActivatedRoute } from '@angular/router';
+import { AdminBankCollectionService } from '../../../services/admin-bank-collection.service';
 
 type BankCollectionFormGroup = {
   name: FormControl<string>;
@@ -47,6 +57,15 @@ export class BankCollectionEditComponent
       nonNullable: true,
     }),
   });
+
+  constructor(
+    service: AdminBankCollectionService,
+    deps: EditComponentDeps,
+    cdr: ChangeDetectorRef,
+    route: ActivatedRoute,
+  ) {
+    super(service, deps, cdr, route);
+  }
 
   users: AdminUser[] = [];
 

@@ -15,8 +15,9 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatRippleModule } from '@angular/material/core';
 import { MatIconModule } from '@angular/material/icon';
 import { CustomersBankCollectionComponent } from './components/customers-bank-collection/customers-bank-collection.component';
-import {MatTooltipModule} from "@angular/material/tooltip";
-import { NgxMatSelectSearchModule } from "ngx-mat-select-search";
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
+import { CustomersService } from './services/customers.service';
 
 @NgModule({
   declarations: [
@@ -40,7 +41,8 @@ import { NgxMatSelectSearchModule } from "ngx-mat-select-search";
     MatIconModule,
     FormsModule,
     MatTooltipModule,
-    NgxMatSelectSearchModule
-  ]
+    NgxMatSelectSearchModule,
+  ],
+  providers: [CustomersService],
 })
 export class CustomersModule {}

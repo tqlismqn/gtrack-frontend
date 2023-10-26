@@ -4,20 +4,22 @@ import {
   Component,
   OnInit,
 } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { CompanyService } from '../../../../services/company.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Modules } from '../../../../constants/modules';
 import { PermissionAccess } from '../../../../constants/permission-access';
 import { ModulesService } from '../../../../services/modules.service';
 import { Nameable } from '../../../base-module/types/nameable.type';
-import { EditComponentComponent } from '../../../base-module/components/edit-component/edit-component.component';
-import { ActivatedRoute, Router } from '@angular/router';
+import {
+  EditComponentComponent,
+  EditComponentDeps,
+} from '../../../base-module/components/edit-component/edit-component.component';
+import { ActivatedRoute } from '@angular/router';
 import {
   PermissionModule,
   PermissionModuleResponse,
 } from '../../types/permissions.type';
 import { PermissionsUtils } from '../../utils/permissions-utils';
+import { PermissionsService } from '../../services/permissions.service';
 
 @Component({
   selector: 'app-permissions-create',
@@ -30,14 +32,13 @@ export class PermissionsEditComponent
   implements OnInit
 {
   constructor(
-    http: HttpClient,
-    cdr: ChangeDetectorRef,
-    companyService: CompanyService,
-    route: ActivatedRoute,
-    router: Router,
     protected modulesService: ModulesService,
+    service: PermissionsService,
+    deps: EditComponentDeps,
+    cdr: ChangeDetectorRef,
+    route: ActivatedRoute,
   ) {
-    super(http, cdr, companyService, route, router);
+    super(service, deps, cdr, route);
   }
 
   userNames: Nameable[] = [];
@@ -63,7 +64,7 @@ export class PermissionsEditComponent
 
   override ngOnInit() {
     super.ngOnInit();
-    this.companyService.getUserSelections().subscribe((users) => {
+    this.deps.companyService.getUserSelections().subscribe((users) => {
       this.userNames = users.map((item) => ({
         name: `(${item.id}) ${item.name}`,
         id: item.id,

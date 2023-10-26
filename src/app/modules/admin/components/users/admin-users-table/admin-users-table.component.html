@@ -1,11 +1,8 @@
 <app-table
   #appTable
-  [module]="module"
-  moduleName="Users"
-  moduleItemName="User"
-  [toDto]="toDto"
   [displayedColumns]="displayedColumns"
   [sortableColumns]="sortableColumns"
+  [service]="service"
 >
   <ng-container matColumnDef="first_name">
     <th mat-header-cell *matHeaderCellDef>First Name</th>

@@ -32,6 +32,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { AdminModule } from './modules/admin/admin.module';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatRippleModule } from '@angular/material/core';
+import { XSocketInterceptor } from './interceptors/x-socket-interceptor';
 
 @NgModule({
   declarations: [
@@ -90,6 +91,11 @@ import { MatRippleModule } from '@angular/material/core';
     {
       provide: HTTP_INTERCEPTORS,
       useClass: WithCredentialsInterceptor,
+      multi: true,
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: XSocketInterceptor,
       multi: true,
     },
     {

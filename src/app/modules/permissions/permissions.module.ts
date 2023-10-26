@@ -11,6 +11,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { RouterLink } from '@angular/router';
 import { MatSelectModule } from '@angular/material/select';
+import { PermissionsService } from './services/permissions.service';
 
 @NgModule({
   declarations: [PermissionsTableComponent, PermissionsEditComponent],
@@ -27,5 +28,6 @@ import { MatSelectModule } from '@angular/material/select';
     ReactiveFormsModule,
     MatSelectModule,
   ],
+  providers: [PermissionsService],
 })
 export class PermissionsModule {}

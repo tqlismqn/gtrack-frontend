@@ -1,12 +1,9 @@
 <app-table
   #appTable
-  [module]="module"
-  moduleName="Banks"
-  moduleItemName="Bank"
-  [toDto]="toDto"
   [displayedColumns]="displayedColumns"
   [sortableColumns]="sortableColumns"
   [searchableColumns]="searchableColumns"
+  [service]="service"
 >
   <ng-container matColumnDef="name">
     <th mat-header-cell *matHeaderCellDef>Name</th>
