@@ -1,0 +1,21 @@
+:host {
+  .row {
+    display: grid;
+    grid: {
+      template-columns: 1fr auto;
+      column-gap: 12px;
+    }
+
+    & > .mdc-icon-button {
+      margin-top: 4px;
+    }
+
+    & > .mdc-button {
+      margin-top: 10px;
+    }
+
+    &--equal {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+}

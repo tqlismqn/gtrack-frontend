@@ -118,7 +118,7 @@ export abstract class EditComponentComponent<
     }
   }
 
-  abstract toDto(value: B): F;
+  toDto = this.service.toDto;
 
   abstract updateFormView(item: F): void;
 

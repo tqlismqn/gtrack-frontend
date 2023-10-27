@@ -73,6 +73,12 @@ export class SidenavComponent implements OnInit, OnDestroy {
         link: 'permissions',
       });
     }
+    if (this.checkPermission(Modules.ORDERS)) {
+      this.links.push({
+        name: 'Orders',
+        link: 'orders',
+      });
+    }
     if (this.auth.isSuperAdmin) {
       this.adminContainer.push({
         name: 'Users',

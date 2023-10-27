@@ -39,7 +39,7 @@ export class EditFormComponent implements OnInit {
   loadingState: LoadingState = 'loading';
 
   @Input()
-  history?: History[] = [];
+  history?: History[] = undefined;
   displayedColumns = ['user', 'field', 'from', 'to', 'date'];
 
   users: Record<string, string> = {};

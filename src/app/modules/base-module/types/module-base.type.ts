@@ -9,6 +9,7 @@ export interface ModuleBaseReadRequest {
   sort?: SortType;
   search?: SearchType;
   pagination?: PaginationType;
+  select?: string[];
 }
 
 export interface ModuleBaseResponse {

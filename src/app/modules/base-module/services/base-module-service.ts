@@ -129,8 +129,11 @@ export abstract class BaseModuleService<
 
   read(
     body: ModuleBaseReadRequest | undefined = this.cachedReadBody,
+    saveData = true,
   ): Observable<[F[], number]> {
-    this.cachedReadBody = body;
+    if (saveData) {
+      this.cachedReadBody = body;
+    }
 
     if (body) {
       body.company_id = this.companyId;
@@ -152,10 +155,14 @@ export abstract class BaseModuleService<
       ]).subscribe({
         next: ([dataResponse, countResponse]) => {
           const data = dataResponse as B[];
-          this.count = Number(countResponse as string);
-          this.data = data.map((item) => this.toDto(item));
-          this.data$.emit(this.data);
-          subscriber.next([this.data, this.count]);
+          const fData = data.map((item) => this.toDto(item));
+          const count = Number(countResponse as string);
+          if (saveData) {
+            this.count = count;
+            this.data = fData;
+            this.data$.emit(fData);
+          }
+          subscriber.next([fData, count]);
         },
         error: (err) => {
           subscriber.error(err);

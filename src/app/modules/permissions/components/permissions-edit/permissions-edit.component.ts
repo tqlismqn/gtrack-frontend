@@ -73,8 +73,6 @@ export class PermissionsEditComponent
     });
   }
 
-  toDto = PermissionsUtils.permissionResponseToDTO;
-
   updateFormView(item: PermissionModule): void {
     this.form.controls.module_id.setValue(item.module_id);
     this.form.controls.user_id.setValue(item.user_id);

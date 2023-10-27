@@ -287,8 +287,6 @@ export class CustomersEditComponent
     }
   }
 
-  toDto = CustomersUtils.customerResponseToDTO;
-
   protected setBanks(banks: CustomerBank[]): void {
     banks = this.parseBanks(banks);
 

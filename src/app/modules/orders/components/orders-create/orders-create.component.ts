@@ -1,0 +1,153 @@
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+} from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import {
+  EditComponentComponent,
+  EditComponentDeps,
+} from '../../../base-module/components/edit-component/edit-component.component';
+import { ActivatedRoute } from '@angular/router';
+import { Order, OrderResponse } from '../../types/orders.type';
+import { OrdersService } from '../../services/orders.service';
+import { CustomersService } from '../../../customers/services/customers.service';
+import { Customer } from '../../../customers/types/customers.type';
+import { takeUntil, tap } from 'rxjs';
+
+interface OrdersEditForm {
+  customer_id: FormControl<string>;
+  vat_id: FormControl<string>;
+  remark: FormControl<string>;
+  currency: FormControl<string>;
+  credit_limit: FormControl<number | null>;
+  available_limit: FormControl<number | null>;
+  order_price: FormControl<number>;
+}
+
+type CustomerSelections = Pick<
+  Customer,
+  | 'id'
+  | 'company_name'
+  | 'internal_company_id'
+  | 'vat_id'
+  | 'remark'
+  | 'total_available_credit_limit'
+  | 'internal_credit_limit'
+>[];
+
+@Component({
+  selector: 'app-orders-create',
+  templateUrl: './orders-create.component.html',
+  styleUrls: ['./orders-create.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class OrdersCreateComponent
+  extends EditComponentComponent<OrderResponse, Order>
+  implements AfterViewInit, OnInit
+{
+  constructor(
+    service: OrdersService,
+    deps: EditComponentDeps,
+    cdr: ChangeDetectorRef,
+    route: ActivatedRoute,
+    protected customersService: CustomersService,
+  ) {
+    super(service, deps, cdr, route);
+  }
+  override form = new FormGroup<OrdersEditForm>({
+    customer_id: new FormControl<string>('', {
+      validators: [Validators.required],
+      nonNullable: true,
+    }),
+    vat_id: new FormControl<string>('', {
+      nonNullable: true,
+    }),
+    remark: new FormControl<string>('', {
+      nonNullable: true,
+    }),
+    currency: new FormControl<string>('EUR', {
+      nonNullable: true,
+    }),
+    credit_limit: new FormControl<number | null>(null),
+    available_limit: new FormControl<number | null>(null),
+    order_price: new FormControl<number>(0, {
+      validators: [Validators.required, Validators.min(1)],
+      nonNullable: true,
+    }),
+  });
+
+  currencies = ['EUR', 'USD'];
+
+  updateFormView() {
+    //
+  }
+
+  customers: CustomerSelections = [];
+
+  override ngOnInit() {
+    super.ngOnInit();
+
+    this.form.controls.customer_id.valueChanges
+      .pipe(
+        takeUntil(this.destroy$),
+        tap((value) => {
+          const customer = this.customers.find((item) => item.id === value);
+
+          this.form.controls.vat_id.setValue(customer?.vat_id ?? '');
+          this.form.controls.remark.setValue(customer?.remark ?? '');
+          this.form.controls.credit_limit.setValue(
+            customer?.internal_credit_limit ?? null,
+          );
+          this.form.controls.available_limit.setValue(
+            customer?.total_available_credit_limit ?? null,
+          );
+          this.cdr.markForCheck();
+        }),
+      )
+      .subscribe();
+  }
+
+  override ngAfterViewInit() {
+    super.ngAfterViewInit();
+
+    this.editFormComponent.startLoading();
+
+    this.customersService
+      .read(
+        {
+          company_id: this.deps.companyService.selectedCompany?.id,
+          select: [
+            'id',
+            'company_name',
+            'internal_company_id',
+            'vat_id',
+            'remark',
+            'total_available_credit_limit',
+            'internal_credit_limit',
+          ] as (keyof Customer)[],
+        },
+        false,
+      )
+      .subscribe({
+        next: ([data]) => {
+          this.editFormComponent.endLoading('success');
+          this.customers = data as CustomerSelections;
+          this.cdr.markForCheck();
+        },
+        error: (err) => {
+          this.editFormComponent.processError(err);
+        },
+      });
+  }
+
+  protected override get values(): any {
+    return {
+      customer_id: this.form.controls.customer_id.value,
+      currency: this.form.controls.currency.value,
+      order_price: this.form.controls.order_price.value,
+    };
+  }
+}
