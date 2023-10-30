@@ -75,6 +75,7 @@ export class OrdersUpdateComponent
 
     this.deps.companyService.getUserSelections().subscribe((users) => {
       this.users = users;
+      this.cdr.markForCheck();
     });
   }
 
@@ -108,9 +109,5 @@ export class OrdersUpdateComponent
       disponent_id: this.form.controls.disponent_id.value,
       delivery_responsible_id: this.form.controls.delivery_responsible_id.value,
     };
-  }
-
-  geterrors(errros: any) {
-    return JSON.stringify(errros);
   }
 }

@@ -31,7 +31,7 @@
         matIconSuffix
         [for]="picker1"
       ></mat-datepicker-toggle>
-      <mat-datepicker #picker1 [formControl]="control"></mat-datepicker>
+      <mat-datepicker #picker1></mat-datepicker>
     </mat-form-field>
 
     <mat-form-field *ngIf="form.controls.last_uploading_date as control">
@@ -78,4 +78,14 @@
       >This field is <b>required</b></mat-error
     >
   </mat-form-field>
+
+  <button type="button" mat-flat-button color="accent">Attach Order</button>
+  <button type="button" mat-flat-button color="accent">Attach CMR</button>
+  <button type="button" mat-flat-button color="accent" disabled>
+    Attach Pallets
+  </button>
+  <button type="button" mat-flat-button color="accent">Attach Invoice</button>
+  <button type="button" mat-flat-button color="accent" class="download-docs">
+    Download All Available Docs
+  </button>
 </app-edit-form>
