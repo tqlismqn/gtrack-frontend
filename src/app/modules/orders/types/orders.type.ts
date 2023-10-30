@@ -2,11 +2,14 @@ import {
   ModuleBase,
   ModuleBaseResponse,
 } from '../../base-module/types/module-base.type';
-import { Nameable } from '../../base-module/types/nameable.type';
+import {
+  Customer,
+  CustomerResponse,
+} from '../../customers/types/customers.type';
 
 export interface OrderResponse extends ModuleBaseResponse {
   customer_id: string;
-  customer?: Nameable;
+  customer?: CustomerResponse;
   currency: string;
   order_price: number;
   internal_order_id: number;
@@ -19,7 +22,7 @@ export interface OrderResponse extends ModuleBaseResponse {
 
 export interface Order extends ModuleBase {
   customer_id: string;
-  customer?: Nameable;
+  customer?: Customer;
   currency: string;
   order_price: number;
   internal_order_id: number;

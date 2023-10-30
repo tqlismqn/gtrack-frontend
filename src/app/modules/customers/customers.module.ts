@@ -23,7 +23,7 @@ import { CustomersService } from './services/customers.service';
   declarations: [
     CustomersEditComponent,
     CustomersTableComponent,
-    CustomersBankCollectionComponent,
+    CustomersBankCollectionComponent
   ],
   imports: [
     CommonModule,
@@ -41,8 +41,11 @@ import { CustomersService } from './services/customers.service';
     MatIconModule,
     FormsModule,
     MatTooltipModule,
-    NgxMatSelectSearchModule,
+    NgxMatSelectSearchModule
   ],
   providers: [CustomersService],
+  exports: [
+    CustomersBankCollectionComponent
+  ]
 })
 export class CustomersModule {}

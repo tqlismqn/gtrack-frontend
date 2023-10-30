@@ -33,6 +33,11 @@ export class ModulesService {
       plural: 'Orders',
       singular: 'Order',
     },
+    [Modules.INVOICES]: {
+      id: Modules.INVOICES,
+      plural: 'Invoices',
+      singular: 'Invoice',
+    },
   };
 
   public readonly moduleNamesArray = Object.values(this.moduleNames);
@@ -62,6 +67,7 @@ export class ModulesService {
     [Modules.CUSTOMERS]?: { [key in keyof Customer]?: string };
     [Modules.PERMISSIONS]?: { [key in keyof PermissionModule]?: string };
     [Modules.ORDERS]?: { [key in keyof Order]?: string };
+    [Modules.INVOICES]?: { [key in keyof Order]?: string };
     [AdminModules.BANK_COLLECTIONS]?: {
       [key in keyof BankCollection]?: string;
     };

@@ -20,6 +20,7 @@ export class AdminBankCollectionService extends BaseModuleService<
 
   constructor(deps: BaseModuleServiceDeps) {
     super(deps, AdminModules.BANK_COLLECTIONS);
+    this.read({}).subscribe();
   }
 
   moduleFieldNames = {};

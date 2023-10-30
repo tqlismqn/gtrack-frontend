@@ -1,0 +1,14 @@
+<app-table
+  #appTable
+  [displayedColumns]="displayedColumns"
+  [searchableColumns]="searchableColumns"
+  [sortableColumns]="sortableColumns"
+  [service]="service"
+>
+  <ng-container matColumnDef="invoice_id">
+    <th mat-header-cell *matHeaderCellDef>Invoice ID</th>
+    <td mat-cell *matCellDef="let element">
+      {{ element.id }}
+    </td>
+  </ng-container>
+</app-table>

@@ -135,7 +135,7 @@ export class CustomersBankCollectionComponent
     }
   }
 
-  checkBankSelector() {
+  public checkBankSelector() {
     const value = this.formGroup.controls.bank_template.value;
     let bank = this.banks.find((item) => item.id === value.id);
     if (

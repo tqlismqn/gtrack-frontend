@@ -1,0 +1,366 @@
+<app-edit-form
+  #editFormComponent
+  (submit$)="submit()"
+  formTitle="Create Invoice"
+  [disableGrid]="true"
+  [history]="item?.history"
+  [module]="module"
+>
+  <div class="edit-form">
+    <div class="edit-form__left">
+      <mat-form-field *ngIf="form.controls.company_id as control">
+        <mat-label>Company</mat-label>
+        <mat-select [formControl]="control">
+          <mat-option
+            *ngFor="let company of this.deps.companyService.companies"
+            [value]="company.id"
+            >{{ company.name }}</mat-option
+          >
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field *ngIf="form.controls.order_id as control">
+        <mat-label>Order</mat-label>
+        <mat-select
+          [formControl]="control"
+          (selectionChange)="onOrderSelect(control.value)"
+        >
+          <mat-option [value]="null">*Empty*</mat-option>
+          <mat-option
+            *ngFor="let order of this.service.orders"
+            [value]="order.id"
+            >{{ order.internal_order_id }} ({{
+              order.customer?.company_name
+            }})</mat-option
+          >
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field *ngIf="form.controls.vat_id as control">
+        <mat-label>Vat ID</mat-label>
+        <input matInput [formControl]="control" />
+        <mat-error *ngIf="control.hasError('required')"
+          >This field is <b>required</b></mat-error
+        >
+      </mat-form-field>
+
+      <mat-form-field *ngIf="form.controls.contact_phone as control">
+        <mat-label>Contact Phone</mat-label>
+        <input matInput [formControl]="control" />
+        <mat-error *ngIf="control.hasError('required')"
+          >This field is <b>required</b></mat-error
+        >
+      </mat-form-field>
+
+      <mat-form-field *ngIf="form.controls.contact_email as control">
+        <mat-label>Main Contact Email</mat-label>
+        <input matInput [formControl]="control" />
+        <mat-error *ngIf="control.hasError('required')"
+          >This field is <b>required</b></mat-error
+        >
+      </mat-form-field>
+
+      <mat-form-field *ngIf="form.controls.accounting_email as control">
+        <mat-label>Email For Accounting Department</mat-label>
+        <input matInput [formControl]="control" />
+        <mat-error *ngIf="control.hasError('required')"
+          >This field is <b>required</b></mat-error
+        >
+      </mat-form-field>
+
+      <mat-form-field *ngIf="form.controls.client_id as control">
+        <mat-label>Client ID</mat-label>
+        <mat-select
+          [formControl]="control"
+          (selectionChange)="onCustomerSelect(control.value)"
+        >
+          <mat-option [value]="null">*Empty*</mat-option>
+          <mat-option
+            *ngFor="let customer of this.service.customers"
+            [value]="customer.internal_company_id"
+            >{{ customer.internal_company_id }}</mat-option
+          >
+        </mat-select>
+      </mat-form-field>
+
+      <div class="date">
+        <mat-form-field *ngIf="form.controls.pick_order_date as control">
+          <mat-label>Когда Взяли Заказ</mat-label>
+          <input
+            matInput
+            [matDatepicker]="pickOrderPicker"
+            [formControl]="control"
+            readonly
+          />
+          <mat-error *ngIf="control.hasError('required')"
+            >This field is <b>required</b></mat-error
+          >
+          <mat-datepicker-toggle
+            matIconSuffix
+            [for]="pickOrderPicker"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #pickOrderPicker></mat-datepicker>
+        </mat-form-field>
+
+        <mat-form-field *ngIf="form.controls.invoice_issued_date as control">
+          <mat-label>Когда Выставили Invoice</mat-label>
+          <input
+            matInput
+            [matDatepicker]="invoiceIssuedPicker"
+            [formControl]="control"
+            readonly
+          />
+          <mat-error *ngIf="control.hasError('required')"
+            >This field is <b>required</b></mat-error
+          >
+          <mat-datepicker-toggle
+            matIconSuffix
+            [for]="invoiceIssuedPicker"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #invoiceIssuedPicker></mat-datepicker>
+        </mat-form-field>
+
+        <mat-form-field *ngIf="form.controls.first_loading_date as control">
+          <mat-label>Дата Первой Загрузки</mat-label>
+          <input
+            matInput
+            [matDatepicker]="firstLoadingPicker"
+            [formControl]="control"
+            readonly
+          />
+          <mat-error *ngIf="control.hasError('required')"
+            >This field is <b>required</b></mat-error
+          >
+          <mat-datepicker-toggle
+            matIconSuffix
+            [for]="firstLoadingPicker"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #firstLoadingPicker></mat-datepicker>
+        </mat-form-field>
+
+        <mat-form-field *ngIf="form.controls.last_uploading_date as control">
+          <mat-label>Дата Последней Выгрузки</mat-label>
+          <input
+            matInput
+            [matDatepicker]="lastUploadingPicker"
+            [formControl]="control"
+            readonly
+          />
+          <mat-error *ngIf="control.hasError('required')"
+            >This field is <b>required</b></mat-error
+          >
+          <mat-datepicker-toggle
+            matIconSuffix
+            [for]="lastUploadingPicker"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #lastUploadingPicker></mat-datepicker>
+        </mat-form-field>
+      </div>
+
+      <h2>Payment Conditions</h2>
+
+      <mat-form-field *ngIf="form.controls.terms_of_payment as control">
+        <mat-label>Terms of Payment</mat-label>
+        <input matInput [formControl]="control" />
+        <mat-error *ngIf="control.hasError('required')"
+          >This field is <b>required</b></mat-error
+        >
+      </mat-form-field>
+
+      <div class="currency">
+        <mat-form-field *ngIf="form.controls.currency as control">
+          <mat-label>Currency</mat-label>
+          <mat-select [formControl]="control">
+            <mat-option
+              *ngFor="let currency of this.currencies"
+              [value]="currency"
+              >{{ currency }}</mat-option
+            >
+          </mat-select>
+          <mat-error *ngIf="control.hasError('required')"
+            >Enter valid number</mat-error
+          >
+        </mat-form-field>
+
+        <mat-form-field *ngIf="form.controls.course as control">
+          <mat-label>Course</mat-label>
+          <input
+            type="number"
+            matInput
+            [formControl]="control"
+            min="0"
+            step="0.1"
+          />
+          <mat-error *ngIf="control.hasError('required')"
+            >Enter valid number</mat-error
+          >
+          <mat-error *ngIf="control.hasError('min')"
+            >Value must be greater or equal 0</mat-error
+          >
+        </mat-form-field>
+      </div>
+
+      <mat-form-field *ngIf="form.controls.remark as control">
+        <mat-label>Remark</mat-label>
+        <textarea matInput [formControl]="control"></textarea>
+      </mat-form-field>
+    </div>
+    <div class="edit-form__right">
+      <h2>Banking details</h2>
+
+      <app-customers-bank-collection
+        class="customers-bank-collection"
+        #bankCollectionComponent
+        [banks]="bankCollectionService.data"
+        [formGroup]="bankGroup"
+      ></app-customers-bank-collection>
+
+      <h2>Items</h2>
+      <div class="items">
+        <table class="items__table" mat-table [dataSource]="items">
+          <ng-container matColumnDef="id">
+            <th mat-header-cell *matHeaderCellDef>№</th>
+            <td mat-cell *matCellDef="let element">{{ element.id }}</td>
+            <td mat-footer-cell *matFooterCellDef></td>
+          </ng-container>
+
+          <ng-container matColumnDef="description">
+            <th mat-header-cell *matHeaderCellDef>Description</th>
+            <td mat-cell *matCellDef="let element">
+              {{ element.description }}
+            </td>
+            <td mat-footer-cell *matFooterCellDef></td>
+          </ng-container>
+
+          <ng-container matColumnDef="quantity">
+            <th mat-header-cell *matHeaderCellDef>Quantity</th>
+            <td mat-cell *matCellDef="let element">{{ element.quantity }}</td>
+            <td mat-footer-cell *matFooterCellDef></td>
+          </ng-container>
+
+          <ng-container matColumnDef="price_per_item">
+            <th mat-header-cell *matHeaderCellDef>Price per Item</th>
+            <td mat-cell *matCellDef="let element">
+              {{ element.price_per_item }}
+            </td>
+            <td mat-footer-cell *matFooterCellDef></td>
+          </ng-container>
+
+          <ng-container matColumnDef="price_vat">
+            <th mat-header-cell *matHeaderCellDef>Price (include VAT)</th>
+            <td mat-cell *matCellDef="let element">{{ element.price_vat }}</td>
+            <td mat-footer-cell *matFooterCellDef>{{ sumPrice }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="price">
+            <th mat-header-cell *matHeaderCellDef>Price</th>
+            <td mat-cell *matCellDef="let element">{{ element.price }}</td>
+            <td mat-footer-cell *matFooterCellDef>{{ sumPrice }}</td>
+          </ng-container>
+
+          <tr
+            class="items__table__header"
+            mat-header-row
+            *matHeaderRowDef="[
+              'id',
+              'description',
+              'quantity',
+              'price_per_item',
+              'price_vat',
+              'price'
+            ]"
+          ></tr>
+          <tr
+            mat-row
+            *matRowDef="
+              let row;
+              columns: [
+                'id',
+                'description',
+                'quantity',
+                'price_per_item',
+                'price_vat',
+                'price'
+              ]
+            "
+          ></tr>
+          <tr
+            mat-footer-row
+            *matFooterRowDef="[
+              'id',
+              'description',
+              'quantity',
+              'price_per_item',
+              'price_vat',
+              'price'
+            ]"
+          ></tr>
+        </table>
+
+        <div class="items__form">
+          <mat-form-field
+            *ngIf="itemsGroup.controls.description as control"
+            class="items__form__description"
+          >
+            <mat-label>Description</mat-label>
+            <textarea matInput [formControl]="control"></textarea>
+            <mat-error *ngIf="control.hasError('required')"
+              >This field is <b>required</b></mat-error
+            >
+          </mat-form-field>
+
+          <mat-form-field *ngIf="itemsGroup.controls.price_per_item as control">
+            <mat-label>Price Per Item</mat-label>
+            <input
+              type="number"
+              matInput
+              [formControl]="control"
+              min="0"
+              step="0.1"
+            />
+            <mat-error *ngIf="control.hasError('required')"
+              >Enter valid number</mat-error
+            >
+          </mat-form-field>
+
+          <mat-form-field *ngIf="itemsGroup.controls.quantity as control">
+            <mat-label>Quantity</mat-label>
+            <input
+              type="number"
+              matInput
+              [formControl]="control"
+              min="0"
+              step="1"
+            />
+            <mat-error
+              *ngIf="
+                control.hasError('required') || control.hasError('pattern')
+              "
+              >Enter valid integer</mat-error
+            >
+          </mat-form-field>
+
+          <mat-form-field *ngIf="itemsGroup.controls.price_vat as control">
+            <mat-label>Price (include VAT)</mat-label>
+            <input type="number" matInput [formControl]="control" readonly />
+          </mat-form-field>
+
+          <mat-form-field *ngIf="itemsGroup.controls.price as control">
+            <mat-label>Price</mat-label>
+            <input type="number" matInput [formControl]="control" readonly />
+          </mat-form-field>
+        </div>
+
+        <button
+          class="items__add"
+          type="button"
+          mat-flat-button
+          color="accent"
+          (click)="addItem()"
+        >
+          Add Item
+        </button>
+      </div>
+    </div>
+  </div>
+</app-edit-form>

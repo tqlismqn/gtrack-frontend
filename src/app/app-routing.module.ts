@@ -27,7 +27,9 @@ import { BankCollectionTableComponent } from './modules/admin/components/bank-co
 import { BankCollectionEditComponent } from './modules/admin/components/bank-collection/bank-collection-edit/bank-collection-edit.component';
 import { OrdersTableComponent } from './modules/orders/components/orders-table/orders-table.component';
 import { OrdersCreateComponent } from './modules/orders/components/orders-create/orders-create.component';
-import {OrdersUpdateComponent} from "./modules/orders/components/orders-update/orders-update.component";
+import { OrdersUpdateComponent } from './modules/orders/components/orders-update/orders-update.component';
+import { InvoicesTableComponent } from './modules/invoices/components/invoices-table/invoices-table.component';
+import { InvoicesEditComponent } from './modules/invoices/components/invoices-edit/invoices-edit.component';
 
 const modules = [
   {
@@ -51,6 +53,14 @@ const modules = [
     tableComponent: OrdersTableComponent,
     createComponent: OrdersCreateComponent,
     updateComponent: OrdersUpdateComponent,
+  },
+  {
+    module: Modules.INVOICES,
+    readActivate: [haveReadAccess(Modules.INVOICES)],
+    writeActivate: [haveWriteAccess(Modules.INVOICES)],
+    tableComponent: InvoicesTableComponent,
+    createComponent: InvoicesEditComponent,
+    updateComponent: InvoicesEditComponent,
   },
 
   {

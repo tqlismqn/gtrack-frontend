@@ -2,6 +2,7 @@ export enum Modules {
   CUSTOMERS = 'customers',
   PERMISSIONS = 'permissions',
   ORDERS = 'orders',
+  INVOICES = 'invoices',
 }
 
 export enum AdminModules {
