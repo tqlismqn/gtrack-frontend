@@ -22,13 +22,13 @@ export class InvoicesTableComponent {
   searchableColumns: Selectable[] = [
     {
       name: 'Invoice ID',
-      value: 'id',
+      value: 'internal_invoice_id',
     },
   ];
   sortableColumns: Selectable[] = [
     {
       name: 'Invoice ID',
-      value: 'id',
+      value: 'internal_invoice_id',
     },
   ];
 }

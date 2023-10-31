@@ -1,4 +1,5 @@
 import {
+  AfterViewInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
@@ -27,9 +28,9 @@ import { CustomerBank } from '../../../customers/types/customers.type';
 import { AdminBankCollectionService } from '../../../admin/services/admin-bank-collection.service';
 import { startWith, takeUntil, tap } from 'rxjs';
 import { merge } from 'rxjs';
+import { Order } from '../../../orders/types/orders.type';
 
 interface InvoicesEditForm {
-  company_id: FormControl<string>;
   order_id: FormControl<string | null>;
   vat_id: FormControl<string>;
   contact_phone: FormControl<string>;
@@ -44,6 +45,7 @@ interface InvoicesEditForm {
   currency: FormControl<string>;
   course: FormControl<number>;
   remark: FormControl<string>;
+  internal_invoice_id: FormControl<string>;
 
   client_id: FormControl<number | null>;
 }
@@ -64,7 +66,7 @@ interface InvoicesItemFormControl {
 })
 export class InvoicesEditComponent
   extends EditComponentComponent<InvoiceResponse, Invoice>
-  implements OnInit
+  implements OnInit, AfterViewInit
 {
   constructor(
     protected override service: InvoicesService,
@@ -74,17 +76,17 @@ export class InvoicesEditComponent
     protected bankCollectionService: AdminBankCollectionService,
   ) {
     super(service, deps, cdr, route);
+    const extras = this.deps.router.getCurrentNavigation()?.extras;
+    if (extras?.state && extras.state['order']) {
+      const order = extras.state['order'] as Order;
+      this.form.controls.order_id.setValue(order.id);
+      this.updateOrderView(order);
+    }
   }
   override form = new FormGroup<InvoicesEditForm>({
-    company_id: new FormControl<string>(
-      {
-        value: this.deps.companyService.selectedCompany?.id ?? '',
-        disabled: true,
-      },
-      {
-        nonNullable: true,
-      },
-    ),
+    internal_invoice_id: new FormControl<string>('', {
+      nonNullable: true,
+    }),
     order_id: new FormControl(null),
     vat_id: new FormControl('', {
       nonNullable: true,
@@ -143,7 +145,6 @@ export class InvoicesEditComponent
 
   updateFormView(item: Invoice) {
     const controls = this.form.controls;
-    controls.company_id?.setValue(item.company_id);
     controls.order_id?.setValue(item.order_id ?? null);
     controls.first_loading_date?.setValue(item.first_loading_date);
     controls.last_uploading_date?.setValue(item.last_uploading_date);
@@ -153,6 +154,7 @@ export class InvoicesEditComponent
     controls.currency?.setValue(item.currency);
     controls.course?.setValue(item.course);
     controls.remark?.setValue(item.remark);
+    controls.internal_invoice_id?.setValue(String(item.internal_invoice_id));
 
     controls.vat_id?.setValue(item.vat_id);
     controls.contact_phone?.setValue(item.contact_phone);
@@ -325,6 +327,9 @@ export class InvoicesEditComponent
   }
 
   protected override get values(): any {
+    const values = super.values;
+    delete values['internal_invoice_id'];
+
     return {
       ...super.values,
       bank: this.bankGroup.value,

@@ -30,6 +30,7 @@ import { OrdersCreateComponent } from './modules/orders/components/orders-create
 import { OrdersUpdateComponent } from './modules/orders/components/orders-update/orders-update.component';
 import { InvoicesTableComponent } from './modules/invoices/components/invoices-table/invoices-table.component';
 import { InvoicesEditComponent } from './modules/invoices/components/invoices-edit/invoices-edit.component';
+import { InvoicesOrdersTableComponent } from './modules/invoices/components/invoices-orders-table/invoices-orders-table.component';
 
 const modules = [
   {
@@ -118,6 +119,16 @@ for (const item of modules) {
     },
   );
 }
+
+moduleRoutes.push({
+  canActivate: [
+    haveReadAccess(Modules.INVOICES),
+    haveReadAccess(Modules.ORDERS),
+  ],
+  path: `${Modules.INVOICES}-${Modules.ORDERS}`,
+  component: InvoicesOrdersTableComponent,
+  runGuardsAndResolvers: 'always',
+});
 
 const routes: Routes = [
   {

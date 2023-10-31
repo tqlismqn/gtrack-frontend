@@ -149,11 +149,11 @@ export abstract class BaseModuleService<
     return new Observable<[F[], number]>((subscriber) => {
       combineLatest([
         this.deps.http.post(
-          `${environment.apiUrl}/api/v1/${this.module}/read`,
+          `${environment.apiUrl}/api/v1/${this.module}/read?company_id=${this.companyId}`,
           body,
         ),
         this.deps.http.post(
-          `${environment.apiUrl}/api/v1/${this.module}/read`,
+          `${environment.apiUrl}/api/v1/${this.module}/read?company_id=${this.companyId}`,
           {
             ...body,
             count: true,

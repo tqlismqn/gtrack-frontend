@@ -180,7 +180,6 @@ export abstract class EditComponentComponent<
 
       this.service.create(values).subscribe({
         next: (item) => {
-          console.log(item);
           this.toUpdatePage();
           subscriber.next(item);
           subscriber.complete();

@@ -24,6 +24,7 @@ export interface InvoiceResponse extends ModuleBaseResponse {
   remark: string;
   bank?: CustomerBank;
   items?: InvoiceItem[];
+  internal_invoice_id: number;
 }
 
 export interface Invoice extends ModuleBase {
@@ -45,6 +46,7 @@ export interface Invoice extends ModuleBase {
   remark: string;
   bank?: CustomerBank;
   items?: InvoiceItem[];
+  internal_invoice_id: number;
 }
 
 export interface InvoiceItem {

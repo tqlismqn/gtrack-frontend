@@ -5,17 +5,36 @@ import { InvoicesTableComponent } from './components/invoices-table/invoices-tab
 import { BaseModuleModule } from '../base-module/base-module.module';
 import { MatTableModule } from '@angular/material/table';
 import { InvoicesEditComponent } from './components/invoices-edit/invoices-edit.component';
-import { MatFormFieldModule } from "@angular/material/form-field";
-import { MatInputModule } from "@angular/material/input";
-import { ReactiveFormsModule } from "@angular/forms";
-import { MatSelectModule } from "@angular/material/select";
-import { MatDatepickerModule } from "@angular/material/datepicker";
-import { CustomersModule } from "../customers/customers.module";
-import { MatButtonModule } from "@angular/material/button";
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatSelectModule } from '@angular/material/select';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { CustomersModule } from '../customers/customers.module';
+import { MatButtonModule } from '@angular/material/button';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { InvoicesOrdersTableComponent } from './components/invoices-orders-table/invoices-orders-table.component';
+import { InvoicesOrdersService } from './services/invoices-orders.service';
 
 @NgModule({
-  declarations: [InvoicesTableComponent, InvoicesEditComponent],
-  imports: [CommonModule, BaseModuleModule, MatTableModule, MatFormFieldModule, MatInputModule, ReactiveFormsModule, MatSelectModule, MatDatepickerModule, CustomersModule, MatButtonModule],
-  providers: [InvoicesService],
+  declarations: [
+    InvoicesTableComponent,
+    InvoicesEditComponent,
+    InvoicesOrdersTableComponent,
+  ],
+  imports: [
+    CommonModule,
+    BaseModuleModule,
+    MatTableModule,
+    MatFormFieldModule,
+    MatInputModule,
+    ReactiveFormsModule,
+    MatSelectModule,
+    MatDatepickerModule,
+    CustomersModule,
+    MatButtonModule,
+    MatTooltipModule,
+  ],
+  providers: [InvoicesService, InvoicesOrdersService],
 })
 export class InvoicesModule {}

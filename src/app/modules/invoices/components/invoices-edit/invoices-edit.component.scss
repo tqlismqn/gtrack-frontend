@@ -1,3 +1,5 @@
+@use '../../../../../styles/includes/mixins/inactive';
+
 :host {
   .edit-form {
     display: grid;
@@ -66,5 +68,9 @@
 
   .customers-bank-collection {
     width: fit-content !important;
+  }
+
+  .inactive {
+    @include inactive.inactive;
   }
 }

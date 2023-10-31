@@ -29,6 +29,7 @@ export class SidenavComponent implements OnInit, OnDestroy {
   links: Link[] = [];
 
   adminContainer: Link[] = [];
+  invoicesContainer: Link[] = [];
 
   destroy$ = new EventEmitter();
 
@@ -80,9 +81,18 @@ export class SidenavComponent implements OnInit, OnDestroy {
       });
     }
     if (this.checkPermission(Modules.INVOICES)) {
-      this.links.push({
+      this.invoicesContainer.push({
         name: 'Invoices',
         link: 'invoices',
+      });
+    }
+    if (
+      this.checkPermission(Modules.INVOICES) &&
+      this.checkPermission(Modules.ORDERS)
+    ) {
+      this.invoicesContainer.push({
+        name: 'Orders',
+        link: 'invoices-orders',
       });
     }
     if (this.auth.isSuperAdmin) {
