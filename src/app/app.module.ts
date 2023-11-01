@@ -33,6 +33,8 @@ import { AdminModule } from './modules/admin/admin.module';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatRippleModule } from '@angular/material/core';
 import { XSocketInterceptor } from './interceptors/x-socket-interceptor';
+import { OrdersModule } from './modules/orders/orders.module';
+import { InvoicesModule } from './modules/invoices/invoices.module';
 
 @NgModule({
   declarations: [
@@ -85,6 +87,8 @@ import { XSocketInterceptor } from './interceptors/x-socket-interceptor';
     AdminModule,
     MatExpansionModule,
     MatRippleModule,
+    OrdersModule,
+    InvoicesModule,
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthHttpInterceptor, multi: true },

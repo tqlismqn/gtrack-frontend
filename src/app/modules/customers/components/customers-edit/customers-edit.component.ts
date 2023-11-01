@@ -17,7 +17,6 @@ import {
   CustomerRaitingType,
   CustomerResponse,
 } from '../../types/customers.type';
-import { CustomersUtils } from '../../utils/customers-utils';
 import { countries } from 'countries-list';
 import { environment } from '../../../../../environments/environment';
 import { Observable } from 'rxjs';
@@ -29,6 +28,10 @@ import {
 import { Nameable } from '../../../base-module/types/nameable.type';
 import { CustomersService } from '../../services/customers.service';
 import { ActivatedRoute } from '@angular/router';
+import {
+  termsOfPayment,
+  TermsOfPaymentEnum,
+} from '../../types/terms-of-payment.enum';
 
 interface CustomersEditForm {
   id?: FormControl<string>;
@@ -45,7 +48,7 @@ interface CustomersEditForm {
   street?: FormControl<string>;
   remark?: FormControl<string | null>;
   documents?: FormControl<CustomerDocument[]>;
-  terms_of_payment?: FormControl<string>;
+  terms_of_payment?: FormControl<number>;
   pallet_balance?: FormControl<number>;
   insurance_credit_limit?: FormControl<number>;
   available_insurance_limit?: FormControl<number>;
@@ -71,6 +74,8 @@ export class CustomersEditComponent
   ) {
     super(service, deps, cdr, route);
   }
+  multipleEmailRegex =
+    /(([a-zA-Z0-9_\-.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(]?)(\s*;\s*|\s*$))+/;
   override form = new FormGroup<CustomersEditForm>({
     company_name: new FormControl<string>('', {
       validators: [Validators.required],
@@ -94,7 +99,10 @@ export class CustomersEditComponent
       nonNullable: true,
     }),
     accounting_email: new FormControl<string>('', {
-      validators: [Validators.required, Validators.email],
+      validators: [
+        Validators.required,
+        Validators.pattern(this.multipleEmailRegex),
+      ],
       nonNullable: true,
     }),
 
@@ -118,7 +126,7 @@ export class CustomersEditComponent
     remark: new FormControl<string>(''),
     documents: new FormControl<CustomerDocument[]>([], { nonNullable: true }),
 
-    terms_of_payment: new FormControl<string>('', {
+    terms_of_payment: new FormControl<number>(TermsOfPaymentEnum.PREPAYMENT, {
       validators: [Validators.required],
       nonNullable: true,
     }),
@@ -286,8 +294,6 @@ export class CustomersEditComponent
       }
     }
   }
-
-  toDto = CustomersUtils.customerResponseToDTO;
 
   protected setBanks(banks: CustomerBank[]): void {
     banks = this.parseBanks(banks);
@@ -515,6 +521,7 @@ export class CustomersEditComponent
     CustomerRaitingType.RED,
     CustomerRaitingType.YELLOW,
     CustomerRaitingType.GREEN,
+    CustomerRaitingType.BLACK,
   ];
   raitingForm = new FormGroup({
     raiting: new FormControl<string>('', {
@@ -592,6 +599,10 @@ export class CustomersEditComponent
         return 'red';
       case CustomerRaitingType.YELLOW:
         return 'yellow';
+      case CustomerRaitingType.BLACK:
+        return 'black';
     }
   }
+
+  protected readonly termsOfPayment = Object.values(termsOfPayment);
 }

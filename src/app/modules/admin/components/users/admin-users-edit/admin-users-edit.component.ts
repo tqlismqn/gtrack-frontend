@@ -72,10 +72,6 @@ export class AdminUsersEditComponent
     super(service, deps, cdr, route);
   }
 
-  toDto(value: AdminUserResponse): AdminUser {
-    return value;
-  }
-
   updateFormView(item: AdminUser): void {
     this.form.controls.first_name.setValue(item.first_name ?? '');
     this.form.controls.last_name.setValue(item.last_name ?? '');

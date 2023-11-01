@@ -1,0 +1,7 @@
+@use '../../../../../styles/includes/mixins/raiting';
+
+:host {
+  .raiting__element {
+    @include raiting.raiting-element;
+  }
+}

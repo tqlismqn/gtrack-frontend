@@ -36,6 +36,10 @@ export abstract class BaseModuleService<
   abstract moduleItemName: string;
   abstract moduleFieldNames: Record<string, string>;
 
+  created$ = new EventEmitter<string>();
+  updated$ = new EventEmitter<string>();
+  deleted$ = new EventEmitter<string>();
+
   constructor(
     protected deps: BaseModuleServiceDeps,
     module: Modules | AdminModules,
@@ -78,18 +82,21 @@ export abstract class BaseModuleService<
         '.App\\Events\\Model\\Module\\ModelModuleUpdate',
         (data: { id: string }) => {
           this.processUpdate(data.id);
+          this.updated$.emit(data.id);
         },
       )
       .listen(
         '.App\\Events\\Model\\Module\\ModelModuleCreate',
         (data: { id: string }) => {
           this.processCreate(data.id);
+          this.created$.emit(data.id);
         },
       )
       .listen(
         '.App\\Events\\Model\\Module\\ModelModuleDelete',
         (data: { id: string }) => {
           this.processDelete(data.id);
+          this.deleted$.emit(data.id);
         },
       );
   }
@@ -129,8 +136,11 @@ export abstract class BaseModuleService<
 
   read(
     body: ModuleBaseReadRequest | undefined = this.cachedReadBody,
+    saveData = true,
   ): Observable<[F[], number]> {
-    this.cachedReadBody = body;
+    if (saveData) {
+      this.cachedReadBody = body;
+    }
 
     if (body) {
       body.company_id = this.companyId;
@@ -139,11 +149,11 @@ export abstract class BaseModuleService<
     return new Observable<[F[], number]>((subscriber) => {
       combineLatest([
         this.deps.http.post(
-          `${environment.apiUrl}/api/v1/${this.module}/read`,
+          `${environment.apiUrl}/api/v1/${this.module}/read?company_id=${this.companyId}`,
           body,
         ),
         this.deps.http.post(
-          `${environment.apiUrl}/api/v1/${this.module}/read`,
+          `${environment.apiUrl}/api/v1/${this.module}/read?company_id=${this.companyId}`,
           {
             ...body,
             count: true,
@@ -152,10 +162,14 @@ export abstract class BaseModuleService<
       ]).subscribe({
         next: ([dataResponse, countResponse]) => {
           const data = dataResponse as B[];
-          this.count = Number(countResponse as string);
-          this.data = data.map((item) => this.toDto(item));
-          this.data$.emit(this.data);
-          subscriber.next([this.data, this.count]);
+          const fData = data.map((item) => this.toDto(item));
+          const count = Number(countResponse as string);
+          if (saveData) {
+            this.count = count;
+            this.data = fData;
+            this.data$.emit(fData);
+          }
+          subscriber.next([fData, count]);
         },
         error: (err) => {
           subscriber.error(err);
@@ -165,7 +179,7 @@ export abstract class BaseModuleService<
     });
   }
 
-  readOne(id: number | string): Observable<F> {
+  readOne(id: number | string, saveData = true): Observable<F> {
     return new Observable<F>((subscriber) => {
       this.deps.http
         .get(
@@ -174,9 +188,12 @@ export abstract class BaseModuleService<
         .subscribe({
           next: (response) => {
             const data = response as B;
-            this.item = this.toDto(data);
-            this.item$.emit(this.item);
-            subscriber.next(this.item);
+            const item = this.toDto(data);
+            if (saveData) {
+              this.item = item;
+              this.item$.emit(this.item);
+            }
+            subscriber.next(item);
           },
           error: (err) => {
             subscriber.error(err);

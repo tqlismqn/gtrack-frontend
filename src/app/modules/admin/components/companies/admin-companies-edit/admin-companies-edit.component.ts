@@ -65,10 +65,6 @@ export class AdminCompaniesEditComponent
 
   users: AdminUser[] = [];
 
-  toDto(value: AdminCompanyResponse): AdminCompany {
-    return value;
-  }
-
   updateFormView(item: AdminCompany): void {
     this.form.controls.name.setValue(item.name);
     this.form.controls.employees_number.setValue(item.employees_number);

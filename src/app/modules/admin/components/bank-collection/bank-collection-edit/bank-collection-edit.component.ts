@@ -69,10 +69,6 @@ export class BankCollectionEditComponent
 
   users: AdminUser[] = [];
 
-  toDto(value: BankCollectionResponse): BankCollection {
-    return value;
-  }
-
   updateFormView(item: BankCollection): void {
     this.form.controls.name.setValue(item.name);
     this.form.controls.bic.setValue(item.bic);

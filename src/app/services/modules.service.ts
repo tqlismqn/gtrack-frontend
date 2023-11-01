@@ -6,6 +6,7 @@ import { PermissionModule } from '../modules/permissions/types/permissions.type'
 import { BankCollection } from '../modules/admin/types/bank-collection';
 import { User } from '../modules/auth/types/user';
 import { Company } from '../types/company.type';
+import { Order } from '../modules/orders/types/orders.type';
 
 @Injectable({ providedIn: 'root' })
 export class ModulesService {
@@ -26,6 +27,16 @@ export class ModulesService {
       id: Modules.PERMISSIONS,
       plural: 'Permissions',
       singular: 'Permission',
+    },
+    [Modules.ORDERS]: {
+      id: Modules.ORDERS,
+      plural: 'Orders',
+      singular: 'Order',
+    },
+    [Modules.INVOICES]: {
+      id: Modules.INVOICES,
+      plural: 'Invoices',
+      singular: 'Invoice',
     },
   };
 
@@ -55,6 +66,8 @@ export class ModulesService {
   public readonly modulesFieldNames: {
     [Modules.CUSTOMERS]?: { [key in keyof Customer]?: string };
     [Modules.PERMISSIONS]?: { [key in keyof PermissionModule]?: string };
+    [Modules.ORDERS]?: { [key in keyof Order]?: string };
+    [Modules.INVOICES]?: { [key in keyof Order]?: string };
     [AdminModules.BANK_COLLECTIONS]?: {
       [key in keyof BankCollection]?: string;
     };

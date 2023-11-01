@@ -17,14 +17,17 @@
         class="edit-form__progress-bar"
       ></mat-progress-bar>
       <ng-content></ng-content>
-      <button
-        mat-flat-button
-        type="submit"
-        color="primary"
-        [disabled]="loading"
-      >
-        {{ submitTitle }}
-      </button>
+      <div class="actions">
+        <ng-content select="[actions]"></ng-content>
+        <button
+          mat-flat-button
+          type="submit"
+          color="primary"
+          [disabled]="loading"
+        >
+          {{ submitTitle }}
+        </button>
+      </div>
     </form>
   </mat-tab>
   <mat-tab label="History" *ngIf="history">

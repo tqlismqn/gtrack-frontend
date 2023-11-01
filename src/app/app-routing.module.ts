@@ -25,6 +25,12 @@ import { AdminCompaniesTableComponent } from './modules/admin/components/compani
 import { AdminCompaniesEditComponent } from './modules/admin/components/companies/admin-companies-edit/admin-companies-edit.component';
 import { BankCollectionTableComponent } from './modules/admin/components/bank-collection/bank-collection-table/bank-collection-table.component';
 import { BankCollectionEditComponent } from './modules/admin/components/bank-collection/bank-collection-edit/bank-collection-edit.component';
+import { OrdersTableComponent } from './modules/orders/components/orders-table/orders-table.component';
+import { OrdersCreateComponent } from './modules/orders/components/orders-create/orders-create.component';
+import { OrdersUpdateComponent } from './modules/orders/components/orders-update/orders-update.component';
+import { InvoicesTableComponent } from './modules/invoices/components/invoices-table/invoices-table.component';
+import { InvoicesEditComponent } from './modules/invoices/components/invoices-edit/invoices-edit.component';
+import { InvoicesOrdersTableComponent } from './modules/invoices/components/invoices-orders-table/invoices-orders-table.component';
 
 const modules = [
   {
@@ -40,6 +46,22 @@ const modules = [
     writeActivate: [haveWriteAccess(Modules.PERMISSIONS)],
     tableComponent: PermissionsTableComponent,
     editComponent: PermissionsEditComponent,
+  },
+  {
+    module: Modules.ORDERS,
+    readActivate: [haveReadAccess(Modules.ORDERS)],
+    writeActivate: [haveWriteAccess(Modules.ORDERS)],
+    tableComponent: OrdersTableComponent,
+    createComponent: OrdersCreateComponent,
+    updateComponent: OrdersUpdateComponent,
+  },
+  {
+    module: Modules.INVOICES,
+    readActivate: [haveReadAccess(Modules.INVOICES)],
+    writeActivate: [haveWriteAccess(Modules.INVOICES)],
+    tableComponent: InvoicesTableComponent,
+    createComponent: InvoicesEditComponent,
+    updateComponent: InvoicesEditComponent,
   },
 
   {
@@ -78,7 +100,7 @@ for (const item of modules) {
     {
       canActivate: item.writeActivate,
       path: `${item.module}/create`,
-      component: item.editComponent,
+      component: item.createComponent ?? item.editComponent,
       runGuardsAndResolvers: 'always',
       data: {
         type: 'create',
@@ -88,7 +110,7 @@ for (const item of modules) {
     {
       canActivate: item.writeActivate,
       path: `${item.module}/update/:id`,
-      component: item.editComponent,
+      component: item.updateComponent ?? item.editComponent,
       runGuardsAndResolvers: 'always',
       data: {
         type: 'update',
@@ -97,6 +119,16 @@ for (const item of modules) {
     },
   );
 }
+
+moduleRoutes.push({
+  canActivate: [
+    haveReadAccess(Modules.INVOICES),
+    haveReadAccess(Modules.ORDERS),
+  ],
+  path: `${Modules.INVOICES}-${Modules.ORDERS}`,
+  component: InvoicesOrdersTableComponent,
+  runGuardsAndResolvers: 'always',
+});
 
 const routes: Routes = [
   {

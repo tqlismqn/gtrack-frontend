@@ -31,7 +31,11 @@
       </mat-option>
     </mat-select>
   </mat-form-field>
-  <a routerLink="./create" mat-flat-button color="primary" class="create-action"
+  <a
+    [routerLink]="createLink"
+    mat-flat-button
+    color="primary"
+    class="create-action"
     >Create New {{ moduleItemName }}</a
   >
 </div>
@@ -44,7 +48,7 @@
   <ng-container matColumnDef="created_by">
     <th mat-header-cell *matHeaderCellDef>Created By</th>
     <td mat-cell *matCellDef="let element">
-      ({{ element.created_by?.id }}) {{ element.created_by?.name }}
+      {{ element.created_by?.name }}
     </td>
   </ng-container>
 
