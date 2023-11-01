@@ -81,6 +81,8 @@ export class InvoicesEditComponent
       const order = extras.state['order'] as Order;
       this.form.controls.order_id.setValue(order.id);
       this.updateOrderView(order);
+      this.form.controls.customer_id.setValue(null);
+      this.form.controls.client_id.disable();
     }
   }
   override form = new FormGroup<InvoicesEditForm>({
@@ -379,7 +381,8 @@ export class InvoicesEditComponent
   }
 
   addItem() {
-    if (!this.item) {
+    this.itemsGroup.markAllAsTouched();
+    if (!this.item || !this.itemsGroup.valid) {
       return;
     }
     const controls = this.itemsGroup.controls;

@@ -31,7 +31,11 @@
       </mat-option>
     </mat-select>
   </mat-form-field>
-  <a routerLink="./create" mat-flat-button color="primary" class="create-action"
+  <a
+    [routerLink]="createLink"
+    mat-flat-button
+    color="primary"
+    class="create-action"
     >Create New {{ moduleItemName }}</a
   >
 </div>
