@@ -20,7 +20,7 @@
 
   <div class="row row--equal">
     <mat-form-field *ngIf="form.controls.first_loading_date as control">
-      <mat-label>Choose a date</mat-label>
+      <mat-label>First Loading Date</mat-label>
       <input
         matInput
         [matDatepicker]="picker1"
@@ -35,7 +35,7 @@
     </mat-form-field>
 
     <mat-form-field *ngIf="form.controls.last_uploading_date as control">
-      <mat-label>Choose a date</mat-label>
+      <mat-label>Last Uploading Date</mat-label>
       <input
         matInput
         [matDatepicker]="picker2"
