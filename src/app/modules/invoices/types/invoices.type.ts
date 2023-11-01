@@ -4,6 +4,7 @@ import {
 } from '../../base-module/types/module-base.type';
 import { Order } from '../../orders/types/orders.type';
 import { Customer, CustomerBank } from '../../customers/types/customers.type';
+import { TermsOfPaymentEnum } from '../../customers/types/terms-of-payment.enum';
 
 export interface InvoiceResponse extends ModuleBaseResponse {
   order_id?: string;
@@ -18,7 +19,7 @@ export interface InvoiceResponse extends ModuleBaseResponse {
   last_uploading_date: string;
   pick_order_date: string;
   invoice_issued_date: string;
-  terms_of_payment: string;
+  terms_of_payment: TermsOfPaymentEnum;
   currency: string;
   course: number;
   remark: string;
@@ -40,7 +41,7 @@ export interface Invoice extends ModuleBase {
   last_uploading_date: string;
   pick_order_date: string;
   invoice_issued_date: string;
-  terms_of_payment: string;
+  terms_of_payment: TermsOfPaymentEnum;
   currency: string;
   course: number;
   remark: string;

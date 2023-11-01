@@ -29,6 +29,10 @@ import { AdminBankCollectionService } from '../../../admin/services/admin-bank-c
 import { startWith, takeUntil, tap } from 'rxjs';
 import { merge } from 'rxjs';
 import { Order } from '../../../orders/types/orders.type';
+import {
+  termsOfPayment,
+  TermsOfPaymentEnum,
+} from '../../../customers/types/terms-of-payment.enum';
 
 interface InvoicesEditForm {
   order_id: FormControl<string | null>;
@@ -41,7 +45,7 @@ interface InvoicesEditForm {
   last_uploading_date: FormControl<string>;
   pick_order_date: FormControl<string>;
   invoice_issued_date: FormControl<string>;
-  terms_of_payment: FormControl<string>;
+  terms_of_payment: FormControl<number>;
   currency: FormControl<string>;
   course: FormControl<number>;
   remark: FormControl<string>;
@@ -123,7 +127,7 @@ export class InvoicesEditComponent
       nonNullable: true,
       validators: [Validators.required],
     }),
-    terms_of_payment: new FormControl('', {
+    terms_of_payment: new FormControl(TermsOfPaymentEnum.PREPAYMENT, {
       nonNullable: true,
       validators: [Validators.required],
     }),
@@ -406,4 +410,6 @@ export class InvoicesEditComponent
       100
     );
   }
+
+  protected readonly termsOfPayment = Object.values(termsOfPayment);
 }

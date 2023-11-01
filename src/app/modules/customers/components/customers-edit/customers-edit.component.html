@@ -92,8 +92,8 @@
           <mat-error *ngIf="control.hasError('required')"
             >This field is <b>required</b></mat-error
           >
-          <mat-error *ngIf="control.hasError('email')"
-            >Enter valid email</mat-error
+          <mat-error *ngIf="control.hasError('pattern')"
+            >Enter valid emails</mat-error
           >
         </mat-form-field>
         <button color="primary" mat-icon-button type="button">
@@ -137,11 +137,15 @@
         >
       </mat-form-field>
 
-      <h3>Payment Conditions</h3>
+      <h2>Payment Conditions</h2>
 
       <mat-form-field *ngIf="form.controls.terms_of_payment as control">
         <mat-label>Terms of Payment</mat-label>
-        <input matInput [formControl]="control" />
+        <mat-select [formControl]="control">
+          <mat-option *ngFor="let term of termsOfPayment" [value]="term.id">
+            {{ term.name }}
+          </mat-option>
+        </mat-select>
         <mat-error *ngIf="control.hasError('required')"
           >This field is <b>required</b></mat-error
         >
@@ -155,7 +159,7 @@
         >
       </mat-form-field>
 
-      <h3>Credit limit</h3>
+      <h2>Credit limit</h2>
 
       <div class="grid">
         <mat-form-field *ngIf="form.controls.insurance_credit_limit as control">
@@ -193,7 +197,7 @@
       </div>
 
       <div class="banking-details">
-        <h3>Banking details</h3>
+        <h2>Banking details</h2>
 
         <app-customers-bank-collection
           *ngIf="firstBank"
@@ -216,7 +220,7 @@
             class="banking-details__other__item"
             *ngFor="let form of otherBanks; let i = index"
           >
-            <div>Bank {{ i + 1 }}</div>
+            <h3>Bank {{ i + 1 }}</h3>
             <app-customers-bank-collection
               [formGroup]="form"
               [banks]="bankCollections"
@@ -241,7 +245,7 @@
         "
         matTooltipPosition="right"
       >
-        <h3>Documents</h3>
+        <h2>Documents</h2>
         <input
           hidden
           type="file"
@@ -305,7 +309,7 @@
         "
         matTooltipPosition="right"
       >
-        <h3>Raiting</h3>
+        <h2>Raiting</h2>
         <div class="raiting__row">
           <mat-form-field *ngIf="raitingForm.controls.raiting as control">
             <mat-label>Raiting</mat-label>
@@ -347,9 +351,9 @@
           Add
         </button>
 
-        <h3 *ngIf="item && item.raiting && item.raiting.length > 0">
+        <h2 *ngIf="item && item.raiting && item.raiting.length > 0">
           Raiting history
-        </h3>
+        </h2>
         <div
           class="raiting__table-wp"
           *ngIf="item && item.raiting && item.raiting.length > 0"

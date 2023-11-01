@@ -2,6 +2,7 @@ import {
   ModuleBase,
   ModuleBaseResponse,
 } from '../../base-module/types/module-base.type';
+import { TermsOfPaymentEnum } from './terms-of-payment.enum';
 
 export interface CustomerResponse extends ModuleBaseResponse {
   id: string;
@@ -18,7 +19,7 @@ export interface CustomerResponse extends ModuleBaseResponse {
   street: string;
   remark: string;
   documents: CustomerDocument[];
-  terms_of_payment: string;
+  terms_of_payment: TermsOfPaymentEnum;
   pallet_balance: number;
   raiting: CustomerRaiting[];
   insurance_credit_limit: number;
@@ -44,7 +45,7 @@ export interface Customer extends ModuleBase {
   street: string;
   remark: string;
   documents: CustomerDocument[];
-  terms_of_payment: string;
+  terms_of_payment: TermsOfPaymentEnum;
   pallet_balance: number;
   raiting: CustomerRaiting[];
   insurance_credit_limit: number;

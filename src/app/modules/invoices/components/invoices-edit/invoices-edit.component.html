@@ -158,7 +158,11 @@
 
       <mat-form-field *ngIf="form.controls.terms_of_payment as control">
         <mat-label>Terms of Payment</mat-label>
-        <input matInput [formControl]="control" />
+        <mat-select [formControl]="control">
+          <mat-option *ngFor="let term of termsOfPayment" [value]="term.id">
+            {{ term.name }}
+          </mat-option>
+        </mat-select>
         <mat-error *ngIf="control.hasError('required')"
           >This field is <b>required</b></mat-error
         >
