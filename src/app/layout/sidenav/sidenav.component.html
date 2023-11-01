@@ -15,34 +15,36 @@
     >{{ link.name }}</a
   >
 
-  <mat-expansion-panel
-    class="sidenav__group"
-    #adminGroup
-    *ngIf="invoicesContainer.length > 0"
-  >
-    <mat-expansion-panel-header matRipple>Invoices</mat-expansion-panel-header>
-    <div class="sidenav__group__inner">
-      <a
-        matRipple
-        *ngFor="let link of invoicesContainer"
-        [routerLink]="link.link"
-        class="sidenav__item"
-        routerLinkActive="active"
-        >{{ link.name }}</a
-      >
-    </div>
-  </mat-expansion-panel>
+  <ng-template
+    [ngTemplateOutlet]="sidenavGroup"
+    [ngTemplateOutletContext]="{
+      container: invoicesContainer,
+      title: 'Invoices'
+    }"
+  ></ng-template>
 
+  <ng-template
+    [ngTemplateOutlet]="sidenavGroup"
+    [ngTemplateOutletContext]="{
+      container: adminContainer,
+      title: 'Admin'
+    }"
+  ></ng-template>
+</div>
+
+<ng-template #sidenavGroup let-container="container" let-title="title">
   <mat-expansion-panel
     class="sidenav__group"
     #adminGroup
-    *ngIf="adminContainer.length > 0"
+    *ngIf="container.length > 0"
   >
-    <mat-expansion-panel-header matRipple>Admin</mat-expansion-panel-header>
+    <mat-expansion-panel-header matRipple>{{
+      title
+    }}</mat-expansion-panel-header>
     <div class="sidenav__group__inner">
       <a
         matRipple
-        *ngFor="let link of adminContainer"
+        *ngFor="let link of container"
         [routerLink]="link.link"
         class="sidenav__item"
         routerLinkActive="active"
@@ -50,4 +52,4 @@
       >
     </div>
   </mat-expansion-panel>
-</div>
+</ng-template>

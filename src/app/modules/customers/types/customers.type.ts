@@ -67,6 +67,7 @@ export enum CustomerRaitingType {
   RED,
   YELLOW,
   GREEN,
+  BLACK,
 }
 
 export type CustomerRaiting = {

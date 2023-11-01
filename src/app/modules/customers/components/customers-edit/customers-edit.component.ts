@@ -521,6 +521,7 @@ export class CustomersEditComponent
     CustomerRaitingType.RED,
     CustomerRaitingType.YELLOW,
     CustomerRaitingType.GREEN,
+    CustomerRaitingType.BLACK,
   ];
   raitingForm = new FormGroup({
     raiting: new FormControl<string>('', {
@@ -598,6 +599,8 @@ export class CustomersEditComponent
         return 'red';
       case CustomerRaitingType.YELLOW:
         return 'yellow';
+      case CustomerRaitingType.BLACK:
+        return 'black';
     }
   }
 
