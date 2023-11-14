@@ -35,6 +35,7 @@ import { MatRippleModule } from '@angular/material/core';
 import { XSocketInterceptor } from './interceptors/x-socket-interceptor';
 import { OrdersModule } from './modules/orders/orders.module';
 import { InvoicesModule } from './modules/invoices/invoices.module';
+import { AddTabDirective } from './modules/customers/directives/add-tab.directive';
 
 @NgModule({
   declarations: [

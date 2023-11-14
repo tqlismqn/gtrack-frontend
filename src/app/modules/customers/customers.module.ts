@@ -18,12 +18,15 @@ import { CustomersBankCollectionComponent } from './components/customers-bank-co
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { CustomersService } from './services/customers.service';
+import { MatTabsModule } from '@angular/material/tabs';
+import { AddTabDirective } from './directives/add-tab.directive';
 
 @NgModule({
   declarations: [
     CustomersEditComponent,
     CustomersTableComponent,
-    CustomersBankCollectionComponent
+    CustomersBankCollectionComponent,
+    AddTabDirective,
   ],
   imports: [
     CommonModule,
@@ -41,11 +44,10 @@ import { CustomersService } from './services/customers.service';
     MatIconModule,
     FormsModule,
     MatTooltipModule,
-    NgxMatSelectSearchModule
+    NgxMatSelectSearchModule,
+    MatTabsModule,
   ],
   providers: [CustomersService],
-  exports: [
-    CustomersBankCollectionComponent
-  ]
+  exports: [CustomersBankCollectionComponent, AddTabDirective],
 })
 export class CustomersModule {}

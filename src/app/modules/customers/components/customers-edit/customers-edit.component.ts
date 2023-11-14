@@ -19,7 +19,7 @@ import {
 } from '../../types/customers.type';
 import { countries } from 'countries-list';
 import { environment } from '../../../../../environments/environment';
-import { Observable } from 'rxjs';
+import { Observable, takeUntil, tap } from 'rxjs';
 import { CustomerBankForm } from '../customers-bank-collection/customers-bank-collection.component';
 import {
   BankCollection,
@@ -32,6 +32,7 @@ import {
   termsOfPayment,
   TermsOfPaymentEnum,
 } from '../../types/terms-of-payment.enum';
+import { merge } from 'rxjs';
 
 interface CustomersEditForm {
   id?: FormControl<string>;
@@ -473,6 +474,30 @@ export class CustomersEditComponent
         this.cdr.markForCheck();
       });
     }
+
+    const watchValues = [
+      this.form.controls.insurance_credit_limit?.valueChanges,
+      this.form.controls.internal_credit_limit?.valueChanges,
+    ].filter((item) => item !== undefined) as Observable<number>[];
+
+    merge(...watchValues)
+      .pipe(
+        takeUntil(this.destroy$),
+        tap(() => {
+          this.updateLimits();
+        }),
+      )
+      .subscribe();
+  }
+
+  updateLimits() {
+    this.form.controls.available_insurance_limit?.setValue(
+      this.form.controls.insurance_credit_limit?.value ?? 0,
+    );
+    this.form.controls.total_available_credit_limit?.setValue(
+      (this.form.controls.insurance_credit_limit?.value ?? 0) +
+        (this.form.controls.internal_credit_limit?.value ?? 0),
+    );
   }
 
   protected fetchBankCollections() {

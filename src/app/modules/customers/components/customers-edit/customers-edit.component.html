@@ -173,7 +173,13 @@
           *ngIf="form.controls.available_insurance_limit as control"
         >
           <mat-label>Available Insurance Limit</mat-label>
-          <input matInput [formControl]="control" type="number" min="0" />
+          <input
+            matInput
+            [formControl]="control"
+            type="number"
+            min="0"
+            readonly
+          />
           <mat-error *ngIf="control.hasError('required')"
             >This field is <b>required</b></mat-error
           >
@@ -189,7 +195,13 @@
           *ngIf="form.controls.total_available_credit_limit as control"
         >
           <mat-label>Total Available Credit Limit</mat-label>
-          <input matInput [formControl]="control" type="number" min="0" />
+          <input
+            matInput
+            [formControl]="control"
+            type="number"
+            min="0"
+            readonly
+          />
           <mat-error *ngIf="control.hasError('required')"
             >This field is <b>required</b></mat-error
           >

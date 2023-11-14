@@ -2,10 +2,12 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  ContentChildren,
   EventEmitter,
   Input,
   OnInit,
   Output,
+  QueryList,
 } from '@angular/core';
 import { LoadingState } from '../../../auth/components/auth-form/auth-form.component';
 import { History } from '../../types/history.type';
@@ -13,6 +15,7 @@ import { CompanyService } from '../../../../services/company.service';
 import { ModulesService } from '../../../../services/modules.service';
 import { AdminModules, Modules } from '../../../../constants/modules';
 import { ModuleBase } from '../../types/module-base.type';
+import { AddTabDirective } from '../../../customers/directives/add-tab.directive';
 
 @Component({
   selector: 'app-edit-form',
@@ -46,6 +49,8 @@ export class EditFormComponent implements OnInit {
 
   @Input()
   module?: Modules | AdminModules;
+
+  @ContentChildren(AddTabDirective) additionalTabs?: QueryList<AddTabDirective>;
 
   constructor(
     protected cdr: ChangeDetectorRef,
@@ -97,4 +102,6 @@ export class EditFormComponent implements OnInit {
     this.endLoading('error');
     throw error;
   }
+
+  protected readonly undefined = undefined;
 }

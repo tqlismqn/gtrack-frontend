@@ -27,7 +27,7 @@ interface OrdersEditForm {
   order_price: FormControl<number>;
 }
 
-type CustomerSelections = Pick<
+type CustomerSelection = Pick<
   Customer,
   | 'id'
   | 'company_name'
@@ -35,8 +35,10 @@ type CustomerSelections = Pick<
   | 'vat_id'
   | 'remark'
   | 'total_available_credit_limit'
-  | 'internal_credit_limit'
->[];
+  | 'insurance_credit_limit'
+>;
+
+type CustomerSelections = CustomerSelection[];
 
 @Component({
   selector: 'app-orders-create',
@@ -99,7 +101,7 @@ export class OrdersCreateComponent
           this.form.controls.vat_id.setValue(customer?.vat_id ?? '');
           this.form.controls.remark.setValue(customer?.remark ?? '');
           this.form.controls.credit_limit.setValue(
-            customer?.internal_credit_limit ?? null,
+            customer?.insurance_credit_limit ?? null,
           );
           this.form.controls.available_limit.setValue(
             customer?.total_available_credit_limit ?? null,
@@ -126,8 +128,8 @@ export class OrdersCreateComponent
             'vat_id',
             'remark',
             'total_available_credit_limit',
-            'internal_credit_limit',
-          ] as (keyof Customer)[],
+            'insurance_credit_limit',
+          ] as (keyof CustomerSelection)[],
         },
         false,
       )
