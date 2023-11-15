@@ -22,7 +22,7 @@ export class OrdersTableComponent {
     'internal_order_id',
     'customer',
     'created_by',
-    'created_at',
+    'created_date',
     'delivery_date',
     'order_price',
     'actions',
@@ -56,7 +56,11 @@ export class OrdersTableComponent {
     },
     {
       name: 'Creation Date',
-      value: 'created_at',
+      value: 'first_loading_date',
+    },
+    {
+      name: 'Delivery Date',
+      value: 'last_uploading_date',
     },
     {
       name: 'Order Price',
