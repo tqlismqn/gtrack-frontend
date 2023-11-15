@@ -1,0 +1,28 @@
+<h1 mat-dialog-title *ngIf="data.title">
+  {{ data.title }}
+</h1>
+<div mat-dialog-content>
+  <p [innerHTML]="data.text"></p>
+</div>
+
+<div mat-dialog-actions>
+  <button
+    type="button"
+    *ngIf="data.cancelText"
+    mat-flat-button
+    color="warn"
+    (click)="onNoClick()"
+  >
+    {{ data.cancelText }}
+  </button>
+  <button
+    type="submit"
+    *ngIf="data.confirmText && data.confirmCallback"
+    mat-flat-button
+    color="primary"
+    [mat-dialog-close]="true"
+    (click)="data.confirmCallback()"
+  >
+    {{ data.confirmText }}
+  </button>
+</div>

@@ -1,13 +1,23 @@
 import { ErrorHandler, Injectable, NgZone } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { ErrorDialogComponent } from './error-dialog/error-dialog.component';
+import { AuthService } from '../modules/auth/services/auth.service';
 
 @Injectable()
 export class GlobalErrorHandler implements ErrorHandler {
+  public auth?: AuthService;
+
   constructor(
     protected snackBar: MatSnackBar,
     protected ngZone: NgZone,
+    protected dialog: MatDialog,
   ) {}
+
+  openedError?: string;
+
+  dialogRef: MatDialogRef<ErrorDialogComponent> | undefined;
 
   handleError(error: any): void {
     console.error(error);
@@ -28,5 +38,30 @@ export class GlobalErrorHandler implements ErrorHandler {
         });
       }
     }
+  }
+
+  authorizationExpiredError() {
+    if (this.openedError === '401') {
+      return;
+    }
+
+    this.dialogRef = this.dialog.open(ErrorDialogComponent, {
+      disableClose: true,
+      data: {
+        title: 'Error',
+        text: 'Your authorization seems to be expired. Please, try again, reload page or Log out.',
+        confirmText: 'Log out',
+        confirmCallback: () => {
+          this.auth?.logout();
+        },
+      },
+    });
+    this.openedError = '401';
+
+    this.dialogRef.afterClosed().subscribe(() => {
+      if (this.openedError === '401') {
+        this.openedError = undefined;
+      }
+    });
   }
 }

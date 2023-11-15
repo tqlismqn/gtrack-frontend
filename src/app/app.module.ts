@@ -35,7 +35,8 @@ import { MatRippleModule } from '@angular/material/core';
 import { XSocketInterceptor } from './interceptors/x-socket-interceptor';
 import { OrdersModule } from './modules/orders/orders.module';
 import { InvoicesModule } from './modules/invoices/invoices.module';
-import { AddTabDirective } from './modules/customers/directives/add-tab.directive';
+import { ErrorDialogComponent } from './errors/error-dialog/error-dialog.component';
+import { MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
   declarations: [
@@ -43,6 +44,7 @@ import { AddTabDirective } from './modules/customers/directives/add-tab.directiv
     HeaderComponent,
     MainComponent,
     SidenavComponent,
+    ErrorDialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -90,6 +92,7 @@ import { AddTabDirective } from './modules/customers/directives/add-tab.directiv
     MatRippleModule,
     OrdersModule,
     InvoicesModule,
+    MatDialogModule,
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthHttpInterceptor, multi: true },
@@ -107,6 +110,7 @@ import { AddTabDirective } from './modules/customers/directives/add-tab.directiv
       provide: ErrorHandler,
       useClass: GlobalErrorHandler,
     },
+    GlobalErrorHandler,
   ],
   bootstrap: [AppComponent],
 })

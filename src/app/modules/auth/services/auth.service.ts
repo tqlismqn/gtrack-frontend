@@ -7,6 +7,7 @@ import { User, UserResponse } from '../types/user';
 import { CompanyService } from '../../../services/company.service';
 import { User as Auth0User } from '@auth0/auth0-angular';
 import { Router } from '@angular/router';
+import { GlobalErrorHandler } from '../../../errors/global-error-handler';
 
 @Injectable({
   providedIn: 'root',
@@ -23,7 +24,20 @@ export class AuthService {
     public http: HttpClient,
     public companyService: CompanyService,
     protected router: Router,
+    protected errorHandler: GlobalErrorHandler,
   ) {
+    errorHandler.auth = this;
+
+    auth0.error$.subscribe((error) => {
+      // @ts-ignore
+      switch (error.error) {
+        case 'invalid_grant':
+        case 'login_required':
+          errorHandler.authorizationExpiredError();
+          break;
+      }
+    });
+
     companyService.companyChanged$.subscribe(() => {
       if (!this.router.navigated) {
         return;
