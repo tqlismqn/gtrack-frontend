@@ -1,0 +1,15 @@
+<ng-container *ngIf="!multiple">
+  <button
+    mat-flat-button
+    color="accent"
+    type="button"
+    (click)="file.click()"
+    [disabled]="disabled"
+  >
+    {{ label }}
+    <input hidden type="file" #file (change)="onFilesChange(file.files)" />
+  </button>
+  <div class="filename" *ngIf="uploadedFile as fileName">
+    {{ fileName }}
+  </div>
+</ng-container>

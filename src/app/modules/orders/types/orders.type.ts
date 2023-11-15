@@ -18,6 +18,10 @@ export interface OrderResponse extends ModuleBaseResponse {
   disponent_id: string;
   delivery_responsible_id: string;
   loading_points_info: OrderLoadingPoints[];
+  order_file?: OrderDocument;
+  cmr_file?: OrderDocument;
+  invoice_file?: OrderDocument;
+  pallets_file?: OrderDocument;
 }
 
 export interface Order extends ModuleBase {
@@ -31,8 +35,23 @@ export interface Order extends ModuleBase {
   disponent_id: string;
   delivery_responsible_id: string;
   loading_points_info: OrderLoadingPoints[];
+  order_file?: OrderDocument;
+  cmr_file?: OrderDocument;
+  invoice_file?: OrderDocument;
+  pallets_file?: OrderDocument;
 }
 
 export interface OrderLoadingPoints {
   point: string;
 }
+
+export interface OrderDocument {
+  name: string;
+  id: string;
+}
+
+export type OrderDocumentType =
+  | 'order_file'
+  | 'cmr_file'
+  | 'invoice_file'
+  | 'pallets_file';

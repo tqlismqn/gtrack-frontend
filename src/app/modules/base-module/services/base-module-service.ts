@@ -209,11 +209,8 @@ export abstract class BaseModuleService<
         .patch(
           `${environment.apiUrl}/api/v1/${this.module}/update/${
             id ?? this.item?.id
-          }`,
-          {
-            values: data,
-            company_id: this.companyId,
-          },
+          }?company_id=${this.companyId}`,
+          data,
         )
         .subscribe({
           next: (response) => {
@@ -242,10 +239,10 @@ export abstract class BaseModuleService<
   create(data: any) {
     return new Observable<F>((subscriber) => {
       this.deps.http
-        .post(`${environment.apiUrl}/api/v1/${this.module}/create`, {
-          values: data,
-          company_id: this.companyId,
-        })
+        .post(
+          `${environment.apiUrl}/api/v1/${this.module}/create?company_id=${this.companyId}`,
+          data,
+        )
         .subscribe({
           next: (response) => {
             const item = response as B;

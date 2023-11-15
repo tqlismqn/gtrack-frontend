@@ -4,6 +4,7 @@ import {
   ChangeDetectorRef,
   Component,
   OnInit,
+  ViewChild,
 } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import {
@@ -16,6 +17,7 @@ import { OrdersService } from '../../services/orders.service';
 import { CustomersService } from '../../../customers/services/customers.service';
 import { Customer } from '../../../customers/types/customers.type';
 import { takeUntil, tap } from 'rxjs';
+import { FileUploadComponent } from '../file-upload/file-upload.component';
 
 interface OrdersEditForm {
   customer_id: FormControl<string>;
@@ -83,6 +85,9 @@ export class OrdersCreateComponent
 
   currencies = ['EUR', 'USD'];
 
+  @ViewChild('fileUploadComponent') fileUpload!: FileUploadComponent;
+  fileError = false;
+
   updateFormView() {
     //
   }
@@ -146,10 +151,36 @@ export class OrdersCreateComponent
   }
 
   protected override get values(): any {
-    return {
-      customer_id: this.form.controls.customer_id.value,
-      currency: this.form.controls.currency.value,
-      order_price: this.form.controls.order_price.value,
-    };
+    const formData = new FormData();
+    formData.append('customer_id', this.form.controls.customer_id.value);
+    formData.append('currency', this.form.controls.currency.value);
+    formData.append(
+      'order_price',
+      String(this.form.controls.order_price.value),
+    );
+    if (this.fileUpload.files) {
+      formData.append('order_file', this.fileUpload.files[0]);
+    }
+
+    return formData;
+  }
+
+  protected override get formValid(): boolean {
+    let result = super.formValid;
+    if (!this.fileUpload.files || this.fileUpload.files.length === 0) {
+      result = false;
+      this.fileError = true;
+    } else {
+      this.fileError = false;
+    }
+
+    return result;
+  }
+
+  protected onFilesChange(files: FileList | null) {
+    if (files && files.length > 0) {
+      this.fileError = false;
+      this.cdr.markForCheck();
+    }
   }
 }

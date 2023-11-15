@@ -71,8 +71,15 @@
   <mat-form-field *ngIf="form.controls.order_price as control">
     <mat-label>Order Price</mat-label>
     <input min="0" type="number" matInput [formControl]="control" />
-    <mat-error *ngIf="control.hasError('required')"
+    <mat-error *ngIf="control.hasError('required') || control.hasError('min')"
       >This field is <b>required</b></mat-error
     >
   </mat-form-field>
+
+  <app-file-upload
+    #fileUploadComponent
+    label="Attach Order"
+    (files$)="onFilesChange($event)"
+  ></app-file-upload>
+  <mat-error *ngIf="fileError">You must attach an order</mat-error>
 </app-edit-form>

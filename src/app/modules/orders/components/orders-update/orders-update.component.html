@@ -4,6 +4,7 @@
   formTitle="Edit Order"
   submitTitle="Save"
   [module]="module"
+  [history]="item?.history"
 >
   <div class="row">
     <mat-form-field *ngIf="form.controls.internal_order_id as control">
@@ -79,13 +80,34 @@
     >
   </mat-form-field>
 
-  <button type="button" mat-flat-button color="accent">Attach Order</button>
-  <button type="button" mat-flat-button color="accent">Attach CMR</button>
-  <button type="button" mat-flat-button color="accent" disabled>
-    Attach Pallets
-  </button>
-  <button type="button" mat-flat-button color="accent">Attach Invoice</button>
-  <button type="button" mat-flat-button color="accent" class="download-docs">
+  <app-file-upload
+    label="Attach Order"
+    [uploadedFileName]="item?.order_file?.name"
+    (files$)="onFileChange('order_file', $event)"
+  ></app-file-upload>
+  <app-file-upload
+    label="Attach CMR"
+    [uploadedFileName]="item?.cmr_file?.name"
+    (files$)="onFileChange('cmr_file', $event)"
+  ></app-file-upload>
+  <app-file-upload
+    label="Attach Pallets"
+    [uploadedFileName]="item?.pallets_file?.name"
+    (files$)="onFileChange('pallets_file', $event)"
+    [disabled]="true"
+  ></app-file-upload>
+  <app-file-upload
+    label="Attach Invoice"
+    [uploadedFileName]="item?.invoice_file?.name"
+    (files$)="onFileChange('invoice_file', $event)"
+  ></app-file-upload>
+  <button
+    type="button"
+    mat-flat-button
+    color="accent"
+    class="download-docs"
+    (click)="downloadAll()"
+  >
     Download All Available Docs
   </button>
 </app-edit-form>

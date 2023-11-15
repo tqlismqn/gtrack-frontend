@@ -15,12 +15,14 @@ import { MatSelectModule } from '@angular/material/select';
 import { OrdersUpdateComponent } from './components/orders-update/orders-update.component';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
+import { FileUploadComponent } from './components/file-upload/file-upload.component';
 
 @NgModule({
   declarations: [
     OrdersTableComponent,
     OrdersCreateComponent,
     OrdersUpdateComponent,
+    FileUploadComponent,
   ],
   imports: [
     CommonModule,

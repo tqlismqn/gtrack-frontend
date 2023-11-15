@@ -11,10 +11,17 @@ import {
   EditComponentDeps,
 } from '../../../base-module/components/edit-component/edit-component.component';
 import { ActivatedRoute } from '@angular/router';
-import { Order, OrderResponse } from '../../types/orders.type';
+import {
+  Order,
+  OrderDocument,
+  OrderDocumentType,
+  OrderResponse,
+} from '../../types/orders.type';
 import { OrdersService } from '../../services/orders.service';
 import { CustomersService } from '../../../customers/services/customers.service';
 import { Nameable } from '../../../base-module/types/nameable.type';
+import { environment } from '../../../../../environments/environment';
+import { CustomerDocument } from '../../../customers/types/customers.type';
 
 interface OrdersEditForm {
   internal_order_id: FormControl<number>;
@@ -109,5 +116,61 @@ export class OrdersUpdateComponent
       disponent_id: this.form.controls.disponent_id.value,
       delivery_responsible_id: this.form.controls.delivery_responsible_id.value,
     };
+  }
+
+  public onFileChange(type: OrderDocumentType, files?: FileList | null) {
+    if (files && files[0]) {
+      this.uploadDocument(type, files[0]);
+    }
+  }
+
+  protected uploadDocument(type: OrderDocumentType, file: File) {
+    const formData = new FormData();
+    formData.append(type, file);
+
+    this.deps.http
+      .post(
+        `${environment.apiUrl}/api/v1/${this.module}/upload/create/${this.item?.id}?company_id=${this.deps.companyService.selectedCompany?.id}`,
+        formData,
+      )
+      .subscribe({
+        next: (response) => {
+          const data = response as OrderDocument;
+          if (this.service.item) {
+            this.service.item[type] = data;
+          }
+          this.cdr.markForCheck();
+        },
+      });
+  }
+
+  downloadAll() {
+    [
+      this.item?.order_file,
+      this.item?.pallets_file,
+      this.item?.cmr_file,
+      this.item?.invoice_file,
+    ]
+      .filter((item) => !!item)
+      .forEach((item) => this.downloadDoc(item as OrderDocument));
+  }
+
+  downloadDoc(doc: OrderDocument) {
+    this.deps.http
+      .get(
+        `${environment.apiUrl}/api/v1/${this.module}/download/${this.item?.id}?company_id=${this.deps.companyService.selectedCompany?.id}&id=${doc.id}`,
+        { responseType: 'blob' },
+      )
+      .subscribe((response) => {
+        const blob = new Blob([response as BlobPart], {
+          type: 'application/octet-stream',
+        });
+
+        const a = document.createElement('a');
+        a.href = window.URL.createObjectURL(blob);
+        a.download = doc.name;
+        a.click();
+        a.remove();
+      });
   }
 }
