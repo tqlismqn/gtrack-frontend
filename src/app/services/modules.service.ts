@@ -77,6 +77,9 @@ export class ModulesService {
     [AdminModules.COMPANIES]?: {
       [key in keyof Company]?: string;
     };
+    [AdminModules.CURRENCIES]?: {
+      [key in keyof Company]?: string;
+    };
   } = {
     [Modules.CUSTOMERS]: {
       company_name: 'Company Name',

@@ -31,6 +31,8 @@ import { OrdersUpdateComponent } from './modules/orders/components/orders-update
 import { InvoicesTableComponent } from './modules/invoices/components/invoices-table/invoices-table.component';
 import { InvoicesEditComponent } from './modules/invoices/components/invoices-edit/invoices-edit.component';
 import { InvoicesOrdersTableComponent } from './modules/invoices/components/invoices-orders-table/invoices-orders-table.component';
+import { CurrenciesTableComponent } from './modules/admin/components/currencies/currencies-table/currencies-table.component';
+import { CurrenciesEditComponent } from './modules/admin/components/currencies/currencies-edit/currencies-edit.component';
 
 const modules = [
   {
@@ -84,6 +86,13 @@ const modules = [
     writeActivate: [isSuperAdmin],
     tableComponent: BankCollectionTableComponent,
     editComponent: BankCollectionEditComponent,
+  },
+  {
+    module: AdminModules.CURRENCIES,
+    readActivate: [isSuperAdmin],
+    writeActivate: [isSuperAdmin],
+    tableComponent: CurrenciesTableComponent,
+    editComponent: CurrenciesEditComponent,
   },
 ];
 
