@@ -7,3 +7,11 @@ export enum Currencies {
   RON = 'RON',
   BGN = 'BGN',
 }
+
+export const CurrenciesArray = Object.values(Currencies);
+
+export type AdminCurrenciesResponse = {
+  id: Currencies;
+  rate: number;
+};
+export type AdminCurrencies = AdminCurrenciesResponse;

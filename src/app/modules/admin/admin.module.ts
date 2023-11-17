@@ -19,7 +19,6 @@ import { AdminBankCollectionService } from './services/admin-bank-collection.ser
 import { AdminCompaniesService } from './services/admin-companies.service';
 import { AdminUsersService } from './services/admin-users.service';
 import { CurrenciesTableComponent } from './components/currencies/currencies-table/currencies-table.component';
-import { AdminCurrenciesService } from './services/admin-currencies.service';
 import { CurrenciesEditComponent } from './components/currencies/currencies-edit/currencies-edit.component';
 
 @NgModule({
@@ -49,7 +48,6 @@ import { CurrenciesEditComponent } from './components/currencies/currencies-edit
     AdminBankCollectionService,
     AdminCompaniesService,
     AdminUsersService,
-    AdminCurrenciesService,
   ],
 })
 export class AdminModule {}

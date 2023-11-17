@@ -16,7 +16,7 @@ import { Order, OrderResponse } from '../../types/orders.type';
 import { OrdersService } from '../../services/orders.service';
 import { CustomersService } from '../../../customers/services/customers.service';
 import { Customer } from '../../../customers/types/customers.type';
-import { takeUntil, tap } from 'rxjs';
+import { merge, startWith, takeUntil, tap } from 'rxjs';
 import { FileUploadComponent } from '../file-upload/file-upload.component';
 
 interface OrdersEditForm {
@@ -83,7 +83,9 @@ export class OrdersCreateComponent
     }),
   });
 
-  currencies = ['EUR', 'USD'];
+  get currencies() {
+    return this.deps.companyService.currencies ?? [];
+  }
 
   @ViewChild('fileUploadComponent') fileUpload!: FileUploadComponent;
   fileError = false;
@@ -111,6 +113,19 @@ export class OrdersCreateComponent
           this.form.controls.available_limit.setValue(
             customer?.total_available_credit_limit ?? null,
           );
+          this.cdr.markForCheck();
+        }),
+      )
+      .subscribe();
+
+    merge(
+      this.deps.companyService.companyChanged$,
+      this.deps.companyService.companiesUpdated$,
+    )
+      .pipe(
+        startWith(undefined),
+        takeUntil(this.destroy$),
+        tap(() => {
           this.cdr.markForCheck();
         }),
       )

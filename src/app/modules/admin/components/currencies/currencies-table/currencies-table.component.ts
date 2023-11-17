@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
 import { TableComponent } from '../../../../base-module/components/table/table.component';
 import { Selectable } from '../../../../../types/selectable.type';
-import { AdminModules } from '../../../../../constants/modules';
+import { Modules } from '../../../../../constants/modules';
 import {
   AdminCurrencies,
   AdminCurrenciesResponse,
-} from '../../../types/currencies';
-import { AdminCurrenciesService } from '../../../services/admin-currencies.service';
+} from '../../../../../types/currencies';
+import { CurrenciesService } from '../../../../../services/currencies.service';
 
 @Component({
   selector: 'app-currencies-table',
@@ -20,7 +20,7 @@ export class CurrenciesTableComponent {
     AdminCurrencies
   >;
 
-  constructor(protected service: AdminCurrenciesService) {}
+  constructor(protected service: CurrenciesService) {}
 
   sortableColumns: Selectable[] = [
     {
@@ -44,7 +44,7 @@ export class CurrenciesTableComponent {
     },
   ];
 
-  module = AdminModules.CURRENCIES;
+  module = Modules.CURRENCIES;
 
   displayedColumns: string[] = ['name', 'rate', 'edit'];
 }

@@ -81,6 +81,12 @@ export class SidenavComponent implements OnInit, OnDestroy {
         link: 'orders',
       });
     }
+    if (this.companyService.selectedCompany?.owner) {
+      this.links.push({
+        name: 'Settings',
+        link: 'settings',
+      });
+    }
     if (this.checkPermission(Modules.INVOICES)) {
       this.invoicesContainer.push({
         name: 'Invoices',
@@ -111,7 +117,7 @@ export class SidenavComponent implements OnInit, OnDestroy {
       });
       this.adminContainer.push({
         name: 'Currencies',
-        link: AdminModules.CURRENCIES,
+        link: Modules.CURRENCIES,
       });
     }
 

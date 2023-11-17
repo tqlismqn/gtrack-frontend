@@ -6,6 +6,7 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { CompanyService } from '../../../../services/company.service';
 import { environment } from '../../../../../environments/environment';
+import { Currencies, CurrenciesArray } from '../../../../types/currencies';
 
 @Component({
   selector: 'app-company-survey',
@@ -27,7 +28,13 @@ export class CompanySurveyComponent {
       validators: [Validators.required],
       nonNullable: true,
     }),
+    currencies: new FormControl<Currencies[]>([...CurrenciesArray], {
+      validators: [Validators.required],
+      nonNullable: true,
+    }),
   });
+
+  currencies = [...CurrenciesArray];
 
   @ViewChild('authForm') authForm?: AuthFormComponent;
 

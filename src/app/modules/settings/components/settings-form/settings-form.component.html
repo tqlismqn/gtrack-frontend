@@ -1,8 +1,9 @@
-<app-auth-form title="Company Information" (submit$)="submit()" #authForm>
-  <mat-form-field
-    *ngIf="form.controls.name as control"
-    subscriptSizing="dynamic"
-  >
+<h1>
+  Company <b>{{ company?.name }}</b> settings
+</h1>
+
+<form (ngSubmit)="submit()">
+  <mat-form-field *ngIf="form.controls.name as control">
     <mat-label>Company Name</mat-label>
     <input type="text" matInput [formControl]="control" />
     <mat-error *ngIf="control.hasError('required')"
@@ -10,10 +11,7 @@
     >
   </mat-form-field>
 
-  <mat-form-field
-    *ngIf="form.controls.employees_number as control"
-    subscriptSizing="dynamic"
-  >
+  <mat-form-field *ngIf="form.controls.employees_number as control">
     <mat-label>Employees Number</mat-label>
     <input type="text" matInput [formControl]="control" />
     <mat-error *ngIf="control.hasError('required')"
@@ -21,10 +19,7 @@
     >
   </mat-form-field>
 
-  <mat-form-field
-    *ngIf="form.controls.website as control"
-    subscriptSizing="dynamic"
-  >
+  <mat-form-field *ngIf="form.controls.website as control">
     <mat-label>Website</mat-label>
     <input type="tel" matInput [formControl]="control" />
     <mat-error *ngIf="control.hasError('required')"
@@ -43,4 +38,8 @@
       >Minimum one currency is required</mat-error
     >
   </mat-form-field>
-</app-auth-form>
+
+  <button type="submit" mat-flat-button color="primary" [disabled]="loading">
+    Save
+  </button>
+</form>

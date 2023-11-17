@@ -7,6 +7,8 @@ import { BankCollection } from '../modules/admin/types/bank-collection';
 import { User } from '../modules/auth/types/user';
 import { Company } from '../types/company.type';
 import { Order } from '../modules/orders/types/orders.type';
+import { Currencies } from "../types/currencies";
+import { AdminCurrencies } from "../types/currencies";
 
 @Injectable({ providedIn: 'root' })
 export class ModulesService {
@@ -37,6 +39,11 @@ export class ModulesService {
       id: Modules.INVOICES,
       plural: 'Invoices',
       singular: 'Invoice',
+    },
+    [Modules.CURRENCIES]: {
+      id: Modules.CURRENCIES,
+      plural: 'Currencies',
+      singular: 'Currency',
     },
   };
 
@@ -77,8 +84,8 @@ export class ModulesService {
     [AdminModules.COMPANIES]?: {
       [key in keyof Company]?: string;
     };
-    [AdminModules.CURRENCIES]?: {
-      [key in keyof Company]?: string;
+    [Modules.CURRENCIES]?: {
+      [key in keyof AdminCurrencies]?: string;
     };
   } = {
     [Modules.CUSTOMERS]: {

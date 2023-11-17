@@ -58,7 +58,7 @@ export class TableComponent<B extends { id: string }, F extends { id: string }>
   sorting?: SortType;
   pagination: PaginationType = {
     page: 1,
-    limit: 5,
+    limit: 20,
   };
   loading = false;
 

@@ -147,7 +147,9 @@ export class InvoicesEditComponent
     }),
   });
 
-  protected currencies = ['USD', 'EUR'];
+  get currencies() {
+    return this.deps.companyService.currencies ?? [];
+  }
 
   updateFormView(item: Invoice) {
     const controls = this.form.controls;
@@ -288,6 +290,19 @@ export class InvoicesEditComponent
           this.cdr.markForCheck();
         }),
         takeUntil(this.destroy$),
+      )
+      .subscribe();
+
+    merge(
+      this.deps.companyService.companyChanged$,
+      this.deps.companyService.companiesUpdated$,
+    )
+      .pipe(
+        startWith(undefined),
+        takeUntil(this.destroy$),
+        tap(() => {
+          this.cdr.markForCheck();
+        }),
       )
       .subscribe();
 

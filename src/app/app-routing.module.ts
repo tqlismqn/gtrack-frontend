@@ -33,6 +33,7 @@ import { InvoicesEditComponent } from './modules/invoices/components/invoices-ed
 import { InvoicesOrdersTableComponent } from './modules/invoices/components/invoices-orders-table/invoices-orders-table.component';
 import { CurrenciesTableComponent } from './modules/admin/components/currencies/currencies-table/currencies-table.component';
 import { CurrenciesEditComponent } from './modules/admin/components/currencies/currencies-edit/currencies-edit.component';
+import { SettingsFormComponent } from './modules/settings/components/settings-form/settings-form.component';
 
 const modules = [
   {
@@ -88,7 +89,7 @@ const modules = [
     editComponent: BankCollectionEditComponent,
   },
   {
-    module: AdminModules.CURRENCIES,
+    module: Modules.CURRENCIES,
     readActivate: [isSuperAdmin],
     writeActivate: [isSuperAdmin],
     tableComponent: CurrenciesTableComponent,
@@ -167,6 +168,11 @@ const routes: Routes = [
           {
             path: 'dashboard',
             component: DashboardComponent,
+          },
+
+          {
+            path: 'settings',
+            component: SettingsFormComponent,
           },
 
           ...moduleRoutes,

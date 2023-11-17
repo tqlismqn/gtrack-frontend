@@ -36,6 +36,13 @@
       <mat-option *ngFor="let currency of currencies" [value]="currency">
         {{ currency }}
       </mat-option>
+      <mat-option
+        *ngIf="control.value"
+        [value]="control.value"
+        style="display: none"
+      >
+        {{ control.value }}
+      </mat-option>
     </mat-select>
     <mat-error *ngIf="control.hasError('required')"
       >This field is <b>required</b></mat-error

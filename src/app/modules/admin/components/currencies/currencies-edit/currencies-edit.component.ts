@@ -14,8 +14,8 @@ import { ActivatedRoute } from '@angular/router';
 import {
   AdminCurrencies,
   AdminCurrenciesResponse,
-} from '../../../types/currencies';
-import { AdminCurrenciesService } from '../../../services/admin-currencies.service';
+} from '../../../../../types/currencies';
+import { CurrenciesService } from '../../../../../services/currencies.service';
 
 type CurrencyFormGroup = {
   id: FormControl<string>;
@@ -44,7 +44,7 @@ export class CurrenciesEditComponent
   });
 
   constructor(
-    service: AdminCurrenciesService,
+    service: CurrenciesService,
     deps: EditComponentDeps,
     cdr: ChangeDetectorRef,
     route: ActivatedRoute,

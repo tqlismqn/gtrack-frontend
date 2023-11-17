@@ -11,6 +11,7 @@ import {
 } from '../constants/permission-access';
 import { Nameable } from '../modules/base-module/types/nameable.type';
 import { SseService } from './sse.service';
+import WavePrivateChannel from 'laravel-wave/dist/echo-broadcaster/wave-private-channel';
 
 @Injectable({ providedIn: 'root' })
 export class CompanyService {
@@ -21,11 +22,16 @@ export class CompanyService {
   selectedPermissions?: Permission[];
 
   companyChanged$ = new EventEmitter<Company>();
+  companiesUpdated$ = new EventEmitter<void>();
 
   constructor(
     protected http: HttpClient,
     protected sse: SseService,
   ) {}
+
+  get currencies() {
+    return this.selectedCompany?.currencies;
+  }
 
   protected fetchCompanies(): Observable<Company[]> {
     return new Observable<Company[]>((subscriber) => {
@@ -33,6 +39,7 @@ export class CompanyService {
         next: (response) => {
           this.companies = response as CompanyResponse[];
           this.ownCompanies = this.companies.filter((item) => item.owner);
+          this.companiesUpdated$.emit();
           subscriber.next(this.companies);
           subscriber.complete();
         },
@@ -89,6 +96,7 @@ export class CompanyService {
         CompanyService.selectedCompanyKey,
         this.selectedCompany.id.toString(),
       );
+      this.sseInit();
       return true;
     }
 
@@ -107,6 +115,7 @@ export class CompanyService {
       CompanyService.selectedCompanyKey,
       this.selectedCompany.id.toString(),
     );
+    this.sseInit();
     return true;
   }
 
@@ -160,6 +169,71 @@ export class CompanyService {
           },
         });
     });
+  }
+
+  updateCompaniesLocally(company: Company) {
+    let updated = false;
+
+    let index = this.companies.findIndex((item) => item.id === company.id);
+    if (index > -1) {
+      this.companies[index] = company;
+      this.companies = [...this.companies];
+      updated = true;
+    }
+
+    index = this.ownCompanies.findIndex((item) => item.id === company.id);
+    if (index > -1) {
+      this.ownCompanies[index] = company;
+      this.ownCompanies = [...this.ownCompanies];
+      updated = true;
+    }
+
+    if (this.selectedCompany?.id === company.id) {
+      this.selectedCompany = company;
+      updated = true;
+    }
+
+    if (updated) {
+      this.companiesUpdated$.emit();
+    }
+  }
+
+  update(
+    fields: Partial<Omit<Company, 'access' | 'id' | 'owner'>>,
+  ): Observable<Company> {
+    return new Observable<Company>((subscriber) => {
+      this.http
+        .patch(
+          `${environment.apiUrl}/api/v1/companies/update?company_id=${this.selectedCompany?.id}`,
+          fields,
+        )
+        .subscribe((response) => {
+          const company = response as CompanyResponse;
+
+          this.updateCompaniesLocally(company);
+
+          subscriber.next(company);
+          subscriber.complete();
+        });
+    });
+  }
+
+  sseChannel?: WavePrivateChannel;
+
+  sseInit() {
+    if (this.sseChannel) {
+      this.sseChannel.stopListening(
+        '.App\\Events\\Model\\Company\\CompanyUpdate',
+      );
+    }
+    this.sseChannel = this.sse.echo
+      .private(`companies.${this.selectedCompany?.id}`)
+      .listen(
+        '.App\\Events\\Model\\Company\\CompanyUpdate',
+        (data: { id: string; company: CompanyResponse }) => {
+          this.updateCompaniesLocally(data.company);
+        },
+      ) as WavePrivateChannel;
   }
 
   static selectedCompanyKey = 'selected-company-id';

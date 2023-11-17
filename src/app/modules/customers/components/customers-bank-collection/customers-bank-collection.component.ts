@@ -11,7 +11,8 @@ import {
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { BankCollection } from '../../../admin/types/bank-collection';
-import { ReplaySubject, startWith, takeUntil, tap } from 'rxjs';
+import { merge, ReplaySubject, startWith, takeUntil, tap } from 'rxjs';
+import { CompanyService } from '../../../../services/company.service';
 
 export interface CustomerBankForm {
   bank_template: FormControl<{
@@ -59,7 +60,9 @@ export class CustomersBankCollectionComponent
   @Input()
   banks: BankCollection[] = [];
 
-  currencies = ['USD', 'EUR'];
+  get currencies() {
+    return this.companyService.currencies ?? [];
+  }
 
   bankFilterControl = new FormControl<string>('');
 
@@ -67,7 +70,10 @@ export class CustomersBankCollectionComponent
     BankCollection[]
   >(1);
 
-  constructor(protected cdr: ChangeDetectorRef) {}
+  constructor(
+    protected cdr: ChangeDetectorRef,
+    protected companyService: CompanyService,
+  ) {}
 
   ngOnDestroy() {
     this.destroy$.emit();
@@ -98,6 +104,19 @@ export class CustomersBankCollectionComponent
         startWith(null),
         tap((value) => {
           this.filterBanks(value);
+        }),
+      )
+      .subscribe();
+
+    merge(
+      this.companyService.companyChanged$,
+      this.companyService.companiesUpdated$,
+    )
+      .pipe(
+        startWith(undefined),
+        takeUntil(this.destroy$),
+        tap(() => {
+          this.cdr.markForCheck();
         }),
       )
       .subscribe();

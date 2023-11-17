@@ -37,6 +37,7 @@ import { OrdersModule } from './modules/orders/orders.module';
 import { InvoicesModule } from './modules/invoices/invoices.module';
 import { ErrorDialogComponent } from './errors/error-dialog/error-dialog.component';
 import { MatDialogModule } from '@angular/material/dialog';
+import { SettingsModule } from './modules/settings/settings.module';
 
 @NgModule({
   declarations: [
@@ -93,6 +94,7 @@ import { MatDialogModule } from '@angular/material/dialog';
     OrdersModule,
     InvoicesModule,
     MatDialogModule,
+    SettingsModule,
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthHttpInterceptor, multi: true },
