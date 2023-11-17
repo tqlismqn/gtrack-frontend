@@ -17,7 +17,12 @@
         >This field is <b>required</b></mat-error
       >
     </mat-form-field>
-    <button mat-flat-button [routerLink]="'/customers/create'" color="accent">
+    <button
+      mat-flat-button
+      [routerLink]="'/customers/create'"
+      color="accent"
+      type="button"
+    >
       Create New
     </button>
   </div>
@@ -27,7 +32,7 @@
       <mat-label>Customer VAT ID</mat-label>
       <input matInput [formControl]="control" readonly />
     </mat-form-field>
-    <button mat-flat-button color="accent">Check VAT ID</button>
+    <button mat-flat-button color="accent" type="button">Check VAT ID</button>
   </div>
 
   <mat-form-field *ngIf="form.controls.remark as control">

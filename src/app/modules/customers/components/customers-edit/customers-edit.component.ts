@@ -19,7 +19,7 @@ import {
 } from '../../types/customers.type';
 import { countries } from 'countries-list';
 import { environment } from '../../../../../environments/environment';
-import { Observable, takeUntil, tap } from 'rxjs';
+import { Observable, startWith, takeUntil, tap } from 'rxjs';
 import { CustomerBankForm } from '../customers-bank-collection/customers-bank-collection.component';
 import {
   BankCollection,
@@ -33,6 +33,7 @@ import {
   TermsOfPaymentEnum,
 } from '../../types/terms-of-payment.enum';
 import { merge } from 'rxjs';
+import { BankCollectionService } from '../../../../services/bank-collection.service';
 
 interface CustomersEditForm {
   id?: FormControl<string>;
@@ -72,6 +73,7 @@ export class CustomersEditComponent
     deps: EditComponentDeps,
     cdr: ChangeDetectorRef,
     route: ActivatedRoute,
+    protected banksService: BankCollectionService,
   ) {
     super(service, deps, cdr, route);
   }
@@ -155,7 +157,9 @@ export class CustomersEditComponent
   });
 
   bankForms: FormGroup<CustomerBankForm>[] = [];
-  bankCollections: BankCollection[] = [];
+  get bankCollections() {
+    return this.banksService.data;
+  }
 
   get firstBank(): FormGroup<CustomerBankForm> | undefined {
     return this.bankForms[0];
@@ -461,7 +465,6 @@ export class CustomersEditComponent
 
   override ngOnInit() {
     super.ngOnInit();
-    this.fetchBankCollections();
 
     if (!this.bankForms || this.bankForms.length === 0) {
       this.setBanks([]);
@@ -488,6 +491,14 @@ export class CustomersEditComponent
         }),
       )
       .subscribe();
+
+    this.banksService.data$.pipe(
+      takeUntil(this.destroy$),
+      startWith(this.banksService.data),
+      tap(() => {
+        this.cdr.markForCheck();
+      }),
+    );
   }
 
   updateLimits() {
@@ -498,24 +509,6 @@ export class CustomersEditComponent
       (this.form.controls.insurance_credit_limit?.value ?? 0) +
         (this.form.controls.internal_credit_limit?.value ?? 0),
     );
-  }
-
-  protected fetchBankCollections() {
-    this.deps.http
-      .post(`${environment.apiUrl}/api/v1/bank_collections/read`, {})
-      .subscribe((response) => {
-        this.bankCollections = (response as BankCollectionResponse[]).map(
-          (item) => ({
-            name: item.name,
-            id: item.id,
-            bic: item.bic,
-            code: item.code,
-            address: item.address,
-            city: item.city,
-          }),
-        );
-        this.cdr.markForCheck();
-      });
   }
 
   protected get banksValue() {

@@ -15,7 +15,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { RouterLink } from '@angular/router';
 import { BankCollectionTableComponent } from './components/bank-collection/bank-collection-table/bank-collection-table.component';
 import { BankCollectionEditComponent } from './components/bank-collection/bank-collection-edit/bank-collection-edit.component';
-import { AdminBankCollectionService } from './services/admin-bank-collection.service';
+import { BankCollectionService } from '../../services/bank-collection.service';
 import { AdminCompaniesService } from './services/admin-companies.service';
 import { AdminUsersService } from './services/admin-users.service';
 import { CurrenciesTableComponent } from './components/currencies/currencies-table/currencies-table.component';
@@ -45,7 +45,7 @@ import { CurrenciesEditComponent } from './components/currencies/currencies-edit
     RouterLink,
   ],
   providers: [
-    AdminBankCollectionService,
+    BankCollectionService,
     AdminCompaniesService,
     AdminUsersService,
   ],

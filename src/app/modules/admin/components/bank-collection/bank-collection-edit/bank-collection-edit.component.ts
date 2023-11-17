@@ -15,7 +15,7 @@ import {
   BankCollectionResponse,
 } from '../../../types/bank-collection';
 import { ActivatedRoute } from '@angular/router';
-import { AdminBankCollectionService } from '../../../services/admin-bank-collection.service';
+import { BankCollectionService } from '../../../../../services/bank-collection.service';
 
 type BankCollectionFormGroup = {
   name: FormControl<string>;
@@ -59,7 +59,7 @@ export class BankCollectionEditComponent
   });
 
   constructor(
-    service: AdminBankCollectionService,
+    service: BankCollectionService,
     deps: EditComponentDeps,
     cdr: ChangeDetectorRef,
     route: ActivatedRoute,

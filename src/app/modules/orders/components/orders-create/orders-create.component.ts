@@ -3,6 +3,7 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  EventEmitter,
   OnInit,
   ViewChild,
 } from '@angular/core';
@@ -18,12 +19,14 @@ import { CustomersService } from '../../../customers/services/customers.service'
 import { Customer } from '../../../customers/types/customers.type';
 import { merge, startWith, takeUntil, tap } from 'rxjs';
 import { FileUploadComponent } from '../file-upload/file-upload.component';
+import { CurrenciesService } from '../../../../services/currencies.service';
+import { Currencies } from '../../../../types/currencies';
 
 interface OrdersEditForm {
   customer_id: FormControl<string>;
   vat_id: FormControl<string>;
   remark: FormControl<string>;
-  currency: FormControl<string>;
+  currency: FormControl<Currencies>;
   credit_limit: FormControl<number | null>;
   available_limit: FormControl<number | null>;
   order_price: FormControl<number>;
@@ -58,6 +61,7 @@ export class OrdersCreateComponent
     cdr: ChangeDetectorRef,
     route: ActivatedRoute,
     protected customersService: CustomersService,
+    protected currenciesService: CurrenciesService,
   ) {
     super(service, deps, cdr, route);
   }
@@ -72,7 +76,7 @@ export class OrdersCreateComponent
     remark: new FormControl<string>('', {
       nonNullable: true,
     }),
-    currency: new FormControl<string>('EUR', {
+    currency: new FormControl<Currencies>(Currencies.EUR, {
       nonNullable: true,
     }),
     credit_limit: new FormControl<number | null>(null),
@@ -87,6 +91,10 @@ export class OrdersCreateComponent
     return this.deps.companyService.currencies ?? [];
   }
 
+  get currency() {
+    return this.form.controls.currency.value ?? Currencies.EUR;
+  }
+
   @ViewChild('fileUploadComponent') fileUpload!: FileUploadComponent;
   fileError = false;
 
@@ -95,24 +103,28 @@ export class OrdersCreateComponent
   }
 
   customers: CustomerSelections = [];
+  customers$ = new EventEmitter<CustomerSelections>();
 
   override ngOnInit() {
     super.ngOnInit();
 
-    this.form.controls.customer_id.valueChanges
+    merge(
+      this.form.controls.customer_id.valueChanges,
+      this.form.controls.currency.valueChanges,
+      this.customers$,
+    )
       .pipe(
         takeUntil(this.destroy$),
-        tap((value) => {
-          const customer = this.customers.find((item) => item.id === value);
-
+        tap(() => {
+          const customer = this.customers.find(
+            (item) => item.id === this.form.controls.customer_id.value,
+          );
           this.form.controls.vat_id.setValue(customer?.vat_id ?? '');
           this.form.controls.remark.setValue(customer?.remark ?? '');
-          this.form.controls.credit_limit.setValue(
-            customer?.insurance_credit_limit ?? null,
-          );
-          this.form.controls.available_limit.setValue(
-            customer?.total_available_credit_limit ?? null,
-          );
+
+          const limits = this.calculateLimits(customer);
+          this.form.controls.credit_limit.setValue(limits.credit_limit);
+          this.form.controls.available_limit.setValue(limits.available_limit);
           this.cdr.markForCheck();
         }),
       )
@@ -132,37 +144,68 @@ export class OrdersCreateComponent
       .subscribe();
   }
 
+  protected calculateLimits(customer?: CustomerSelection) {
+    return {
+      credit_limit: customer?.insurance_credit_limit
+        ? this.currenciesService.fromEur(
+            this.currency,
+            customer.insurance_credit_limit,
+          )
+        : null,
+
+      available_limit: customer?.total_available_credit_limit
+        ? this.currenciesService.fromEur(
+            this.currency,
+            customer.total_available_credit_limit,
+          )
+        : null,
+    };
+  }
+
   override ngAfterViewInit() {
     super.ngAfterViewInit();
 
     this.editFormComponent.startLoading();
 
-    this.customersService
-      .read(
-        {
-          company_id: this.deps.companyService.selectedCompany?.id,
-          select: [
-            'id',
-            'company_name',
-            'internal_company_id',
-            'vat_id',
-            'remark',
-            'total_available_credit_limit',
-            'insurance_credit_limit',
-          ] as (keyof CustomerSelection)[],
-        },
-        false,
+    merge(
+      this.customersService.created$,
+      this.customersService.deleted$,
+      this.customersService.updated$,
+    )
+      .pipe(
+        takeUntil(this.destroy$),
+        startWith(undefined),
+        tap(() => {
+          this.customersService
+            .read(
+              {
+                company_id: this.deps.companyService.selectedCompany?.id,
+                select: [
+                  'id',
+                  'company_name',
+                  'internal_company_id',
+                  'vat_id',
+                  'remark',
+                  'total_available_credit_limit',
+                  'insurance_credit_limit',
+                ] as (keyof CustomerSelection)[],
+              },
+              false,
+            )
+            .subscribe({
+              next: ([data]) => {
+                this.editFormComponent.endLoading('success');
+                this.customers = data as CustomerSelections;
+                this.customers$.emit(this.customers);
+                this.cdr.markForCheck();
+              },
+              error: (err) => {
+                this.editFormComponent.processError(err);
+              },
+            });
+        }),
       )
-      .subscribe({
-        next: ([data]) => {
-          this.editFormComponent.endLoading('success');
-          this.customers = data as CustomerSelections;
-          this.cdr.markForCheck();
-        },
-        error: (err) => {
-          this.editFormComponent.processError(err);
-        },
-      });
+      .subscribe();
   }
 
   protected override get values(): any {
@@ -171,7 +214,16 @@ export class OrdersCreateComponent
     formData.append('currency', this.form.controls.currency.value);
     formData.append(
       'order_price',
-      String(this.form.controls.order_price.value),
+      String(
+        this.currenciesService.toEur(
+          this.currency,
+          this.form.controls.order_price.value,
+        ),
+      ),
+    );
+    formData.append(
+      'rate',
+      String(this.currenciesService.getRate(this.currency)),
     );
     if (this.fileUpload.files) {
       formData.append('order_file', this.fileUpload.files[0]);

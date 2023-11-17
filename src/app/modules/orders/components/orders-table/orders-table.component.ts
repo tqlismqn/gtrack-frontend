@@ -25,6 +25,7 @@ export class OrdersTableComponent {
     'created_date',
     'delivery_date',
     'order_price',
+    'status',
     'actions',
   ];
   searchableColumns: Selectable[] = [

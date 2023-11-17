@@ -1,13 +1,13 @@
 import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
 import { TableComponent } from '../../../../base-module/components/table/table.component';
 import { Selectable } from '../../../../../types/selectable.type';
-import { AdminModules } from '../../../../../constants/modules';
+import { AdminModules, Modules } from '../../../../../constants/modules';
 import { AdminUser, AdminUserResponse } from '../../../types/users';
 import {
   BankCollection,
   BankCollectionResponse,
 } from '../../../types/bank-collection';
-import { AdminBankCollectionService } from '../../../services/admin-bank-collection.service';
+import { BankCollectionService } from '../../../../../services/bank-collection.service';
 
 @Component({
   selector: 'app-bank-collection-table',
@@ -21,7 +21,7 @@ export class BankCollectionTableComponent {
     BankCollection
   >;
 
-  constructor(protected service: AdminBankCollectionService) {}
+  constructor(protected service: BankCollectionService) {}
 
   sortableColumns: Selectable[] = [
     {
@@ -81,7 +81,7 @@ export class BankCollectionTableComponent {
     },
   ];
 
-  module = AdminModules.BANK_COLLECTIONS;
+  module = Modules.BANK_COLLECTIONS;
 
   displayedColumns: string[] = [
     'name',

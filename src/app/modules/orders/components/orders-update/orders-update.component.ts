@@ -21,7 +21,7 @@ import { OrdersService } from '../../services/orders.service';
 import { CustomersService } from '../../../customers/services/customers.service';
 import { Nameable } from '../../../base-module/types/nameable.type';
 import { environment } from '../../../../../environments/environment';
-import { CustomerDocument } from '../../../customers/types/customers.type';
+import { CurrenciesService } from '../../../../services/currencies.service';
 
 interface OrdersEditForm {
   internal_order_id: FormControl<number>;
@@ -48,6 +48,7 @@ export class OrdersUpdateComponent
     cdr: ChangeDetectorRef,
     route: ActivatedRoute,
     protected customersService: CustomersService,
+    protected currenciesService: CurrenciesService,
   ) {
     super(service, deps, cdr, route);
   }
@@ -91,21 +92,16 @@ export class OrdersUpdateComponent
     this.form.controls.first_loading_date.setValue(item.first_loading_date);
     this.form.controls.last_uploading_date.setValue(item.last_uploading_date);
     this.form.controls.order_price.setValue(
-      `${item.order_price} ${this.getCurrencySign(item.currency)}`,
+      `${this.currenciesService.fromEur(
+        item.currency,
+        item.order_price,
+        item.rate,
+      )} ${item.currency}`,
     );
     this.form.controls.disponent_id.setValue(item.disponent_id);
     this.form.controls.delivery_responsible_id.setValue(
       item.delivery_responsible_id,
     );
-  }
-
-  getCurrencySign(currency: string) {
-    switch (currency) {
-      case 'USD':
-        return '$';
-      default:
-        return '€';
-    }
   }
 
   protected override get values(): any {

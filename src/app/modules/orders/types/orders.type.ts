@@ -6,11 +6,13 @@ import {
   Customer,
   CustomerResponse,
 } from '../../customers/types/customers.type';
+import { Currencies } from '../../../types/currencies';
+import { Nameable } from '../../base-module/types/nameable.type';
 
 export interface OrderResponse extends ModuleBaseResponse {
   customer_id: string;
   customer?: CustomerResponse;
-  currency: string;
+  currency: Currencies;
   order_price: number;
   internal_order_id: number;
   first_loading_date: string;
@@ -22,12 +24,14 @@ export interface OrderResponse extends ModuleBaseResponse {
   cmr_file?: OrderDocument;
   invoice_file?: OrderDocument;
   pallets_file?: OrderDocument;
+  rate: number;
+  status: OrderStatuses;
 }
 
 export interface Order extends ModuleBase {
   customer_id: string;
   customer?: Customer;
-  currency: string;
+  currency: Currencies;
   order_price: number;
   internal_order_id: number;
   first_loading_date: string;
@@ -39,7 +43,37 @@ export interface Order extends ModuleBase {
   cmr_file?: OrderDocument;
   invoice_file?: OrderDocument;
   pallets_file?: OrderDocument;
+  rate: number;
+  status: OrderFrontendStatus;
 }
+
+export interface OrderFrontendStatus extends Nameable {
+  id: OrderStatuses;
+}
+
+export enum OrderStatuses {
+  DRAFT = 'draft',
+  OPEN = 'open',
+  IN_PROGRESS = 'in_progress',
+  LOADED = 'loaded',
+  UNLOADED = 'unloaded',
+  READY_FOR_INVOICE = 'ready_for_invoice',
+  INVOICE_SENT = 'invoice_sent',
+  PAYMENT_RECEIVED = 'payment_received',
+  PARTLY_PAID = 'partly_paid',
+}
+
+export const OrderStatusesNames: Record<OrderStatuses, string> = {
+  [OrderStatuses.DRAFT]: 'Draft',
+  [OrderStatuses.OPEN]: 'Open',
+  [OrderStatuses.IN_PROGRESS]: 'In Progress',
+  [OrderStatuses.LOADED]: 'Loaded',
+  [OrderStatuses.UNLOADED]: 'Unloaded',
+  [OrderStatuses.READY_FOR_INVOICE]: 'Ready For Invoice',
+  [OrderStatuses.INVOICE_SENT]: 'Invoice Sent',
+  [OrderStatuses.PAYMENT_RECEIVED]: 'Payment Received',
+  [OrderStatuses.PARTLY_PAID]: 'Partly Paid',
+};
 
 export interface OrderLoadingPoints {
   point: string;

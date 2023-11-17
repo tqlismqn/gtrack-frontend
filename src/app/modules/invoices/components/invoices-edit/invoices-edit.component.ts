@@ -25,7 +25,7 @@ import {
   CustomersBankCollectionComponent,
 } from '../../../customers/components/customers-bank-collection/customers-bank-collection.component';
 import { CustomerBank } from '../../../customers/types/customers.type';
-import { AdminBankCollectionService } from '../../../admin/services/admin-bank-collection.service';
+import { BankCollectionService } from '../../../../services/bank-collection.service';
 import { startWith, takeUntil, tap } from 'rxjs';
 import { merge } from 'rxjs';
 import { Order } from '../../../orders/types/orders.type';
@@ -77,7 +77,7 @@ export class InvoicesEditComponent
     deps: EditComponentDeps,
     cdr: ChangeDetectorRef,
     route: ActivatedRoute,
-    protected bankCollectionService: AdminBankCollectionService,
+    protected bankCollectionService: BankCollectionService,
   ) {
     super(service, deps, cdr, route);
     const extras = this.deps.router.getCurrentNavigation()?.extras;
@@ -87,6 +87,7 @@ export class InvoicesEditComponent
       this.updateOrderView(order);
       this.form.controls.customer_id.setValue(null);
       this.form.controls.client_id.disable();
+      this.cdr.markForCheck();
     }
   }
   override form = new FormGroup<InvoicesEditForm>({

@@ -45,6 +45,11 @@ export class ModulesService {
       plural: 'Currencies',
       singular: 'Currency',
     },
+    [Modules.BANK_COLLECTIONS]: {
+      id: Modules.BANK_COLLECTIONS,
+      plural: 'Banks',
+      singular: 'Bank',
+    },
   };
 
   public readonly moduleNamesArray = Object.values(this.moduleNames);
@@ -75,7 +80,7 @@ export class ModulesService {
     [Modules.PERMISSIONS]?: { [key in keyof PermissionModule]?: string };
     [Modules.ORDERS]?: { [key in keyof Order]?: string };
     [Modules.INVOICES]?: { [key in keyof Order]?: string };
-    [AdminModules.BANK_COLLECTIONS]?: {
+    [Modules.BANK_COLLECTIONS]?: {
       [key in keyof BankCollection]?: string;
     };
     [AdminModules.USERS]?: {

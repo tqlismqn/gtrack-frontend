@@ -4,10 +4,10 @@ export enum Modules {
   ORDERS = 'orders',
   INVOICES = 'invoices',
   CURRENCIES = 'currencies',
+  BANK_COLLECTIONS = 'bank_collections',
 }
 
 export enum AdminModules {
   USERS = 'admin/users',
   COMPANIES = 'admin/companies',
-  BANK_COLLECTIONS = 'admin/bank_collections',
 }

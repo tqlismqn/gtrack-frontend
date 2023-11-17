@@ -113,7 +113,7 @@ export class SidenavComponent implements OnInit, OnDestroy {
       });
       this.adminContainer.push({
         name: 'Bank Collection',
-        link: AdminModules.BANK_COLLECTIONS,
+        link: Modules.BANK_COLLECTIONS,
       });
       this.adminContainer.push({
         name: 'Currencies',

@@ -82,7 +82,7 @@ const modules = [
     editComponent: AdminCompaniesEditComponent,
   },
   {
-    module: AdminModules.BANK_COLLECTIONS,
+    module: Modules.BANK_COLLECTIONS,
     readActivate: [isSuperAdmin],
     writeActivate: [isSuperAdmin],
     tableComponent: BankCollectionTableComponent,
