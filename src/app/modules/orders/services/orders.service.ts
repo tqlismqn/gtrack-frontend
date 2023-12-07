@@ -6,6 +6,7 @@ import { Modules } from '../../../constants/modules';
 import { Injectable } from '@angular/core';
 import { Order, OrderResponse, OrderStatusesNames } from '../types/orders.type';
 import { CustomersService } from '../../customers/services/customers.service';
+import { Nameable } from '../../base-module/types/nameable.type';
 
 @Injectable()
 export class OrdersService extends BaseModuleService<OrderResponse, Order> {
@@ -22,6 +23,13 @@ export class OrdersService extends BaseModuleService<OrderResponse, Order> {
       },
     };
   };
+
+  public ordersSelections: Nameable[] = Object.entries(OrderStatusesNames).map(
+    (item) => ({
+      id: item[0],
+      name: item[1],
+    }),
+  );
 
   constructor(
     deps: BaseModuleServiceDeps,

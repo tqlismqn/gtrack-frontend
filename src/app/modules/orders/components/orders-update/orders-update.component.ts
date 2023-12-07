@@ -3,7 +3,9 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  computed,
   OnInit,
+  signal,
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import {
@@ -16,6 +18,7 @@ import {
   OrderDocument,
   OrderDocumentType,
   OrderResponse,
+  OrderStatuses,
 } from '../../types/orders.type';
 import { OrdersService } from '../../services/orders.service';
 import { CustomersService } from '../../../customers/services/customers.service';
@@ -30,6 +33,15 @@ interface OrdersEditForm {
   order_price: FormControl<string>;
   disponent_id: FormControl<string>;
   delivery_responsible_id: FormControl<string>;
+  truck_number: FormControl<string | null>;
+  trailer_number: FormControl<string | null>;
+  loading_address: FormControl<string | null>;
+  unloading_address: FormControl<string | null>;
+  status: FormControl<OrderStatuses>;
+}
+
+interface OrderStatusSelection extends Nameable {
+  disabled?: boolean;
 }
 
 @Component({
@@ -43,7 +55,7 @@ export class OrdersUpdateComponent
   implements AfterViewInit, OnInit
 {
   constructor(
-    service: OrdersService,
+    protected override service: OrdersService,
     deps: EditComponentDeps,
     cdr: ChangeDetectorRef,
     route: ActivatedRoute,
@@ -74,6 +86,34 @@ export class OrdersUpdateComponent
     delivery_responsible_id: new FormControl<string>('', {
       nonNullable: true,
     }),
+    truck_number: new FormControl<string | null>(null),
+    trailer_number: new FormControl<string | null>(null),
+    loading_address: new FormControl<string | null>(null),
+    unloading_address: new FormControl<string | null>(null),
+    status: new FormControl<OrderStatuses>(OrderStatuses.DRAFT, {
+      nonNullable: true,
+    }),
+  });
+
+  status = signal<OrderStatuses>(OrderStatuses.DRAFT);
+  statusSelections = computed<OrderStatusSelection[]>(() => {
+    const selections = this.service.ordersSelections;
+    let enabled: OrderStatuses;
+    const status = this.status();
+    switch (status) {
+      case OrderStatuses.IN_PROGRESS:
+        enabled = OrderStatuses.LOADED;
+        break;
+
+      case OrderStatuses.LOADED:
+        enabled = OrderStatuses.UNLOADED;
+        break;
+    }
+
+    return selections.map((item) => ({
+      ...item,
+      disabled: item.id !== enabled && item.id !== status,
+    }));
   });
 
   users: Nameable[] = [];
@@ -102,16 +142,23 @@ export class OrdersUpdateComponent
     this.form.controls.delivery_responsible_id.setValue(
       item.delivery_responsible_id,
     );
+    this.form.controls.truck_number.setValue(item.truck_number ?? null);
+    this.form.controls.trailer_number.setValue(item.trailer_number ?? null);
+    this.form.controls.loading_address.setValue(item.loading_address ?? null);
+    this.form.controls.unloading_address.setValue(
+      item.unloading_address ?? null,
+    );
+    this.form.controls.status.setValue(item.status.id);
+    this.status.set(item.status.id);
   }
 
   protected override get values(): any {
-    return {
-      internal_order_id: this.form.controls.internal_order_id.value,
-      first_loading_date: this.form.controls.first_loading_date.value,
-      last_uploading_date: this.form.controls.last_uploading_date.value,
-      disponent_id: this.form.controls.disponent_id.value,
-      delivery_responsible_id: this.form.controls.delivery_responsible_id.value,
-    };
+    const values = this.form.value;
+    if (values.order_price) {
+      delete values.order_price;
+    }
+
+    return values;
   }
 
   public onFileChange(type: OrderDocumentType, files?: FileList | null) {
@@ -136,6 +183,10 @@ export class OrdersUpdateComponent
             this.service.item[type] = data;
           }
           this.cdr.markForCheck();
+
+          if (this.item) {
+            this.fetchItem(this.item.id);
+          }
         },
       });
   }

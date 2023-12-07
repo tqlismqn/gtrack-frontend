@@ -128,7 +128,7 @@ export abstract class BaseModuleService<
 
   abstract toDto: (item: B) => F;
 
-  protected get companyId() {
+  public get companyId() {
     return this.deps.companyService.selectedCompany?.id;
   }
 

@@ -33,6 +33,8 @@ import {
   termsOfPayment,
   TermsOfPaymentEnum,
 } from '../../../customers/types/terms-of-payment.enum';
+import { environment } from '../../../../../environments/environment';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 interface InvoicesEditForm {
   order_id: FormControl<string | null>;
@@ -78,6 +80,7 @@ export class InvoicesEditComponent
     cdr: ChangeDetectorRef,
     route: ActivatedRoute,
     protected bankCollectionService: BankCollectionService,
+    protected snackBar: MatSnackBar,
   ) {
     super(service, deps, cdr, route);
     const extras = this.deps.router.getCurrentNavigation()?.extras;
@@ -147,6 +150,8 @@ export class InvoicesEditComponent
       nonNullable: false,
     }),
   });
+
+  protected readonly termsOfPayment = Object.values(termsOfPayment);
 
   get currencies() {
     return this.deps.companyService.currencies ?? [];
@@ -427,5 +432,22 @@ export class InvoicesEditComponent
     );
   }
 
-  protected readonly termsOfPayment = Object.values(termsOfPayment);
+  send() {
+    this.deps.http
+      .post(
+        `${environment.apiUrl}/api/v1/invoices/send/${this.item?.id}?company_id=${this.service.companyId}`,
+        {},
+      )
+      .subscribe((response) => {
+        const data = response as { message: string };
+        this.snackBar.open(data.message, 'Ok', {
+          horizontalPosition: 'center',
+          verticalPosition: 'bottom',
+        });
+
+        if (this.item) {
+          this.fetchItem(this.item.id);
+        }
+      });
+  }
 }

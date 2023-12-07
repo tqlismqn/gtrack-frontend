@@ -374,7 +374,9 @@
   </div>
 
   <ng-container actions>
-    <button type="button" mat-flat-button color="accent">Send</button>
+    <button type="button" mat-flat-button color="accent" (click)="send()">
+      Send
+    </button>
     <button type="button" mat-flat-button color="accent">Print</button>
     <button type="button" mat-flat-button color="accent">Download</button>
   </ng-container>

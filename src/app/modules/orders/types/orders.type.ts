@@ -26,6 +26,10 @@ export interface OrderResponse extends ModuleBaseResponse {
   pallets_file?: OrderDocument;
   rate: number;
   status: OrderStatuses;
+  truck_number?: string;
+  trailer_number?: string;
+  loading_address?: string;
+  unloading_address?: string;
 }
 
 export interface Order extends ModuleBase {
@@ -45,6 +49,10 @@ export interface Order extends ModuleBase {
   pallets_file?: OrderDocument;
   rate: number;
   status: OrderFrontendStatus;
+  truck_number?: string;
+  trailer_number?: string;
+  loading_address?: string;
+  unloading_address?: string;
 }
 
 export interface OrderFrontendStatus extends Nameable {

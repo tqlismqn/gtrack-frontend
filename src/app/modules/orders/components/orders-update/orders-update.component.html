@@ -19,6 +19,22 @@
     </button>
   </div>
 
+  <mat-form-field *ngIf="form.controls.status as control">
+    <mat-label>Order Status</mat-label>
+    <mat-select [formControl]="control">
+      <mat-option
+        *ngFor="let status of statusSelections()"
+        [value]="status.id"
+        [disabled]="status.disabled ?? false"
+      >
+        {{ status.name }}
+      </mat-option>
+    </mat-select>
+    <mat-error *ngIf="control.hasError('required')"
+      >This field is <b>required</b></mat-error
+    >
+  </mat-form-field>
+
   <div class="row row--equal">
     <mat-form-field *ngIf="form.controls.first_loading_date as control">
       <mat-label>First Loading Date</mat-label>
@@ -79,6 +95,46 @@
       >This field is <b>required</b></mat-error
     >
   </mat-form-field>
+
+  <div class="row">
+    <mat-form-field *ngIf="form.controls.truck_number as control">
+      <mat-label>Truck Number</mat-label>
+      <input matInput [formControl]="control" />
+    </mat-form-field>
+    <button color="primary" mat-icon-button type="button">
+      <mat-icon fontIcon="file_copy"></mat-icon>
+    </button>
+  </div>
+
+  <div class="row">
+    <mat-form-field *ngIf="form.controls.trailer_number as control">
+      <mat-label>Trailer Number</mat-label>
+      <input matInput [formControl]="control" />
+    </mat-form-field>
+    <button color="primary" mat-icon-button type="button">
+      <mat-icon fontIcon="file_copy"></mat-icon>
+    </button>
+  </div>
+
+  <div class="row">
+    <mat-form-field *ngIf="form.controls.loading_address as control">
+      <mat-label>Loading Address</mat-label>
+      <input matInput [formControl]="control" />
+    </mat-form-field>
+    <button color="primary" mat-icon-button type="button">
+      <mat-icon fontIcon="file_copy"></mat-icon>
+    </button>
+  </div>
+
+  <div class="row">
+    <mat-form-field *ngIf="form.controls.unloading_address as control">
+      <mat-label>Unloading Address</mat-label>
+      <input matInput [formControl]="control" />
+    </mat-form-field>
+    <button color="primary" mat-icon-button type="button">
+      <mat-icon fontIcon="file_copy"></mat-icon>
+    </button>
+  </div>
 
   <app-file-upload
     label="Attach Order"
