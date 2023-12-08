@@ -99,10 +99,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "g-track-frontend:build:production"
+              "buildTarget": "g-track-frontend:build:production"
             },
             "development": {
-              "browserTarget": "g-track-frontend:build:development"
+              "buildTarget": "g-track-frontend:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -110,7 +110,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "g-track-frontend:build"
+            "buildTarget": "g-track-frontend:build"
           }
         },
         "test": {
