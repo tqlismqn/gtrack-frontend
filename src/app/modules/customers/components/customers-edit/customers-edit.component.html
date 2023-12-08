@@ -3,7 +3,7 @@
   (submit$)="submit()"
   formTitle="Create Customer"
   [disableGrid]="true"
-  [history]="item?.history"
+  [history]="item()?.history"
   [module]="module"
 >
   <div class="customers-edit-form">
@@ -214,7 +214,7 @@
         <app-customers-bank-collection
           *ngIf="firstBank"
           [formGroup]="firstBank"
-          [banks]="bankCollections"
+          [banks]="bankCollections()"
         ></app-customers-bank-collection>
 
         <button
@@ -235,7 +235,7 @@
             <h3>Bank {{ i + 1 }}</h3>
             <app-customers-bank-collection
               [formGroup]="form"
-              [banks]="bankCollections"
+              [banks]="bankCollections()"
             ></app-customers-bank-collection>
           </div>
         </div>
@@ -363,63 +363,62 @@
           Add
         </button>
 
-        <h2 *ngIf="item && item.raiting && item.raiting.length > 0">
-          Raiting history
-        </h2>
-        <div
-          class="raiting__table-wp"
-          *ngIf="item && item.raiting && item.raiting.length > 0"
-        >
-          <table
-            class="raiting__table"
-            *ngIf="item"
-            mat-table
-            [dataSource]="item.raiting"
+        <ng-container *ngIf="item() as item">
+          <h2 *ngIf="item.raiting && item.raiting.length > 0">
+            Raiting history
+          </h2>
+          <div
+            class="raiting__table-wp"
+            *ngIf="item.raiting && item.raiting.length > 0"
           >
-            <ng-container matColumnDef="raiting">
-              <th mat-header-cell *matHeaderCellDef>Raiting</th>
-              <td mat-cell *matCellDef="let element">
-                <span
-                  class="raiting__element"
-                  [class]="getRaitingClassName(element.raiting)"
-                >
-                </span>
-              </td>
-            </ng-container>
+            <table class="raiting__table" mat-table [dataSource]="item.raiting">
+              <ng-container matColumnDef="raiting">
+                <th mat-header-cell *matHeaderCellDef>Raiting</th>
+                <td mat-cell *matCellDef="let element">
+                  <span
+                    class="raiting__element"
+                    [class]="getRaitingClassName(element.raiting)"
+                  >
+                  </span>
+                </td>
+              </ng-container>
 
-            <ng-container matColumnDef="user">
-              <th mat-header-cell *matHeaderCellDef>User</th>
-              <td mat-cell *matCellDef="let element">
-                {{ getUserName(element.user) }}
-              </td>
-            </ng-container>
+              <ng-container matColumnDef="user">
+                <th mat-header-cell *matHeaderCellDef>User</th>
+                <td mat-cell *matCellDef="let element">
+                  {{ getUserName(element.user) }}
+                </td>
+              </ng-container>
 
-            <ng-container matColumnDef="comment">
-              <th mat-header-cell *matHeaderCellDef>Comment</th>
-              <td mat-cell *matCellDef="let element">{{ element.comment }}</td>
-            </ng-container>
+              <ng-container matColumnDef="comment">
+                <th mat-header-cell *matHeaderCellDef>Comment</th>
+                <td mat-cell *matCellDef="let element">
+                  {{ element.comment }}
+                </td>
+              </ng-container>
 
-            <ng-container matColumnDef="date">
-              <th mat-header-cell *matHeaderCellDef>Date</th>
-              <td mat-cell *matCellDef="let element">
-                {{ element.date | date: "dd/MM/YYYY" }}
-              </td>
-            </ng-container>
+              <ng-container matColumnDef="date">
+                <th mat-header-cell *matHeaderCellDef>Date</th>
+                <td mat-cell *matCellDef="let element">
+                  {{ element.date | date: "dd/MM/YYYY" }}
+                </td>
+              </ng-container>
 
-            <tr
-              class="raiting__table__header"
-              mat-header-row
-              *matHeaderRowDef="['raiting', 'user', 'comment', 'date']"
-            ></tr>
-            <tr
-              mat-row
-              *matRowDef="
-                let row;
-                columns: ['raiting', 'user', 'comment', 'date']
-              "
-            ></tr>
-          </table>
-        </div>
+              <tr
+                class="raiting__table__header"
+                mat-header-row
+                *matHeaderRowDef="['raiting', 'user', 'comment', 'date']"
+              ></tr>
+              <tr
+                mat-row
+                *matRowDef="
+                  let row;
+                  columns: ['raiting', 'user', 'comment', 'date']
+                "
+              ></tr>
+            </table>
+          </div>
+        </ng-container>
       </div>
     </div>
   </div>

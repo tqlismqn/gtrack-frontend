@@ -29,7 +29,7 @@ export class CurrenciesService extends BaseModuleService<
   };
 
   public getRate(currency: Currencies): number {
-    return this.data.find((item) => item.id === currency)?.rate ?? 1;
+    return this.items().find((item) => item.id === currency)?.rate ?? 1;
   }
 
   public fromEur(

@@ -3,6 +3,7 @@ import {
   ChangeDetectorRef,
   Component,
   OnInit,
+  WritableSignal,
 } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import {
@@ -19,12 +20,8 @@ import {
 } from '../../types/customers.type';
 import { countries } from 'countries-list';
 import { environment } from '../../../../../environments/environment';
-import { Observable, startWith, takeUntil, tap } from 'rxjs';
+import { Observable, takeUntil, tap } from 'rxjs';
 import { CustomerBankForm } from '../customers-bank-collection/customers-bank-collection.component';
-import {
-  BankCollection,
-  BankCollectionResponse,
-} from '../../../admin/types/bank-collection';
 import { Nameable } from '../../../base-module/types/nameable.type';
 import { CustomersService } from '../../services/customers.service';
 import { ActivatedRoute } from '@angular/router';
@@ -34,6 +31,7 @@ import {
 } from '../../types/terms-of-payment.enum';
 import { merge } from 'rxjs';
 import { BankCollectionService } from '../../../../services/bank-collection.service';
+import { BankCollection } from '../../../admin/types/bank-collection';
 
 interface CustomersEditForm {
   id?: FormControl<string>;
@@ -157,8 +155,8 @@ export class CustomersEditComponent
   });
 
   bankForms: FormGroup<CustomerBankForm>[] = [];
-  get bankCollections() {
-    return this.banksService.data;
+  get bankCollections(): WritableSignal<BankCollection[]> {
+    return this.banksService.items;
   }
 
   get firstBank(): FormGroup<CustomerBankForm> | undefined {
@@ -203,9 +201,13 @@ export class CustomersEditComponent
     this.bankForms = [];
     this.setBanks(item.banks ?? []);
 
-    if (this.item?.raiting) {
-      this.item.raiting = this.sortRaiting(this.item.raiting);
-    }
+    this.item.update((item) => {
+      if (item) {
+        item.raiting = this.sortRaiting(item.raiting);
+      }
+
+      return item;
+    });
   }
 
   isDragging = false;
@@ -266,7 +268,10 @@ export class CustomersEditComponent
   downloadFile(doc: CustomerDocument) {
     this.deps.http
       .get(
-        `${environment.apiUrl}/api/v1/${this.module}/download/${this.item?.id}?company_id=${this.deps.companyService.selectedCompany?.id}&id=${doc.id}`,
+        `${environment.apiUrl}/api/v1/${this.module}/download/${this.item()
+          ?.id}?company_id=${this.deps.companyService.selectedCompany?.id}&id=${
+          doc.id
+        }`,
         { responseType: 'blob' },
       )
       .subscribe((response) => {
@@ -423,7 +428,10 @@ export class CustomersEditComponent
 
       this.deps.http
         .post(
-          `${environment.apiUrl}/api/v1/${this.module}/upload/create/${this.item?.id}?company_id=${this.deps.companyService.selectedCompany?.id}`,
+          `${environment.apiUrl}/api/v1/${
+            this.module
+          }/upload/create/${this.item()?.id}?company_id=${this.deps
+            .companyService.selectedCompany?.id}`,
           formData,
         )
         .subscribe({
@@ -447,7 +455,10 @@ export class CustomersEditComponent
 
       this.deps.http
         .post(
-          `${environment.apiUrl}/api/v1/${this.module}/upload/delete/${this.item?.id}?company_id=${this.deps.companyService.selectedCompany?.id}`,
+          `${environment.apiUrl}/api/v1/${
+            this.module
+          }/upload/delete/${this.item()?.id}?company_id=${this.deps
+            .companyService.selectedCompany?.id}`,
           formData,
         )
         .subscribe({
@@ -491,14 +502,6 @@ export class CustomersEditComponent
         }),
       )
       .subscribe();
-
-    this.banksService.data$.pipe(
-      takeUntil(this.destroy$),
-      startWith(this.banksService.data),
-      tap(() => {
-        this.cdr.markForCheck();
-      }),
-    );
   }
 
   updateLimits() {
@@ -568,14 +571,20 @@ export class CustomersEditComponent
 
       this.deps.http
         .post(
-          `${environment.apiUrl}/api/v1/${this.module}/raiting/add/${this.item?.id}?company_id=${this.deps.companyService.selectedCompany?.id}`,
+          `${environment.apiUrl}/api/v1/${this.module}/raiting/add/${this.item()
+            ?.id}?company_id=${this.deps.companyService.selectedCompany?.id}`,
           this.raitingForm.value,
         )
         .subscribe({
           next: (response) => {
             const data = this.sortRaiting(response as CustomerRaiting[]);
+            this.item.update((item) => {
+              if (item) {
+                item.raiting = data;
+              }
 
-            this.item!.raiting = data;
+              return item;
+            });
             this.raitingForm.reset();
             this.cdr.markForCheck();
             subscriber.next(data);

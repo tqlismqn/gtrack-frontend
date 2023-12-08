@@ -1,7 +1,7 @@
 import { AdminModules, Modules } from '../../../constants/modules';
-import { EventEmitter, Injectable } from '@angular/core';
+import { EventEmitter, Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { combineLatest, Observable } from 'rxjs';
+import { combineLatest, first, Observable } from 'rxjs';
 import { SseService } from '../../../services/sse.service';
 import { ModuleBaseReadRequest } from '../types/module-base.type';
 import { environment } from '../../../../environments/environment';
@@ -22,13 +22,11 @@ export abstract class BaseModuleService<
   B extends { id: string },
   F extends { id: string },
 > {
-  data: F[] = [];
-  data$ = new EventEmitter<F[]>();
+  readonly items = signal<F[]>([]);
 
   count = 0;
 
-  item?: F;
-  item$ = new EventEmitter<F>();
+  readonly item = signal<F | undefined>(undefined);
 
   module!: Modules | AdminModules;
 
@@ -49,7 +47,7 @@ export abstract class BaseModuleService<
     if (this.deps.sse.init) {
       this.sseInit();
     } else {
-      this.deps.sse.init$.subscribe(() => {
+      this.deps.sse.init$.pipe(first()).subscribe(() => {
         this.sseInit();
       });
     }
@@ -110,10 +108,8 @@ export abstract class BaseModuleService<
   }
 
   processUpdate(id: string) {
-    if (this.data.findIndex((item) => item.id === id) > -1) {
-      this.read().subscribe();
-    }
-    if (this.item?.id === id) {
+    this.read().subscribe();
+    if (this.item()?.id === id) {
       this.readOne(id).subscribe();
     }
   }
@@ -166,8 +162,7 @@ export abstract class BaseModuleService<
           const count = Number(countResponse as string);
           if (saveData) {
             this.count = count;
-            this.data = fData;
-            this.data$.emit(fData);
+            this.items.set(fData);
           }
           subscriber.next([fData, count]);
         },
@@ -190,8 +185,7 @@ export abstract class BaseModuleService<
             const data = response as B;
             const item = this.toDto(data);
             if (saveData) {
-              this.item = item;
-              this.item$.emit(this.item);
+              this.item.set(item);
             }
             subscriber.next(item);
           },
@@ -208,24 +202,25 @@ export abstract class BaseModuleService<
       this.deps.http
         .patch(
           `${environment.apiUrl}/api/v1/${this.module}/update/${
-            id ?? this.item?.id
+            id ?? this.item()?.id
           }?company_id=${this.companyId}`,
           data,
         )
         .subscribe({
           next: (response) => {
             const item = response as B;
-            this.item = this.toDto(item);
-            this.item$.emit(this.item);
+            this.item.set(this.toDto(item));
 
-            const itemIndex = this.data.findIndex((item) => item.id === id);
-            if (itemIndex > -1) {
-              this.data[itemIndex] = this.item;
-              this.data = [...this.data];
-              this.data$.emit();
-            }
+            this.items.update((items) => {
+              const itemIndex = items.findIndex((item) => item.id === id);
+              if (itemIndex > -1) {
+                items[itemIndex] = this.item()!;
+              }
 
-            subscriber.next(this.item);
+              return items;
+            });
+
+            subscriber.next(this.item());
             subscriber.complete();
           },
           error: (err) => {
@@ -246,9 +241,8 @@ export abstract class BaseModuleService<
         .subscribe({
           next: (response) => {
             const item = response as B;
-            this.item = this.toDto(item);
-            this.item$.emit(this.item);
-            subscriber.next(this.item);
+            this.item.set(this.toDto(item));
+            subscriber.next(this.item());
             subscriber.complete();
           },
           error: (err) => {
@@ -260,11 +254,11 @@ export abstract class BaseModuleService<
   }
 
   protected processInternalDelete(id: number | string) {
-    if (this.data.findIndex((item) => item.id === id) > -1) {
+    if (this.items().findIndex((item) => item.id === id) > -1) {
       this.read().subscribe();
     }
-    if (this.item?.id === id) {
-      this.item = undefined;
+    if (this.item()?.id === id) {
+      this.item.set(undefined);
       if (this.deps.router.url.includes(`/update/${id}`)) {
         this.deps.router.navigateByUrl(
           this.deps.router.url.replace(`/update/${id}`, ''),

@@ -3,7 +3,7 @@ import {
   BaseModuleServiceDeps,
 } from '../../base-module/services/base-module-service';
 import { Modules } from '../../../constants/modules';
-import { EventEmitter, Injectable } from '@angular/core';
+import { EventEmitter, Injectable, signal } from '@angular/core';
 import { Invoice, InvoiceItem, InvoiceResponse } from '../types/invoices.type';
 import { Order } from '../../orders/types/orders.type';
 import { OrdersService } from '../../orders/services/orders.service';
@@ -35,8 +35,7 @@ export class InvoicesService extends BaseModuleService<
     this.initCustomers();
   }
 
-  orders: Order[] = [];
-  orders$ = new EventEmitter<Order[]>();
+  orders = signal<Order[]>([]);
 
   protected initOrders() {
     this.readOrders();
@@ -51,8 +50,7 @@ export class InvoicesService extends BaseModuleService<
 
   public readOrders() {
     this.ordersService.read({}, false).subscribe(([data]) => {
-      this.orders = data;
-      this.orders$.emit(data);
+      this.orders.set(data);
     });
   }
 

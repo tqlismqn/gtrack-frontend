@@ -173,31 +173,33 @@ export class OrdersUpdateComponent
 
     this.deps.http
       .post(
-        `${environment.apiUrl}/api/v1/${this.module}/upload/create/${this.item?.id}?company_id=${this.deps.companyService.selectedCompany?.id}`,
+        `${environment.apiUrl}/api/v1/${this.module}/upload/create/${this.item()
+          ?.id}?company_id=${this.deps.companyService.selectedCompany?.id}`,
         formData,
       )
       .subscribe({
         next: (response) => {
           const data = response as OrderDocument;
-          if (this.service.item) {
-            this.service.item[type] = data;
-          }
+          this.service.item.update((item) => {
+            if (item) {
+              item[type] = data;
+            }
+            return item;
+          });
           this.cdr.markForCheck();
 
-          if (this.item) {
-            this.fetchItem(this.item.id);
+          const item = this.item();
+
+          if (item) {
+            this.fetchItem(item.id);
           }
         },
       });
   }
 
   downloadAll() {
-    [
-      this.item?.order_file,
-      this.item?.pallets_file,
-      this.item?.cmr_file,
-      this.item?.invoice_file,
-    ]
+    const item = this.item();
+    [item?.order_file, item?.pallets_file, item?.cmr_file, item?.invoice_file]
       .filter((item) => !!item)
       .forEach((item) => this.downloadDoc(item as OrderDocument));
   }
@@ -205,7 +207,10 @@ export class OrdersUpdateComponent
   downloadDoc(doc: OrderDocument) {
     this.deps.http
       .get(
-        `${environment.apiUrl}/api/v1/${this.module}/download/${this.item?.id}?company_id=${this.deps.companyService.selectedCompany?.id}&id=${doc.id}`,
+        `${environment.apiUrl}/api/v1/${this.module}/download/${this.item()
+          ?.id}?company_id=${this.deps.companyService.selectedCompany?.id}&id=${
+          doc.id
+        }`,
         { responseType: 'blob' },
       )
       .subscribe((response) => {

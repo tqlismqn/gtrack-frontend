@@ -124,15 +124,6 @@ export class TableComponent<B extends { id: string }, F extends { id: string }>
     this.sortingFieldControl.valueChanges.subscribe((value) => {
       this.sortChange(value);
     });
-
-    this.service.data$
-      .pipe(
-        takeUntil(this.destroy$),
-        tap(() => {
-          this.cdr.markForCheck();
-        }),
-      )
-      .subscribe();
   }
 
   @ViewChild(MatTable, { static: true }) table!: MatTable<F>;

@@ -4,7 +4,7 @@
   formTitle="Edit Order"
   submitTitle="Save"
   [module]="module"
-  [history]="item?.history"
+  [history]="item()?.history"
 >
   <div class="row">
     <mat-form-field *ngIf="form.controls.internal_order_id as control">
@@ -138,23 +138,23 @@
 
   <app-file-upload
     label="Attach Order"
-    [uploadedFileName]="item?.order_file?.name"
+    [uploadedFileName]="item()?.order_file?.name"
     (files$)="onFileChange('order_file', $event)"
   ></app-file-upload>
   <app-file-upload
     label="Attach CMR"
-    [uploadedFileName]="item?.cmr_file?.name"
+    [uploadedFileName]="item()?.cmr_file?.name"
     (files$)="onFileChange('cmr_file', $event)"
   ></app-file-upload>
   <app-file-upload
     label="Attach Pallets"
-    [uploadedFileName]="item?.pallets_file?.name"
+    [uploadedFileName]="item()?.pallets_file?.name"
     (files$)="onFileChange('pallets_file', $event)"
     [disabled]="true"
   ></app-file-upload>
   <app-file-upload
     label="Attach Invoice"
-    [uploadedFileName]="item?.invoice_file?.name"
+    [uploadedFileName]="item()?.invoice_file?.name"
     (files$)="onFileChange('invoice_file', $event)"
   ></app-file-upload>
   <button

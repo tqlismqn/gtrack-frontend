@@ -3,11 +3,13 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  effect,
   EventEmitter,
   Injectable,
   OnDestroy,
   OnInit,
   ViewChild,
+  WritableSignal,
 } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { CompanyService } from '../../../../services/company.service';
@@ -60,6 +62,17 @@ export abstract class EditComponentComponent<
         if (extras?.state && extras.state['item']) {
           this.item = extras.state['item'];
         }
+
+        effect(
+          () => {
+            const item = this.item();
+            if (item) {
+              this.updateFormView(item);
+              this.cdr.markForCheck();
+            }
+          },
+          { allowSignalWrites: true },
+        );
       }
     });
   }
@@ -71,11 +84,11 @@ export abstract class EditComponentComponent<
 
   form!: FormGroup;
 
-  get item() {
+  get item(): WritableSignal<F | undefined> {
     return this.service.item;
   }
-  set item(item) {
-    this.service.item = item;
+  set item(item: F | undefined) {
+    this.service.item.set(item);
   }
 
   get module() {
@@ -86,27 +99,12 @@ export abstract class EditComponentComponent<
   }
 
   ngOnInit() {
-    if (this.type === 'update') {
-      this.service.item$
-        .pipe(
-          takeUntil(this.destroy$),
-          tap((item) => {
-            this.updateFormView(item);
-            this.cdr.markForCheck();
-          }),
-        )
-        .subscribe();
-
-      if (this.item) {
-        this.updateFormView(this.item);
-        this.cdr.markForCheck();
-      }
-    }
+    //
   }
 
   ngAfterViewInit() {
     if (this.type === 'update') {
-      if (!this.item) {
+      if (!this.item()) {
         this.route.params.subscribe((params) => {
           if (!params['id']) {
             return;
@@ -196,9 +194,9 @@ export abstract class EditComponentComponent<
   }
 
   toUpdatePage() {
-    this.deps.router.navigateByUrl(`${this.module}/update/${this.item?.id}`, {
+    this.deps.router.navigateByUrl(`${this.module}/update/${this.item()?.id}`, {
       state: {
-        item: this.item,
+        item: this.item(),
       },
     });
   }

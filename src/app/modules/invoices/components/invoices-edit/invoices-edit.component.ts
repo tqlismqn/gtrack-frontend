@@ -3,6 +3,8 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  computed,
+  effect,
   OnInit,
   ViewChild,
 } from '@angular/core';
@@ -200,8 +202,6 @@ export class InvoicesEditComponent
       controls.client_id.disable();
     }
 
-    this.getOrder();
-
     this.cdr.markForCheck();
   }
 
@@ -259,7 +259,7 @@ export class InvoicesEditComponent
       return;
     }
 
-    const order = this.service.orders.find((item) => item.id === id);
+    const order = this.service.orders().find((item) => item.id === id);
     if (order) {
       this.form.controls.customer_id.setValue(null);
       this.form.controls.client_id.disable();
@@ -285,37 +285,19 @@ export class InvoicesEditComponent
     }
   }
 
-  order?: Order;
-
-  getOrder() {
-    if (this.service.orders && this.item) {
-      this.order = this.service.orders.find(
-        (item) => item.id === this.item!.order_id,
-      );
+  order = computed<Order | undefined>(() => {
+    const invoice = this.item();
+    const orders = this.service.orders();
+    let result: Order | undefined = undefined;
+    if (orders && invoice) {
+      result = orders.find((item) => item.id === invoice.order_id);
     }
-  }
+
+    return result;
+  });
 
   override ngOnInit() {
     super.ngOnInit();
-
-    this.service.orders$
-      .pipe(
-        tap((orders) => {
-          this.getOrder();
-          this.cdr.markForCheck();
-        }),
-        takeUntil(this.destroy$),
-      )
-      .subscribe();
-
-    this.bankCollectionService.data$
-      .pipe(
-        tap(() => {
-          this.cdr.markForCheck();
-        }),
-        takeUntil(this.destroy$),
-      )
-      .subscribe();
 
     merge(
       this.deps.companyService.companyChanged$,
@@ -425,12 +407,13 @@ export class InvoicesEditComponent
 
   addItem() {
     this.itemsGroup.markAllAsTouched();
-    if (!this.item || !this.itemsGroup.valid) {
+    const item = this.item();
+    if (!item || !this.itemsGroup.valid) {
       return;
     }
     const controls = this.itemsGroup.controls;
     this.service
-      .addItem(this.item.id, {
+      .addItem(item.id, {
         price_per_item: controls.price_per_item.value,
         quantity: controls.quantity.value,
         description: controls.description.value,
@@ -453,7 +436,8 @@ export class InvoicesEditComponent
   send() {
     this.deps.http
       .post(
-        `${environment.apiUrl}/api/v1/invoices/send/${this.item?.id}?company_id=${this.service.companyId}`,
+        `${environment.apiUrl}/api/v1/invoices/send/${this.item()
+          ?.id}?company_id=${this.service.companyId}`,
         {},
       )
       .subscribe((response) => {
@@ -463,8 +447,9 @@ export class InvoicesEditComponent
           verticalPosition: 'bottom',
         });
 
-        if (this.item) {
-          this.fetchItem(this.item.id);
+        const item = this.item();
+        if (item) {
+          this.fetchItem(item.id);
           this.service.readOrders();
         }
       });
