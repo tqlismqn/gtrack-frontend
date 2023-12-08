@@ -26,7 +26,7 @@ import {
 } from '../../../customers/components/customers-bank-collection/customers-bank-collection.component';
 import { CustomerBank } from '../../../customers/types/customers.type';
 import { BankCollectionService } from '../../../../services/bank-collection.service';
-import { startWith, takeUntil, tap } from 'rxjs';
+import { Observable, startWith, takeUntil, tap } from 'rxjs';
 import { merge } from 'rxjs';
 import { Order } from '../../../orders/types/orders.type';
 import {
@@ -465,7 +465,18 @@ export class InvoicesEditComponent
 
         if (this.item) {
           this.fetchItem(this.item.id);
+          this.service.readOrders();
         }
       });
+  }
+
+  override update(): Observable<Invoice | undefined> {
+    return new Observable<Invoice | undefined>((subscriber) => {
+      super.update().subscribe((data) => {
+        subscriber.next(data);
+        subscriber.complete();
+        this.service.readOrders();
+      });
+    });
   }
 }

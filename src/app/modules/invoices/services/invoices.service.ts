@@ -49,7 +49,7 @@ export class InvoicesService extends BaseModuleService<
     });
   }
 
-  protected readOrders() {
+  public readOrders() {
     this.ordersService.read({}, false).subscribe(([data]) => {
       this.orders = data;
       this.orders$.emit(data);
