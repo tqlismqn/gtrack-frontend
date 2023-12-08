@@ -26,6 +26,7 @@ export interface InvoiceResponse extends ModuleBaseResponse {
   bank?: CustomerBank;
   items?: InvoiceItem[];
   internal_invoice_id: number;
+  paid_sum: number | null;
 }
 
 export interface Invoice extends ModuleBase {
@@ -48,6 +49,7 @@ export interface Invoice extends ModuleBase {
   bank?: CustomerBank;
   items?: InvoiceItem[];
   internal_invoice_id: number;
+  paid_sum: number | null;
 }
 
 export interface InvoiceItem {
@@ -71,5 +73,11 @@ export type CustomerFields = Pick<
 
 export type OrderFields = Pick<
   Order,
-  'customer' | 'first_loading_date' | 'last_uploading_date' | 'created_at'
+  | 'id'
+  | 'customer'
+  | 'first_loading_date'
+  | 'last_uploading_date'
+  | 'created_at'
+  | 'status'
+  | 'order_price'
 >;

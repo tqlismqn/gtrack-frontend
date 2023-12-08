@@ -370,6 +370,24 @@
           Add Item
         </button>
       </div>
+
+      <mat-form-field *ngIf="form.controls.paid_sum as control">
+        <mat-label>Paid Sum</mat-label>
+        <input
+          type="number"
+          matInput
+          [formControl]="control"
+          min="0"
+          step="0.1"
+          [max]="order?.order_price ?? 0"
+          [readonly]="
+            !order || !['invoice_sent', 'partly_paid'].includes(order.status.id)
+          "
+        />
+        <mat-error *ngIf="control.hasError('required')"
+          >Enter valid number</mat-error
+        >
+      </mat-form-field>
     </div>
   </div>
 

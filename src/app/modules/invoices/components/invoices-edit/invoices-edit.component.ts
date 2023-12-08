@@ -52,6 +52,7 @@ interface InvoicesEditForm {
   course: FormControl<number>;
   remark: FormControl<string>;
   internal_invoice_id: FormControl<string>;
+  paid_sum: FormControl<number | null>;
 
   client_id: FormControl<number | null>;
 }
@@ -149,6 +150,9 @@ export class InvoicesEditComponent
     client_id: new FormControl(null, {
       nonNullable: false,
     }),
+    paid_sum: new FormControl<number | null>(null, {
+      nonNullable: false,
+    }),
   });
 
   protected readonly termsOfPayment = Object.values(termsOfPayment);
@@ -174,6 +178,7 @@ export class InvoicesEditComponent
     controls.contact_phone?.setValue(item.contact_phone);
     controls.contact_email?.setValue(item.contact_email);
     controls.accounting_email?.setValue(item.accounting_email);
+    controls.paid_sum?.setValue(item.paid_sum);
 
     if (item.items) {
       this.items = item.items;
@@ -194,6 +199,8 @@ export class InvoicesEditComponent
       controls.order_id.enable();
       controls.client_id.disable();
     }
+
+    this.getOrder();
 
     this.cdr.markForCheck();
   }
@@ -278,12 +285,23 @@ export class InvoicesEditComponent
     }
   }
 
+  order?: Order;
+
+  getOrder() {
+    if (this.service.orders && this.item) {
+      this.order = this.service.orders.find(
+        (item) => item.id === this.item!.order_id,
+      );
+    }
+  }
+
   override ngOnInit() {
     super.ngOnInit();
 
     this.service.orders$
       .pipe(
-        tap(() => {
+        tap((orders) => {
+          this.getOrder();
           this.cdr.markForCheck();
         }),
         takeUntil(this.destroy$),
