@@ -1,13 +1,16 @@
 import { Injectable } from '@angular/core';
-import { AuthService as Auth0Service } from '@auth0/auth0-angular';
+import {
+  AuthService as Auth0Service,
+  User as Auth0User,
+} from '@auth0/auth0-angular';
 import { combineLatest, Observable, Subject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
 import { User, UserResponse } from '../types/user';
 import { CompanyService } from '../../../services/company.service';
-import { User as Auth0User } from '@auth0/auth0-angular';
 import { Router } from '@angular/router';
 import { GlobalErrorHandler } from '../../../errors/global-error-handler';
+import { Roles } from '../../admin/types/roles';
 
 @Injectable({
   providedIn: 'root',
@@ -119,7 +122,14 @@ export class AuthService {
     });
   }
 
+  get isAdmin() {
+    return (
+      this.isSuperAdmin ||
+      this.companyService.selectedCompany?.role === Roles.Admin
+    );
+  }
+
   get isSuperAdmin() {
-    return this.user?.role_id === 'super_admin';
+    return this.companyService.selectedCompany?.role === Roles.SuperAdmin;
   }
 }

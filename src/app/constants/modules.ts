@@ -9,5 +9,9 @@ export enum Modules {
 
 export enum AdminModules {
   USERS = 'admin/users',
-  COMPANIES = 'admin/companies',
+  ROLES = 'admin/roles',
+}
+
+export enum SuperAdminModules {
+  COMPANIES = 'super_admin/companies',
 }

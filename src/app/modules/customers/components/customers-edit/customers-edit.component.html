@@ -164,7 +164,13 @@
       <div class="grid">
         <mat-form-field *ngIf="form.controls.insurance_credit_limit as control">
           <mat-label>Insurance Credit Limit</mat-label>
-          <input matInput [formControl]="control" type="number" min="0" />
+          <input
+            matInput
+            [formControl]="control"
+            type="number"
+            min="0"
+            [readonly]="!ableToEditLimits"
+          />
           <mat-error *ngIf="control.hasError('required')"
             >This field is <b>required</b></mat-error
           >
@@ -186,7 +192,13 @@
         </mat-form-field>
         <mat-form-field *ngIf="form.controls.internal_credit_limit as control">
           <mat-label>Internal credit limit</mat-label>
-          <input matInput [formControl]="control" type="number" min="0" />
+          <input
+            matInput
+            [formControl]="control"
+            type="number"
+            min="0"
+            [readonly]="!ableToEditLimits"
+          />
           <mat-error *ngIf="control.hasError('required')"
             >This field is <b>required</b></mat-error
           >

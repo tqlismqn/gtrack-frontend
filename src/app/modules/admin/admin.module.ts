@@ -20,6 +20,9 @@ import { AdminCompaniesService } from './services/admin-companies.service';
 import { AdminUsersService } from './services/admin-users.service';
 import { CurrenciesTableComponent } from './components/currencies/currencies-table/currencies-table.component';
 import { CurrenciesEditComponent } from './components/currencies/currencies-edit/currencies-edit.component';
+import { AdminRolesService } from './services/roles.service';
+import { AdminRolesTableComponent } from './components/roles/admin-roles-table/admin-roles-table.component';
+import { AdminRolesEditComponent } from './components/roles/admin-roles-edit/admin-roles-edit.component';
 
 @NgModule({
   declarations: [
@@ -31,6 +34,8 @@ import { CurrenciesEditComponent } from './components/currencies/currencies-edit
     BankCollectionEditComponent,
     CurrenciesTableComponent,
     CurrenciesEditComponent,
+    AdminRolesTableComponent,
+    AdminRolesEditComponent,
   ],
   imports: [
     CommonModule,
@@ -48,6 +53,7 @@ import { CurrenciesEditComponent } from './components/currencies/currencies-edit
     BankCollectionService,
     AdminCompaniesService,
     AdminUsersService,
+    AdminRolesService,
   ],
 })
 export class AdminModule {}

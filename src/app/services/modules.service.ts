@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AdminModules, Modules } from '../constants/modules';
+import {AdminModules, Modules, SuperAdminModules} from '../constants/modules';
 import { PermissionAccess } from '../constants/permission-access';
 import { Customer } from '../modules/customers/types/customers.type';
 import { PermissionModule } from '../modules/permissions/types/permissions.type';
@@ -7,8 +7,9 @@ import { BankCollection } from '../modules/admin/types/bank-collection';
 import { User } from '../modules/auth/types/user';
 import { Company } from '../types/company.type';
 import { Order } from '../modules/orders/types/orders.type';
-import { Currencies } from "../types/currencies";
-import { AdminCurrencies } from "../types/currencies";
+import { Currencies } from '../types/currencies';
+import { AdminCurrencies } from '../types/currencies';
+import { Role } from '../modules/admin/types/roles';
 
 @Injectable({ providedIn: 'root' })
 export class ModulesService {
@@ -86,11 +87,14 @@ export class ModulesService {
     [AdminModules.USERS]?: {
       [key in keyof User]?: string;
     };
-    [AdminModules.COMPANIES]?: {
+    [SuperAdminModules.COMPANIES]?: {
       [key in keyof Company]?: string;
     };
     [Modules.CURRENCIES]?: {
       [key in keyof AdminCurrencies]?: string;
+    };
+    [AdminModules.ROLES]?: {
+      [key in keyof Role]?: string;
     };
   } = {
     [Modules.CUSTOMERS]: {

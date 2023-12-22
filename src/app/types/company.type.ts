@@ -1,5 +1,6 @@
 import { PermissionAccess } from '../constants/permission-access';
 import { Currencies } from './currencies';
+import { Roles } from '../modules/admin/types/roles';
 
 export interface Company {
   id: string;
@@ -12,6 +13,7 @@ export interface Company {
     read_access: PermissionAccess;
     write_access: PermissionAccess;
   };
+  role: Roles;
 }
 
 export interface CompanyResponse {
@@ -25,4 +27,5 @@ export interface CompanyResponse {
     read_access: PermissionAccess;
     write_access: PermissionAccess;
   };
+  role: Roles;
 }

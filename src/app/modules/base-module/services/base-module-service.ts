@@ -1,4 +1,8 @@
-import { AdminModules, Modules } from '../../../constants/modules';
+import {
+  AdminModules,
+  Modules,
+  SuperAdminModules,
+} from '../../../constants/modules';
 import { EventEmitter, Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { combineLatest, first, Observable } from 'rxjs';
@@ -28,7 +32,7 @@ export abstract class BaseModuleService<
 
   readonly item = signal<F | undefined>(undefined);
 
-  module!: Modules | AdminModules;
+  module!: Modules | AdminModules | SuperAdminModules;
 
   abstract moduleName: string;
   abstract moduleItemName: string;
@@ -40,7 +44,7 @@ export abstract class BaseModuleService<
 
   constructor(
     protected deps: BaseModuleServiceDeps,
-    module: Modules | AdminModules,
+    module: Modules | AdminModules | SuperAdminModules,
   ) {
     this.module = module;
 
@@ -53,12 +57,32 @@ export abstract class BaseModuleService<
     }
   }
 
+  get isSuperAdminModule() {
+    return this.module.indexOf('super_admin/') > -1;
+  }
+
   get isAdminModule() {
     return this.module.indexOf('admin/') > -1;
   }
 
   sseInitAdminModule() {
     const path = this.module.replace('admin/', '');
+
+    this.deps.sse.echo
+      .private(`${path}.${this.companyId}`)
+      .listen('.App\\Events\\Model\\ModelUpdate', (data: { id: string }) => {
+        this.processUpdate(data.id);
+      })
+      .listen('.App\\Events\\Model\\ModelCreate', (data: { id: string }) => {
+        this.processCreate(data.id);
+      })
+      .listen('.App\\Events\\Model\\ModelDelete', (data: { id: string }) => {
+        this.processDelete(data.id);
+      });
+  }
+
+  sseInitSuperAdminModule() {
+    const path = this.module.replace('super_admin/', '');
 
     this.deps.sse.echo
       .private(`${path}`)
@@ -100,7 +124,9 @@ export abstract class BaseModuleService<
   }
 
   sseInit() {
-    if (this.isAdminModule) {
+    if (this.isSuperAdminModule) {
+      this.sseInitSuperAdminModule();
+    } else if (this.isAdminModule) {
       this.sseInitAdminModule();
     } else {
       this.sseInitModule();

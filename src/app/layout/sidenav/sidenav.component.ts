@@ -9,7 +9,11 @@ import {
   ViewChild,
 } from '@angular/core';
 import { CompanyService } from '../../services/company.service';
-import { AdminModules, Modules } from '../../constants/modules';
+import {
+  AdminModules,
+  Modules,
+  SuperAdminModules,
+} from '../../constants/modules';
 import { PermissionAccessType } from '../../constants/permission-access';
 import { takeUntil, tap } from 'rxjs';
 import { AuthService } from '../../modules/auth/services/auth.service';
@@ -28,6 +32,7 @@ type Link = {
 export class SidenavComponent implements OnInit, OnDestroy {
   links: Link[] = [];
 
+  superAdminContainer: Link[] = [];
   adminContainer: Link[] = [];
   invoicesContainer: Link[] = [];
 
@@ -102,14 +107,10 @@ export class SidenavComponent implements OnInit, OnDestroy {
         link: 'invoices-orders',
       });
     }
-    if (this.auth.isSuperAdmin) {
+    if (this.auth.isAdmin) {
       this.adminContainer.push({
         name: 'Users',
         link: AdminModules.USERS,
-      });
-      this.adminContainer.push({
-        name: 'Companies',
-        link: AdminModules.COMPANIES,
       });
       this.adminContainer.push({
         name: 'Bank Collection',
@@ -118,6 +119,16 @@ export class SidenavComponent implements OnInit, OnDestroy {
       this.adminContainer.push({
         name: 'Currencies',
         link: Modules.CURRENCIES,
+      });
+      this.adminContainer.push({
+        name: 'Roles',
+        link: AdminModules.ROLES,
+      });
+    }
+    if (this.auth.isSuperAdmin) {
+      this.superAdminContainer.push({
+        name: 'Companies',
+        link: SuperAdminModules.COMPANIES,
       });
     }
 

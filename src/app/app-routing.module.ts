@@ -12,7 +12,7 @@ import { isUserNotHaveCompany } from './guards/auth/is-user-not-have-company.gua
 import { CompanySurveyComponent } from './modules/auth/components/company-survey/company-survey.component';
 import { MainComponent } from './layout/main/main.component';
 import { haveReadAccess } from './guards/modules/have-read-access';
-import { AdminModules, Modules } from './constants/modules';
+import { AdminModules, Modules, SuperAdminModules } from './constants/modules';
 import { haveWriteAccess } from './guards/modules/have-write-access';
 import { CustomersEditComponent } from './modules/customers/components/customers-edit/customers-edit.component';
 import { CustomersTableComponent } from './modules/customers/components/customers-table/customers-table.component';
@@ -34,6 +34,8 @@ import { InvoicesOrdersTableComponent } from './modules/invoices/components/invo
 import { CurrenciesTableComponent } from './modules/admin/components/currencies/currencies-table/currencies-table.component';
 import { CurrenciesEditComponent } from './modules/admin/components/currencies/currencies-edit/currencies-edit.component';
 import { SettingsFormComponent } from './modules/settings/components/settings-form/settings-form.component';
+import { AdminRolesTableComponent } from './modules/admin/components/roles/admin-roles-table/admin-roles-table.component';
+import { AdminRolesEditComponent } from './modules/admin/components/roles/admin-roles-edit/admin-roles-edit.component';
 
 const modules = [
   {
@@ -75,11 +77,18 @@ const modules = [
     editComponent: AdminUsersEditComponent,
   },
   {
-    module: AdminModules.COMPANIES,
+    module: SuperAdminModules.COMPANIES,
     readActivate: [isSuperAdmin],
     writeActivate: [isSuperAdmin],
     tableComponent: AdminCompaniesTableComponent,
     editComponent: AdminCompaniesEditComponent,
+  },
+  {
+    module: AdminModules.ROLES,
+    readActivate: [isSuperAdmin],
+    writeActivate: [isSuperAdmin],
+    tableComponent: AdminRolesTableComponent,
+    editComponent: AdminRolesEditComponent,
   },
   {
     module: Modules.BANK_COLLECTIONS,

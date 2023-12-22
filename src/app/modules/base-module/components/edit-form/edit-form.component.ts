@@ -13,7 +13,7 @@ import { LoadingState } from '../../../auth/components/auth-form/auth-form.compo
 import { History } from '../../types/history.type';
 import { CompanyService } from '../../../../services/company.service';
 import { ModulesService } from '../../../../services/modules.service';
-import { AdminModules, Modules } from '../../../../constants/modules';
+import {AdminModules, Modules, SuperAdminModules} from '../../../../constants/modules';
 import { ModuleBase } from '../../types/module-base.type';
 import { AddTabDirective } from '../../../customers/directives/add-tab.directive';
 
@@ -48,7 +48,7 @@ export class EditFormComponent implements OnInit {
   users: Record<string, string> = {};
 
   @Input()
-  module?: Modules | AdminModules;
+  module?: Modules | AdminModules | SuperAdminModules;
 
   @ContentChildren(AddTabDirective) additionalTabs?: QueryList<AddTabDirective>;
 

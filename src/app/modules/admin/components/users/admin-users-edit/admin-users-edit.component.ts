@@ -95,7 +95,7 @@ export class AdminUsersEditComponent
 
   fetchCompanyNames() {
     this.deps.http
-      .post(`${environment.apiUrl}/api/v1/admin/companies/read/`, {})
+      .post(`${environment.apiUrl}/api/v1/super_admin/companies/read/`, {})
       .subscribe({
         next: (response) => {
           const data = response as AdminCompanyResponse[];

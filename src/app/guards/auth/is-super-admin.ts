@@ -1,12 +1,13 @@
 import { CanActivateFn, Router } from '@angular/router';
 import { inject } from '@angular/core';
-import { AuthService } from '../../modules/auth/services/auth.service';
+import { CompanyService } from '../../services/company.service';
+import { Roles } from '../../modules/admin/types/roles';
 
 export const isSuperAdmin: CanActivateFn = () => {
-  const authService = inject(AuthService);
+  const companyService = inject(CompanyService);
   const router = inject(Router);
 
-  const result = authService.user?.role_id === 'super_admin';
+  const result = companyService.selectedCompany?.role === Roles.SuperAdmin;
 
   if (!result) {
     router.navigate(['/dashboard']);

@@ -4,16 +4,16 @@ import { Selectable } from '../../../../../types/selectable.type';
 import { AdminModules } from '../../../../../constants/modules';
 import { AdminUser, AdminUserResponse } from '../../../types/users';
 import { Roles } from '../../../types/roles';
-import { AdminUsersService } from '../../../services/admin-users.service';
+import { AdminRolesService } from '../../../services/roles.service';
 
 @Component({
-  selector: 'app-admin-users-table',
-  templateUrl: './admin-users-table.component.html',
-  styleUrls: ['./admin-users-table.component.scss'],
+  selector: 'app-admin-roles-table',
+  templateUrl: './admin-roles-table.component.html',
+  styleUrls: ['./admin-roles-table.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AdminUsersTableComponent {
-  constructor(protected service: AdminUsersService) {}
+export class AdminRolesTableComponent {
+  constructor(protected service: AdminRolesService) {}
 
   @ViewChild('appTable') appTable!: TableComponent<
     AdminUserResponse,
@@ -26,20 +26,8 @@ export class AdminUsersTableComponent {
       value: '',
     },
     {
-      name: 'ID',
-      value: 'id',
-    },
-    {
-      name: 'First Name',
-      value: 'first_name',
-    },
-    {
-      name: 'Last Name',
-      value: 'last_name',
-    },
-    {
-      name: 'Phone',
-      value: 'phone',
+      name: 'User',
+      value: 'user_id',
     },
     {
       name: 'Role',
@@ -47,16 +35,9 @@ export class AdminUsersTableComponent {
     },
   ];
 
-  module = AdminModules.USERS;
+  module = AdminModules.ROLES;
 
-  displayedColumns: string[] = [
-    'id',
-    'first_name',
-    'last_name',
-    'phone',
-    'role_id',
-    'actions',
-  ];
+  displayedColumns: string[] = ['user_id', 'role', 'actions'];
 
   toDto(value: AdminUserResponse): AdminUser {
     return value;

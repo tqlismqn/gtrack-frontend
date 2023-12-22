@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
 import { TableComponent } from '../../../../base-module/components/table/table.component';
 import { Selectable } from '../../../../../types/selectable.type';
-import { AdminModules } from '../../../../../constants/modules';
+import {AdminModules, SuperAdminModules} from '../../../../../constants/modules';
 import { AdminUser, AdminUserResponse } from '../../../types/users';
 import { AdminCompany, AdminCompanyResponse } from '../../../types/companies';
 import { AdminCompaniesService } from '../../../services/admin-companies.service';
@@ -47,7 +47,7 @@ export class AdminCompaniesTableComponent {
     },
   ];
 
-  module = AdminModules.COMPANIES;
+  module = SuperAdminModules.COMPANIES;
 
   displayedColumns: string[] = [
     'id',
