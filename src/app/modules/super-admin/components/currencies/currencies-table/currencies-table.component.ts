@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
 import { TableComponent } from '../../../../base-module/components/table/table.component';
 import { Selectable } from '../../../../../types/selectable.type';
-import { Modules } from '../../../../../constants/modules';
+import { SuperAdminModules } from '../../../../../constants/modules';
 import {
   AdminCurrencies,
   AdminCurrenciesResponse,
@@ -44,7 +44,7 @@ export class CurrenciesTableComponent {
     },
   ];
 
-  module = Modules.CURRENCIES;
+  module = SuperAdminModules.CURRENCIES;
 
   displayedColumns: string[] = ['name', 'rate', 'edit'];
 }

@@ -1,19 +1,19 @@
 import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
 import { TableComponent } from '../../../../base-module/components/table/table.component';
 import { Selectable } from '../../../../../types/selectable.type';
-import { AdminModules } from '../../../../../constants/modules';
-import { AdminUser, AdminUserResponse } from '../../../types/users';
 import { Roles } from '../../../types/roles';
-import { AdminRolesService } from '../../../services/admin-roles.service';
+import { AdminUsersService } from '../../../services/admin-users.service';
+import { AdminUser, AdminUserResponse } from '../../../types/users';
+import { AdminModules } from '../../../../../constants/modules';
 
 @Component({
-  selector: 'app-admin-roles-table',
-  templateUrl: './admin-roles-table.component.html',
-  styleUrls: ['./admin-roles-table.component.scss'],
+  selector: 'app-admin-users-table',
+  templateUrl: './admin-users-table.component.html',
+  styleUrls: ['./admin-users-table.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AdminRolesTableComponent {
-  constructor(protected service: AdminRolesService) {}
+export class AdminUsersTableComponent {
+  constructor(protected service: AdminUsersService) {}
 
   @ViewChild('appTable') appTable!: TableComponent<
     AdminUserResponse,
@@ -26,8 +26,20 @@ export class AdminRolesTableComponent {
       value: '',
     },
     {
-      name: 'User',
-      value: 'user_id',
+      name: 'ID',
+      value: 'id',
+    },
+    {
+      name: 'First Name',
+      value: 'first_name',
+    },
+    {
+      name: 'Last Name',
+      value: 'last_name',
+    },
+    {
+      name: 'Phone',
+      value: 'phone',
     },
     {
       name: 'Role',
@@ -35,9 +47,16 @@ export class AdminRolesTableComponent {
     },
   ];
 
-  module = AdminModules.ROLES;
+  module = AdminModules.USERS;
 
-  displayedColumns: string[] = ['user_id', 'role', 'actions'];
+  displayedColumns: string[] = [
+    'id',
+    'first_name',
+    'last_name',
+    'phone',
+    'role_id',
+    'actions',
+  ];
 
   toDto(value: AdminUserResponse): AdminUser {
     return value;

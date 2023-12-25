@@ -9,7 +9,7 @@ import {
   EditComponentDeps,
 } from '../../../../base-module/components/edit-component/edit-component.component';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { AdminUser } from '../../../types/users';
+import { AdminUser } from '../../../../admin/types/users';
 import { ActivatedRoute } from '@angular/router';
 import {
   AdminCurrencies,

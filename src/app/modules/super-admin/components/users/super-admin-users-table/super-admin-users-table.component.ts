@@ -2,22 +2,22 @@ import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
 import { TableComponent } from '../../../../base-module/components/table/table.component';
 import { Selectable } from '../../../../../types/selectable.type';
 import { AdminModules } from '../../../../../constants/modules';
-import { AdminUser, AdminUserResponse } from '../../../types/users';
-import { Roles } from '../../../types/roles';
-import { AdminUsersService } from '../../../services/admin-users.service';
+import { Roles } from '../../../../admin/types/roles';
+import { SuperAdminUsersService } from '../../../services/super-admin-users.service';
+import { SuperAdminUser, SuperAdminUserResponse } from '../../../types/users';
 
 @Component({
   selector: 'app-admin-users-table',
-  templateUrl: './admin-users-table.component.html',
-  styleUrls: ['./admin-users-table.component.scss'],
+  templateUrl: './super-admin-users-table.component.html',
+  styleUrls: ['./super-admin-users-table.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AdminUsersTableComponent {
-  constructor(protected service: AdminUsersService) {}
+export class SuperAdminUsersTableComponent {
+  constructor(protected service: SuperAdminUsersService) {}
 
   @ViewChild('appTable') appTable!: TableComponent<
-    AdminUserResponse,
-    AdminUser
+    SuperAdminUserResponse,
+    SuperAdminUser
   >;
 
   sortableColumns: Selectable[] = [
@@ -58,7 +58,7 @@ export class AdminUsersTableComponent {
     'actions',
   ];
 
-  toDto(value: AdminUserResponse): AdminUser {
+  toDto(value: SuperAdminUserResponse): SuperAdminUser {
     return value;
   }
 

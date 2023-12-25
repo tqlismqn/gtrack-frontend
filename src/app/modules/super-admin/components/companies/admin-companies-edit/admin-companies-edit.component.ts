@@ -11,7 +11,7 @@ import {
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AdminCompany, AdminCompanyResponse } from '../../../types/companies';
 import { environment } from '../../../../../../environments/environment';
-import { AdminUser, AdminUserResponse } from '../../../types/users';
+import { AdminUser, AdminUserResponse } from '../../../../admin/types/users';
 import { ActivatedRoute } from '@angular/router';
 import { AdminCompaniesService } from '../../../services/admin-companies.service';
 
@@ -83,7 +83,7 @@ export class AdminCompaniesEditComponent
 
   fetchUserNames() {
     this.deps.http
-      .post(`${environment.apiUrl}/api/v1/admin/users/read/`, {})
+      .post(`${environment.apiUrl}/api/v1/super_admin/users/read/`, {})
       .subscribe({
         next: (response) => {
           const data = response as AdminUserResponse[];

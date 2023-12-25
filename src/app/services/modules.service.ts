@@ -1,22 +1,21 @@
 import { Injectable } from '@angular/core';
-import {AdminModules, Modules, SuperAdminModules} from '../constants/modules';
+import { AdminModules, Modules, SuperAdminModules } from '../constants/modules';
 import { PermissionAccess } from '../constants/permission-access';
 import { Customer } from '../modules/customers/types/customers.type';
 import { PermissionModule } from '../modules/permissions/types/permissions.type';
-import { BankCollection } from '../modules/admin/types/bank-collection';
+import { BankCollection } from '../modules/super-admin/types/bank-collection';
 import { User } from '../modules/auth/types/user';
 import { Company } from '../types/company.type';
 import { Order } from '../modules/orders/types/orders.type';
-import { Currencies } from '../types/currencies';
 import { AdminCurrencies } from '../types/currencies';
 import { Role } from '../modules/admin/types/roles';
 
 @Injectable({ providedIn: 'root' })
 export class ModulesService {
   public readonly moduleNames: Record<
-    Modules,
+    Modules | SuperAdminModules | AdminModules,
     {
-      id: Modules;
+      id: Modules | SuperAdminModules | AdminModules;
       singular: string;
       plural: string;
     }
@@ -41,15 +40,35 @@ export class ModulesService {
       plural: 'Invoices',
       singular: 'Invoice',
     },
-    [Modules.CURRENCIES]: {
-      id: Modules.CURRENCIES,
+    [SuperAdminModules.CURRENCIES]: {
+      id: SuperAdminModules.CURRENCIES,
       plural: 'Currencies',
       singular: 'Currency',
     },
-    [Modules.BANK_COLLECTIONS]: {
-      id: Modules.BANK_COLLECTIONS,
+    [SuperAdminModules.BANK_COLLECTIONS]: {
+      id: SuperAdminModules.BANK_COLLECTIONS,
       plural: 'Banks',
       singular: 'Bank',
+    },
+    [SuperAdminModules.COMPANIES]: {
+      id: SuperAdminModules.COMPANIES,
+      plural: 'Companies',
+      singular: 'Company',
+    },
+    [AdminModules.USERS]: {
+      id: AdminModules.USERS,
+      plural: 'Users',
+      singular: 'User',
+    },
+    [SuperAdminModules.USERS]: {
+      id: AdminModules.USERS,
+      plural: 'Users',
+      singular: 'User',
+    },
+    [AdminModules.ROLES]: {
+      id: AdminModules.ROLES,
+      plural: 'Roles',
+      singular: 'Role',
     },
   };
 
@@ -81,16 +100,19 @@ export class ModulesService {
     [Modules.PERMISSIONS]?: { [key in keyof PermissionModule]?: string };
     [Modules.ORDERS]?: { [key in keyof Order]?: string };
     [Modules.INVOICES]?: { [key in keyof Order]?: string };
-    [Modules.BANK_COLLECTIONS]?: {
+    [SuperAdminModules.BANK_COLLECTIONS]?: {
       [key in keyof BankCollection]?: string;
     };
     [AdminModules.USERS]?: {
       [key in keyof User]?: string;
     };
+    [SuperAdminModules.USERS]?: {
+      [key in keyof User]?: string;
+    };
     [SuperAdminModules.COMPANIES]?: {
       [key in keyof Company]?: string;
     };
-    [Modules.CURRENCIES]?: {
+    [SuperAdminModules.CURRENCIES]?: {
       [key in keyof AdminCurrencies]?: string;
     };
     [AdminModules.ROLES]?: {

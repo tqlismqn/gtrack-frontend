@@ -14,7 +14,7 @@ import { environment } from '../../../../../../environments/environment';
 import { ActivatedRoute } from '@angular/router';
 import { Nameable } from '../../../../base-module/types/nameable.type';
 import { Role, RoleResponse, Roles } from '../../../types/roles';
-import { AdminRolesService } from '../../../services/roles.service';
+import { AdminRolesService } from '../../../services/admin-roles.service';
 
 type AdminUsersFormGroup = {
   user_id: FormControl<string>;

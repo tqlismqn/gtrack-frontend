@@ -113,14 +113,6 @@ export class SidenavComponent implements OnInit, OnDestroy {
         link: AdminModules.USERS,
       });
       this.adminContainer.push({
-        name: 'Bank Collection',
-        link: Modules.BANK_COLLECTIONS,
-      });
-      this.adminContainer.push({
-        name: 'Currencies',
-        link: Modules.CURRENCIES,
-      });
-      this.adminContainer.push({
         name: 'Roles',
         link: AdminModules.ROLES,
       });
@@ -129,6 +121,18 @@ export class SidenavComponent implements OnInit, OnDestroy {
       this.superAdminContainer.push({
         name: 'Companies',
         link: SuperAdminModules.COMPANIES,
+      });
+      this.superAdminContainer.push({
+        name: 'Users',
+        link: SuperAdminModules.USERS,
+      });
+      this.superAdminContainer.push({
+        name: 'Bank Collection',
+        link: SuperAdminModules.BANK_COLLECTIONS,
+      });
+      this.superAdminContainer.push({
+        name: 'Currencies',
+        link: SuperAdminModules.CURRENCIES,
       });
     }
 

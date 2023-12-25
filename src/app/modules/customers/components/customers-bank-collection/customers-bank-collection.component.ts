@@ -10,7 +10,7 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { BankCollection } from '../../../admin/types/bank-collection';
+import { BankCollection } from '../../../super-admin/types/bank-collection';
 import { merge, ReplaySubject, startWith, takeUntil, tap } from 'rxjs';
 import { CompanyService } from '../../../../services/company.service';
 

@@ -8,7 +8,7 @@ import {
   AdminCurrenciesResponse,
   Currencies,
 } from '../types/currencies';
-import { Modules } from '../constants/modules';
+import { SuperAdminModules } from '../constants/modules';
 
 @Injectable({ providedIn: 'root' })
 export class CurrenciesService extends BaseModuleService<
@@ -20,7 +20,7 @@ export class CurrenciesService extends BaseModuleService<
   moduleName = 'Currencies';
 
   constructor(deps: BaseModuleServiceDeps) {
-    super(deps, Modules.CURRENCIES);
+    super(deps, SuperAdminModules.CURRENCIES);
     this.read({}).subscribe();
   }
 

@@ -30,7 +30,7 @@ import {
   TermsOfPaymentEnum,
 } from '../../types/terms-of-payment.enum';
 import { BankCollectionService } from '../../../../services/bank-collection.service';
-import { BankCollection } from '../../../admin/types/bank-collection';
+import { BankCollection } from '../../../super-admin/types/bank-collection';
 import { CompanyService } from '../../../../services/company.service';
 import { Roles } from '../../../admin/types/roles';
 

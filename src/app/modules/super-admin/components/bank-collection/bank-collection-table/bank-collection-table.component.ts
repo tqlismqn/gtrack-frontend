@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
 import { TableComponent } from '../../../../base-module/components/table/table.component';
 import { Selectable } from '../../../../../types/selectable.type';
-import { AdminModules, Modules } from '../../../../../constants/modules';
-import { AdminUser, AdminUserResponse } from '../../../types/users';
+import { SuperAdminModules } from '../../../../../constants/modules';
+import { AdminUser, AdminUserResponse } from '../../../../admin/types/users';
 import {
   BankCollection,
   BankCollectionResponse,
@@ -81,7 +81,7 @@ export class BankCollectionTableComponent {
     },
   ];
 
-  module = Modules.BANK_COLLECTIONS;
+  module = SuperAdminModules.BANK_COLLECTIONS;
 
   displayedColumns: string[] = [
     'name',

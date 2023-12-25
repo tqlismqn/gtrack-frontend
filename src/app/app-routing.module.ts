@@ -19,23 +19,26 @@ import { CustomersTableComponent } from './modules/customers/components/customer
 import { PermissionsTableComponent } from './modules/permissions/components/permissions-table/permissions-table.component';
 import { PermissionsEditComponent } from './modules/permissions/components/permissions-edit/permissions-edit.component';
 import { isSuperAdmin } from './guards/auth/is-super-admin';
-import { AdminUsersTableComponent } from './modules/admin/components/users/admin-users-table/admin-users-table.component';
-import { AdminUsersEditComponent } from './modules/admin/components/users/admin-users-edit/admin-users-edit.component';
-import { AdminCompaniesTableComponent } from './modules/admin/components/companies/admin-companies-table/admin-companies-table.component';
-import { AdminCompaniesEditComponent } from './modules/admin/components/companies/admin-companies-edit/admin-companies-edit.component';
-import { BankCollectionTableComponent } from './modules/admin/components/bank-collection/bank-collection-table/bank-collection-table.component';
-import { BankCollectionEditComponent } from './modules/admin/components/bank-collection/bank-collection-edit/bank-collection-edit.component';
+import { AdminCompaniesTableComponent } from './modules/super-admin/components/companies/admin-companies-table/admin-companies-table.component';
+import { AdminCompaniesEditComponent } from './modules/super-admin/components/companies/admin-companies-edit/admin-companies-edit.component';
+import { BankCollectionTableComponent } from './modules/super-admin/components/bank-collection/bank-collection-table/bank-collection-table.component';
+import { BankCollectionEditComponent } from './modules/super-admin/components/bank-collection/bank-collection-edit/bank-collection-edit.component';
 import { OrdersTableComponent } from './modules/orders/components/orders-table/orders-table.component';
 import { OrdersCreateComponent } from './modules/orders/components/orders-create/orders-create.component';
 import { OrdersUpdateComponent } from './modules/orders/components/orders-update/orders-update.component';
 import { InvoicesTableComponent } from './modules/invoices/components/invoices-table/invoices-table.component';
 import { InvoicesEditComponent } from './modules/invoices/components/invoices-edit/invoices-edit.component';
 import { InvoicesOrdersTableComponent } from './modules/invoices/components/invoices-orders-table/invoices-orders-table.component';
-import { CurrenciesTableComponent } from './modules/admin/components/currencies/currencies-table/currencies-table.component';
-import { CurrenciesEditComponent } from './modules/admin/components/currencies/currencies-edit/currencies-edit.component';
+import { CurrenciesTableComponent } from './modules/super-admin/components/currencies/currencies-table/currencies-table.component';
+import { CurrenciesEditComponent } from './modules/super-admin/components/currencies/currencies-edit/currencies-edit.component';
 import { SettingsFormComponent } from './modules/settings/components/settings-form/settings-form.component';
 import { AdminRolesTableComponent } from './modules/admin/components/roles/admin-roles-table/admin-roles-table.component';
 import { AdminRolesEditComponent } from './modules/admin/components/roles/admin-roles-edit/admin-roles-edit.component';
+import { AdminUsersTableComponent } from './modules/admin/components/admin-users/admin-users-table/admin-users-table.component';
+import { AdminUsersEditComponent } from './modules/admin/components/admin-users/admin-users-edit/admin-users-edit.component';
+import { isAdmin } from './guards/auth/is-admin';
+import { SuperAdminUsersTableComponent } from './modules/super-admin/components/users/super-admin-users-table/super-admin-users-table.component';
+import { SuperAdminUsersEditComponent } from './modules/super-admin/components/users/super-admin-users-edit/super-admin-users-edit.component';
 
 const modules = [
   {
@@ -71,10 +74,17 @@ const modules = [
 
   {
     module: AdminModules.USERS,
-    readActivate: [isSuperAdmin],
-    writeActivate: [isSuperAdmin],
+    readActivate: [isAdmin],
+    writeActivate: [isAdmin],
     tableComponent: AdminUsersTableComponent,
     editComponent: AdminUsersEditComponent,
+  },
+  {
+    module: SuperAdminModules.USERS,
+    readActivate: [isSuperAdmin],
+    writeActivate: [isSuperAdmin],
+    tableComponent: SuperAdminUsersTableComponent,
+    editComponent: SuperAdminUsersEditComponent,
   },
   {
     module: SuperAdminModules.COMPANIES,
@@ -85,20 +95,20 @@ const modules = [
   },
   {
     module: AdminModules.ROLES,
-    readActivate: [isSuperAdmin],
-    writeActivate: [isSuperAdmin],
+    readActivate: [isAdmin],
+    writeActivate: [isAdmin],
     tableComponent: AdminRolesTableComponent,
     editComponent: AdminRolesEditComponent,
   },
   {
-    module: Modules.BANK_COLLECTIONS,
+    module: SuperAdminModules.BANK_COLLECTIONS,
     readActivate: [isSuperAdmin],
     writeActivate: [isSuperAdmin],
     tableComponent: BankCollectionTableComponent,
     editComponent: BankCollectionEditComponent,
   },
   {
-    module: Modules.CURRENCIES,
+    module: SuperAdminModules.CURRENCIES,
     readActivate: [isSuperAdmin],
     writeActivate: [isSuperAdmin],
     tableComponent: CurrenciesTableComponent,
