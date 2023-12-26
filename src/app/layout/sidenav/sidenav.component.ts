@@ -68,6 +68,7 @@ export class SidenavComponent implements OnInit, OnDestroy {
     this.links = [];
     this.adminContainer = [];
     this.invoicesContainer = [];
+    this.superAdminContainer = [];
     if (this.checkPermission(Modules.CUSTOMERS)) {
       this.links.push({
         name: 'Address Book',
