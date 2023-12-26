@@ -1,4 +1,9 @@
-<app-edit-form #editFormComponent (submit$)="submit()" formTitle="Create Role">
+<app-edit-form
+  #editFormComponent
+  (submit$)="submit()"
+  [formTitle]="(type === 'update' ? 'Update' : 'Create') + ' Role'"
+  [history]="item()?.history"
+>
   <mat-form-field
     subscriptSizing="dynamic"
     *ngIf="form.controls.role as control"
