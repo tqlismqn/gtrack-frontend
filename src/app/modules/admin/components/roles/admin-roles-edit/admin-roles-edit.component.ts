@@ -65,6 +65,7 @@ export class AdminRolesEditComponent
   updateFormView(item: Role): void {
     this.form.controls.role.setValue(item.role ?? '');
     this.form.controls.user_id.setValue(item.user_id ?? '');
+    this.form.controls.user_id.disable();
   }
 
   override ngOnInit() {

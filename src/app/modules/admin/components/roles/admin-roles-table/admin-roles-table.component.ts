@@ -3,7 +3,7 @@ import { TableComponent } from '../../../../base-module/components/table/table.c
 import { Selectable } from '../../../../../types/selectable.type';
 import { AdminModules } from '../../../../../constants/modules';
 import { AdminUser, AdminUserResponse } from '../../../types/users';
-import { Roles } from '../../../types/roles';
+import { Role, RoleResponse, Roles } from '../../../types/roles';
 import { AdminRolesService } from '../../../services/admin-roles.service';
 
 @Component({
@@ -15,10 +15,7 @@ import { AdminRolesService } from '../../../services/admin-roles.service';
 export class AdminRolesTableComponent {
   constructor(protected service: AdminRolesService) {}
 
-  @ViewChild('appTable') appTable!: TableComponent<
-    AdminUserResponse,
-    AdminUser
-  >;
+  @ViewChild('appTable') appTable!: TableComponent<RoleResponse, Role>;
 
   sortableColumns: Selectable[] = [
     {
@@ -37,7 +34,11 @@ export class AdminRolesTableComponent {
 
   module = AdminModules.ROLES;
 
-  displayedColumns: string[] = ['user_id', 'role', 'actions'];
+  displayedColumns: string[] = ['user_id', 'role', 'role_edit'];
+
+  toEdit(item: Role) {
+    this.appTable.openUpdatePage(item);
+  }
 
   toDto(value: AdminUserResponse): AdminUser {
     return value;
