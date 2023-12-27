@@ -31,7 +31,7 @@ export class SettingsFormComponent implements OnInit, OnDestroy {
       validators: [Validators.required],
       nonNullable: true,
     }),
-    currencies: new FormControl<Currencies[]>([...CurrenciesArray], {
+    available_currencies: new FormControl<Currencies[]>([...CurrenciesArray], {
       validators: [Validators.required],
       nonNullable: true,
     }),
@@ -73,7 +73,9 @@ export class SettingsFormComponent implements OnInit, OnDestroy {
 
   updateFormView() {
     if (this.company) {
-      this.form.controls.currencies.setValue(this.company.currencies);
+      this.form.controls.available_currencies.setValue(
+        this.company.currencies.map((currency: any) => currency.ID),
+      );
       this.form.controls.website.setValue(this.company.website);
       this.form.controls.name.setValue(this.company.name);
       this.form.controls.employees_number.setValue(
@@ -84,6 +86,7 @@ export class SettingsFormComponent implements OnInit, OnDestroy {
   }
 
   submit() {
+    console.log(this.form.value);
     if (!this.form.valid) {
       return;
     }
