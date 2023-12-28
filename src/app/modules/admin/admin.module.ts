@@ -18,8 +18,6 @@ import { BankCollectionEditComponent } from './components/bank-collection/bank-c
 import { BankCollectionService } from '../../services/bank-collection.service';
 import { AdminCompaniesService } from './services/admin-companies.service';
 import { AdminUsersService } from './services/admin-users.service';
-import { CurrenciesTableComponent } from './components/currencies/currencies-table/currencies-table.component';
-import { CurrenciesEditComponent } from './components/currencies/currencies-edit/currencies-edit.component';
 
 @NgModule({
   declarations: [
@@ -29,8 +27,6 @@ import { CurrenciesEditComponent } from './components/currencies/currencies-edit
     AdminCompaniesTableComponent,
     BankCollectionTableComponent,
     BankCollectionEditComponent,
-    CurrenciesTableComponent,
-    CurrenciesEditComponent,
   ],
   imports: [
     CommonModule,
