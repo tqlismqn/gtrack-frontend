@@ -19,7 +19,6 @@ import { CustomersService } from '../../../customers/services/customers.service'
 import { Customer } from '../../../customers/types/customers.type';
 import { merge, startWith, takeUntil, tap } from 'rxjs';
 import { FileUploadComponent } from '../file-upload/file-upload.component';
-import { CurrenciesService } from '../../../../services/currencies.service';
 import { Currencies } from '../../../../types/currencies';
 
 interface OrdersEditForm {
@@ -61,7 +60,6 @@ export class OrdersCreateComponent
     cdr: ChangeDetectorRef,
     route: ActivatedRoute,
     protected customersService: CustomersService,
-    protected currenciesService: CurrenciesService,
   ) {
     super(service, deps, cdr, route);
   }
@@ -123,8 +121,8 @@ export class OrdersCreateComponent
           this.form.controls.remark.setValue(customer?.remark ?? '');
 
           const limits = this.calculateLimits(customer);
-          this.form.controls.credit_limit.setValue(limits.credit_limit);
-          this.form.controls.available_limit.setValue(limits.available_limit);
+          this.form.controls.credit_limit.setValue(0);
+          this.form.controls.available_limit.setValue(0);
           this.cdr.markForCheck();
         }),
       )
@@ -146,19 +144,9 @@ export class OrdersCreateComponent
 
   protected calculateLimits(customer?: CustomerSelection) {
     return {
-      credit_limit: customer?.insurance_credit_limit
-        ? this.currenciesService.fromEur(
-            this.currency,
-            customer.insurance_credit_limit,
-          )
-        : null,
+      credit_limit: customer?.insurance_credit_limit,
 
-      available_limit: customer?.total_available_credit_limit
-        ? this.currenciesService.fromEur(
-            this.currency,
-            customer.total_available_credit_limit,
-          )
-        : null,
+      available_limit: customer?.total_available_credit_limit,
     };
   }
 
@@ -212,19 +200,6 @@ export class OrdersCreateComponent
     const formData = new FormData();
     formData.append('customer_id', this.form.controls.customer_id.value);
     formData.append('currency', this.form.controls.currency.value);
-    formData.append(
-      'order_price',
-      String(
-        this.currenciesService.toEur(
-          this.currency,
-          this.form.controls.order_price.value,
-        ),
-      ),
-    );
-    formData.append(
-      'rate',
-      String(this.currenciesService.getRate(this.currency)),
-    );
     if (this.fileUpload.files) {
       formData.append('order_file', this.fileUpload.files[0]);
     }
