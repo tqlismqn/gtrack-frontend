@@ -46,16 +46,11 @@
     </form>
   </mat-tab>
   <mat-tab label="Company currency settings">
-<!--    <app-table-->
-
-<!--      #appTable-->
-<!--      [displayedColumns]="displayedColumns"-->
-<!--      [sortableColumns]="sortableColumns"-->
-<!--    >-->
+<!--    <table mat-table [dataSource]="this.company?.currencies">-->
 <!--      <ng-container matColumnDef="ID">-->
 <!--        <th mat-header-cell *matHeaderCellDef>ID</th>-->
-<!--        <td mat-cell *matCellDef="let currency">{{ currency }}</td>-->
+<!--        <td mat-cell *matCellDef="let currency">{{}}</td>-->
 <!--      </ng-container>-->
-<!--    </app-table>-->
+<!--    </table>-->
   </mat-tab>
 </mat-tab-group>
