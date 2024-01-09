@@ -10,6 +10,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { CompanyService } from '../../../../services/company.service';
 import { Currencies, CurrenciesArray } from '../../../../types/currencies';
 import { merge, startWith, takeUntil, tap } from 'rxjs';
+import { CdkTableDataSourceInput } from '@angular/cdk/table';
 
 @Component({
   selector: 'app-settings-form',
@@ -42,6 +43,7 @@ export class SettingsFormComponent implements OnInit, OnDestroy {
   destroy$ = new EventEmitter<void>();
 
   loading = false;
+  dataSource!: CdkTableDataSourceInput<Currencies>;
 
   constructor(
     protected companyService: CompanyService,
@@ -73,6 +75,7 @@ export class SettingsFormComponent implements OnInit, OnDestroy {
 
   updateFormView() {
     if (this.company) {
+      this.dataSource = this.company.currencies;
       this.form.controls.available_currencies.setValue(
         this.company.currencies.map((currency: any) => currency.ID),
       );
@@ -86,7 +89,6 @@ export class SettingsFormComponent implements OnInit, OnDestroy {
   }
 
   submit() {
-    console.log(this.form.value);
     if (!this.form.valid) {
       return;
     }

@@ -1,5 +1,5 @@
 import { PermissionAccess } from '../constants/permission-access';
-import { CustomCurrencies } from './currencies';
+import { Currencies } from './currencies';
 
 export interface Company {
   id: string;
@@ -7,7 +7,7 @@ export interface Company {
   employees_number: string;
   website: string;
   owner: boolean;
-  currencies: CustomCurrencies[];
+  currencies: Currencies[];
   access: {
     read_access: PermissionAccess;
     write_access: PermissionAccess;
@@ -20,7 +20,7 @@ export interface CompanyResponse {
   employees_number: string;
   website: string;
   owner: boolean;
-  currencies: CustomCurrencies[];
+  currencies: Currencies[];
   access: {
     read_access: PermissionAccess;
     write_access: PermissionAccess;

@@ -10,11 +10,6 @@ export enum Currencies {
 
 export const CurrenciesArray = Object.values(Currencies);
 
-export type CustomCurrencies = {
-  ID: Currencies;
-  rate: number;
-};
-
 export type AdminCurrenciesResponse = {
   id: Currencies;
   rate: number;
