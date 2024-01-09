@@ -106,4 +106,13 @@ export class SettingsFormComponent implements OnInit, OnDestroy {
       },
     });
   }
+
+  startEditing(currency: any) {
+    currency.editing = true;
+    currency.editedRate = currency.rate;
+  }
+
+  saveChanges(currency: any){
+    currency.editing = false;
+  }
 }

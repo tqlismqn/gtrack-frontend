@@ -6,4 +6,22 @@
     display: grid;
     max-width: 480px;
   }
+
+  .table {
+    margin-top: 24px;
+
+    td.table__actions {
+      white-space: nowrap;
+
+      > * {
+        &:not(:last-child) {
+          margin-right: 14px;
+        }
+      }
+    }
+
+    th.table__actions {
+      width: 0;
+    }
+  }
 }

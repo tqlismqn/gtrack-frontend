@@ -51,18 +51,43 @@
     </form>
   </mat-tab>
   <mat-tab label="Company currency settings">
-    <table mat-table [dataSource]="this.dataSource">
+    <table mat-table [dataSource]="this.dataSource" class="table">
       <ng-container matColumnDef="ID">
         <th mat-header-cell *matHeaderCellDef>ID</th>
         <td mat-cell *matCellDef="let currency">{{ currency.ID }}</td>
       </ng-container>
       <ng-container matColumnDef="rate">
         <th mat-header-cell *matHeaderCellDef>rate</th>
-        <td mat-cell *matCellDef="let currency">{{ currency.rate }}</td>
+        <td mat-cell *matCellDef="let currency">
+          <span *ngIf="!currency.editing">{{ currency.rate }}</span>
+          <input *ngIf="currency.editing" [(ngModel)]="currency.editedRate" />
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="edit">
+        <th mat-header-cell *matHeaderCellDef class="table__actions"></th>
+        <td mat-cell *matCellDef="let currency" class="table__actions">
+          <button
+            mat-flat-button
+            color="primary"
+            (click)="startEditing(currency)"
+          >
+            Edit
+          </button>
+          <button
+            mat-flat-button
+            color="accent"
+            *ngIf="currency.editing"
+            (click)="saveChanges(currency)"
+          >
+            Save
+          </button>
+        </td>
       </ng-container>
 
-      <mat-header-row *matHeaderRowDef="['ID', 'rate']"></mat-header-row>
-      <mat-row *matRowDef="let row; columns: ['ID', 'rate']"></mat-row>
+      <mat-header-row
+        *matHeaderRowDef="['ID', 'rate', 'edit']"
+      ></mat-header-row>
+      <mat-row *matRowDef="let row; columns: ['ID', 'rate', 'edit']"></mat-row>
     </table>
   </mat-tab>
 </mat-tab-group>
