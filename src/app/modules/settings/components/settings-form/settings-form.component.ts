@@ -6,7 +6,7 @@ import {
   OnDestroy,
   OnInit,
 } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Form, FormArray, FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
 import { CompanyService } from '../../../../services/company.service';
 import { Currencies, CurrenciesArray } from '../../../../types/currencies';
 import { merge, startWith, takeUntil, tap } from 'rxjs';
@@ -38,6 +38,8 @@ export class SettingsFormComponent implements OnInit, OnDestroy {
     }),
   });
 
+  currenciesForm: FormGroup;
+
   currencies = CurrenciesArray;
 
   destroy$ = new EventEmitter<void>();
@@ -48,7 +50,10 @@ export class SettingsFormComponent implements OnInit, OnDestroy {
   constructor(
     protected companyService: CompanyService,
     protected cdr: ChangeDetectorRef,
-  ) {}
+    protected formBuilder: FormBuilder,
+  ) {
+    this.currenciesForm = this.formBuilder.group({ currencies: this.formBuilder.array([]) });
+  }
 
   ngOnInit() {
     merge(
@@ -107,12 +112,14 @@ export class SettingsFormComponent implements OnInit, OnDestroy {
     });
   }
 
-  startEditing(currency: any) {
-    currency.editing = true;
-    currency.editedRate = currency.rate;
-  }
-
-  saveChanges(currency: any){
-    currency.editing = false;
+  updateCurrencies(){
+    const formData = this.currenciesForm.value;
+    const currencies = formData.currencies.map((currency: any) => {
+      return {
+        ID: currency.ID,
+        rate: currency.rate,
+      };
+    });
+    console.log(currencies);
   }
 }
