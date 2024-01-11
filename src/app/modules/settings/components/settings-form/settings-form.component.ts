@@ -6,11 +6,19 @@ import {
   OnDestroy,
   OnInit,
 } from '@angular/core';
-import { Form, FormArray, FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import { CompanyService } from '../../../../services/company.service';
 import { Currencies, CurrenciesArray } from '../../../../types/currencies';
 import { merge, startWith, takeUntil, tap } from 'rxjs';
 import { CdkTableDataSourceInput } from '@angular/cdk/table';
+import { HttpClient } from '@angular/common/http';
+import { environment } from "../../../../../environments/environment";
+
 
 @Component({
   selector: 'app-settings-form',
@@ -50,12 +58,18 @@ export class SettingsFormComponent implements OnInit, OnDestroy {
   constructor(
     protected companyService: CompanyService,
     protected cdr: ChangeDetectorRef,
-    protected formBuilder: FormBuilder,
+    protected fb: FormBuilder,
+    protected http: HttpClient,
   ) {
-    this.currenciesForm = this.formBuilder.group({ currencies: this.formBuilder.array([]) });
+    this.currenciesForm = this.fb.group({});
   }
 
   ngOnInit() {
+    if (this.company) {
+      this.company.currencies.map((data: any) => {
+        this.currenciesForm.addControl(data.ID, new FormControl(data.rate));
+      });
+    }
     merge(
       this.companyService.companyChanged$,
       this.companyService.companiesUpdated$,
@@ -112,14 +126,27 @@ export class SettingsFormComponent implements OnInit, OnDestroy {
     });
   }
 
-  updateCurrencies(){
-    const formData = this.currenciesForm.value;
-    const currencies = formData.currencies.map((currency: any) => {
-      return {
-        ID: currency.ID,
-        rate: currency.rate,
-      };
-    });
+  updateCurrencies() {
+    const currencies = Object.keys(this.currenciesForm.value).map((key) => ({
+      ID: key,
+      rate: parseFloat(this.currenciesForm.value[key]).toFixed(2),
+    }));
+    this.http
+      .patch(
+        `${environment.apiUrl}/api/v1/companies/update?company_id=${this.company?.id}`,
+        { currencies: currencies },
+      )
+      .subscribe({
+        next: () => {
+          this.loading = false;
+          this.cdr.markForCheck();
+        },
+        error: (err) => {
+          this.loading = false;
+          this.cdr.markForCheck();
+          throw err;
+        },
+      });
     console.log(currencies);
   }
 }
