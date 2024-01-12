@@ -86,7 +86,11 @@ export class OrdersCreateComponent
   });
 
   get currencies() {
-    return this.deps.companyService.currencies ?? [];
+    return (
+      this.deps.companyService.currencies?.map((currency: any) => {
+        return currency.ID;
+      }) ?? []
+    );
   }
 
   get currency() {
