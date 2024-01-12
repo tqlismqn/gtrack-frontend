@@ -147,6 +147,5 @@ export class SettingsFormComponent implements OnInit, OnDestroy {
           throw err;
         },
       });
-    console.log(currencies);
   }
 }
