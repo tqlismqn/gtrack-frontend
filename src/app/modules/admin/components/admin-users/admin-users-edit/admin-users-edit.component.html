@@ -1,0 +1,33 @@
+<app-edit-form #editFormComponent (submit$)="submit()" formTitle="Create User">
+  <mat-form-field
+    *ngIf="form.controls.email as control"
+    subscriptSizing="dynamic"
+  >
+    <mat-label>Email</mat-label>
+    <input matInput [formControl]="control" />
+  </mat-form-field>
+
+  <mat-form-field
+    *ngIf="form.controls.first_name as control"
+    subscriptSizing="dynamic"
+  >
+    <mat-label>First Name</mat-label>
+    <input matInput [formControl]="control" />
+  </mat-form-field>
+
+  <mat-form-field
+    *ngIf="form.controls.last_name as control"
+    subscriptSizing="dynamic"
+  >
+    <mat-label>Last Name</mat-label>
+    <input matInput [formControl]="control" />
+  </mat-form-field>
+
+  <mat-form-field
+    *ngIf="form.controls.phone as control"
+    subscriptSizing="dynamic"
+  >
+    <mat-label>Phone</mat-label>
+    <input matInput [formControl]="control" />
+  </mat-form-field>
+</app-edit-form>

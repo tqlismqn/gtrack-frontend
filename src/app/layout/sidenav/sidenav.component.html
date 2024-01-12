@@ -30,6 +30,14 @@
       title: 'Admin'
     }"
   ></ng-template>
+
+  <ng-template
+    [ngTemplateOutlet]="sidenavGroup"
+    [ngTemplateOutletContext]="{
+      container: superAdminContainer,
+      title: 'Super Admin'
+    }"
+  ></ng-template>
 </div>
 
 <ng-template #sidenavGroup let-container="container" let-title="title">

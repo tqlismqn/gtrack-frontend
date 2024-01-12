@@ -20,7 +20,7 @@ import {
 } from '../../types/customers.type';
 import { countries } from 'countries-list';
 import { environment } from '../../../../../environments/environment';
-import { Observable, takeUntil, tap } from 'rxjs';
+import { merge, Observable, takeUntil, tap } from 'rxjs';
 import { CustomerBankForm } from '../customers-bank-collection/customers-bank-collection.component';
 import { Nameable } from '../../../base-module/types/nameable.type';
 import { CustomersService } from '../../services/customers.service';
@@ -29,9 +29,10 @@ import {
   termsOfPayment,
   TermsOfPaymentEnum,
 } from '../../types/terms-of-payment.enum';
-import { merge } from 'rxjs';
 import { BankCollectionService } from '../../../../services/bank-collection.service';
-import { BankCollection } from '../../../admin/types/bank-collection';
+import { BankCollection } from '../../../super-admin/types/bank-collection';
+import { CompanyService } from '../../../../services/company.service';
+import { Roles } from '../../../admin/types/roles';
 
 interface CustomersEditForm {
   id?: FormControl<string>;
@@ -72,6 +73,7 @@ export class CustomersEditComponent
     cdr: ChangeDetectorRef,
     route: ActivatedRoute,
     protected banksService: BankCollectionService,
+    protected companyService: CompanyService,
   ) {
     super(service, deps, cdr, route);
   }
@@ -632,4 +634,10 @@ export class CustomersEditComponent
   }
 
   protected readonly termsOfPayment = Object.values(termsOfPayment);
+
+  get ableToEditLimits() {
+    return [Roles.SuperAdmin, Roles.Admin].includes(
+      this.companyService.selectedCompany?.role ?? Roles.User,
+    );
+  }
 }

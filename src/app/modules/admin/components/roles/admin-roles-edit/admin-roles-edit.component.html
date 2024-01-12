@@ -1,0 +1,30 @@
+<app-edit-form
+  #editFormComponent
+  (submit$)="submit()"
+  [formTitle]="(type === 'update' ? 'Update' : 'Create') + ' Role'"
+  [history]="item()?.history"
+>
+  <mat-form-field
+    subscriptSizing="dynamic"
+    *ngIf="form.controls.role as control"
+  >
+    <mat-label>Role</mat-label>
+    <mat-select [formControl]="control">
+      <mat-option *ngFor="let role of roles" [value]="role.id">
+        {{ role.name }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field
+    subscriptSizing="dynamic"
+    *ngIf="form.controls.user_id as control"
+  >
+    <mat-label>User</mat-label>
+    <mat-select [formControl]="control">
+      <mat-option *ngFor="let user of userNames()" [value]="user.id">
+        {{ user.name }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+</app-edit-form>

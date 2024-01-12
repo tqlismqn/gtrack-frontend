@@ -1,5 +1,3 @@
-import { Roles } from '../../admin/types/roles';
-
 export interface UserResponse {
   id: string;
   auth0_id: string;
@@ -7,7 +5,6 @@ export interface UserResponse {
   last_name?: string;
   phone?: string;
   is_active: boolean;
-  role_id: Roles;
 }
 
 export type User = UserResponse;

@@ -1,0 +1,14 @@
+:host {
+  .with-button {
+    display: flex;
+    align-items: center;
+
+    button {
+      margin-left: 12px;
+    }
+
+    mat-form-field {
+      width: 100%;
+    }
+  }
+}

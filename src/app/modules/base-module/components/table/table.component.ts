@@ -75,7 +75,7 @@ export class TableComponent<B extends { id: string }, F extends { id: string }>
   searchableColumns: Selectable[] = defaultSearchableFields;
 
   @Input()
-  createLink = './create';
+  createLink? = './create';
 
   sortingFieldControl = new FormControl<string | undefined>('', {
     nonNullable: true,

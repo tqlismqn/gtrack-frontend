@@ -211,6 +211,7 @@ export abstract class EditComponentComponent<
 
   ngOnDestroy() {
     this.destroy$.emit();
+    this.item = undefined;
   }
 
   protected get formValid(): boolean {

@@ -1,0 +1,64 @@
+<app-edit-form #editFormComponent (submit$)="submit()" formTitle="Create User">
+  <mat-form-field
+    *ngIf="form.controls.email as control"
+    subscriptSizing="dynamic"
+  >
+    <mat-label>Email</mat-label>
+    <input matInput [formControl]="control" />
+  </mat-form-field>
+
+  <mat-form-field
+    *ngIf="form.controls.first_name as control"
+    subscriptSizing="dynamic"
+  >
+    <mat-label>First Name</mat-label>
+    <input matInput [formControl]="control" />
+  </mat-form-field>
+
+  <mat-form-field
+    *ngIf="form.controls.last_name as control"
+    subscriptSizing="dynamic"
+  >
+    <mat-label>Last Name</mat-label>
+    <input matInput [formControl]="control" />
+  </mat-form-field>
+
+  <mat-form-field
+    *ngIf="form.controls.phone as control"
+    subscriptSizing="dynamic"
+  >
+    <mat-label>Phone</mat-label>
+    <input matInput [formControl]="control" />
+  </mat-form-field>
+
+  <div class="with-button" *ngIf="form.controls.company_id as control">
+    <mat-form-field subscriptSizing="dynamic">
+      <mat-label>Company</mat-label>
+      <mat-select [formControl]="control">
+        <mat-option *ngFor="let company of companies" [value]="company.id">
+          {{ company.name }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <button
+      [routerLink]="'/super_admin/companies/create'"
+      type="button"
+      mat-flat-button
+      color="accent"
+    >
+      New
+    </button>
+  </div>
+
+  <mat-form-field
+    *ngIf="form.controls.company_ids as control"
+    subscriptSizing="dynamic"
+  >
+    <mat-label>Companies</mat-label>
+    <mat-select multiple [formControl]="control">
+      <mat-option *ngFor="let company of companies" [value]="company.id">{{
+        company.name
+      }}</mat-option>
+    </mat-select>
+  </mat-form-field>
+</app-edit-form>

@@ -3,11 +3,16 @@ export enum Modules {
   PERMISSIONS = 'permissions',
   ORDERS = 'orders',
   INVOICES = 'invoices',
-  CURRENCIES = 'currencies',
-  BANK_COLLECTIONS = 'bank_collections',
 }
 
 export enum AdminModules {
+  ROLES = 'admin/roles',
   USERS = 'admin/users',
-  COMPANIES = 'admin/companies',
+}
+
+export enum SuperAdminModules {
+  COMPANIES = 'super_admin/companies',
+  CURRENCIES = 'currencies',
+  BANK_COLLECTIONS = 'bank_collections',
+  USERS = 'super_admin/users',
 }

@@ -6,8 +6,8 @@ import { Injectable } from '@angular/core';
 import {
   BankCollection,
   BankCollectionResponse,
-} from '../modules/admin/types/bank-collection';
-import { Modules } from '../constants/modules';
+} from '../modules/super-admin/types/bank-collection';
+import { SuperAdminModules } from '../constants/modules';
 
 @Injectable()
 export class BankCollectionService extends BaseModuleService<
@@ -19,7 +19,7 @@ export class BankCollectionService extends BaseModuleService<
   };
 
   constructor(deps: BaseModuleServiceDeps) {
-    super(deps, Modules.BANK_COLLECTIONS);
+    super(deps, SuperAdminModules.BANK_COLLECTIONS);
     this.read({}).subscribe();
   }
 

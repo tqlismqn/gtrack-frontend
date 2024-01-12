@@ -38,6 +38,7 @@ import { InvoicesModule } from './modules/invoices/invoices.module';
 import { ErrorDialogComponent } from './errors/error-dialog/error-dialog.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { SettingsModule } from './modules/settings/settings.module';
+import {SuperAdminModule} from "./modules/super-admin/super-admin.module";
 
 @NgModule({
   declarations: [
@@ -95,6 +96,7 @@ import { SettingsModule } from './modules/settings/settings.module';
     InvoicesModule,
     MatDialogModule,
     SettingsModule,
+    SuperAdminModule,
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthHttpInterceptor, multi: true },
