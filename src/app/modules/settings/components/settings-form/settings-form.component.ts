@@ -65,11 +65,6 @@ export class SettingsFormComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    if (this.company) {
-      this.company.currencies.map((data: any) => {
-        this.currenciesForm.addControl(data.ID, new FormControl(data.rate));
-      });
-    }
     merge(
       this.companyService.companyChanged$,
       this.companyService.companiesUpdated$,
@@ -127,10 +122,16 @@ export class SettingsFormComponent implements OnInit, OnDestroy {
   }
 
   updateCurrencies() {
+    if(this.company){
+      this.company.currencies.map((data: any) => {
+        this.currenciesForm.addControl(data.ID, new FormControl(data.rate));
+      });
+    }
     const currencies = Object.keys(this.currenciesForm.value).map((key) => ({
       ID: key,
       rate: parseFloat(this.currenciesForm.value[key]).toFixed(2),
     }));
+    console.log(currencies);
     this.http
       .patch(
         `${environment.apiUrl}/api/v1/companies/update?company_id=${this.company?.id}`,
