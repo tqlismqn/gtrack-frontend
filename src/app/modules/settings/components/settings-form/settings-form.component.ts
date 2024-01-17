@@ -131,7 +131,6 @@ export class SettingsFormComponent implements OnInit, OnDestroy {
       ID: key,
       rate: parseFloat(this.currenciesForm.value[key]).toFixed(2),
     }));
-    console.log(currencies);
     this.http
       .patch(
         `${environment.apiUrl}/api/v1/companies/update?company_id=${this.company?.id}`,
