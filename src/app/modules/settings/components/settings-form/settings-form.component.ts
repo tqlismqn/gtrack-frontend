@@ -15,10 +15,8 @@ import {
 import { CompanyService } from '../../../../services/company.service';
 import { Currencies, CurrenciesArray } from '../../../../types/currencies';
 import { merge, startWith, takeUntil, tap } from 'rxjs';
-import { CdkTableDataSourceInput } from '@angular/cdk/table';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../../environments/environment';
-import { keyframes } from "@angular/animations";
 
 @Component({
   selector: 'app-settings-form',
@@ -65,6 +63,14 @@ export class SettingsFormComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    if (this.company) {
+      this.form.controls.available_currencies.setValue(
+        this.company.currencies.map((currency: any) => currency.ID),
+      );
+    }
+    this.form.controls.available_currencies.valueChanges.subscribe(() => {
+      this.submit();
+    });
     merge(
       this.companyService.companyChanged$,
       this.companyService.companiesUpdated$,
@@ -89,7 +95,7 @@ export class SettingsFormComponent implements OnInit, OnDestroy {
 
   updateFormView() {
     if (this.company) {
-      for (const controlName in this.currenciesForm.controls){
+      for (const controlName in this.currenciesForm.controls) {
         this.currenciesForm.removeControl(controlName);
       }
       this.company.currencies.map((data: any) => {
@@ -104,9 +110,6 @@ export class SettingsFormComponent implements OnInit, OnDestroy {
       this.dataSource = this.company.currencies.map((key: any) => {
         return { ID: key.ID, rate: key.rate };
       });
-      this.form.controls.available_currencies.setValue(
-        this.company.currencies.map((currency: any) => currency.ID),
-      );
       this.form.controls.website.setValue(this.company.website);
       this.form.controls.name.setValue(this.company.name);
       this.form.controls.employees_number.setValue(
@@ -160,6 +163,4 @@ export class SettingsFormComponent implements OnInit, OnDestroy {
         },
       });
   }
-
-  protected readonly startWith = startWith;
 }
