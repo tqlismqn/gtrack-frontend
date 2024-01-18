@@ -63,6 +63,9 @@
               step="0.01"
               [value]="currency.rate"
             />
+            <mat-error *ngIf="currenciesForm.get(currency.ID)?.hasError('required')">
+              The currency rate is required
+            </mat-error>
           </mat-form-field>
         </div>
       </div>

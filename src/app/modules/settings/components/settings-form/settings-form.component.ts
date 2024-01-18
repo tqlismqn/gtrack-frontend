@@ -93,7 +93,13 @@ export class SettingsFormComponent implements OnInit, OnDestroy {
         this.currenciesForm.removeControl(controlName);
       }
       this.company.currencies.map((data: any) => {
-        this.currenciesForm.addControl(data.ID, new FormControl(data.rate));
+        this.currenciesForm.addControl(
+          data.ID,
+          new FormControl(data.rate, {
+            validators: [Validators.required],
+            nonNullable: true,
+          }),
+        );
       });
       this.dataSource = this.company.currencies.map((key: any) => {
         return { ID: key.ID, rate: key.rate };
@@ -130,6 +136,9 @@ export class SettingsFormComponent implements OnInit, OnDestroy {
   }
 
   updateCurrencies() {
+    if (!this.currenciesForm.valid) {
+      return;
+    }
     const currencies = Object.keys(this.currenciesForm.value).map((key) => ({
       ID: key,
       rate: parseFloat(this.currenciesForm.value[key]).toFixed(2),
@@ -151,4 +160,6 @@ export class SettingsFormComponent implements OnInit, OnDestroy {
         },
       });
   }
+
+  protected readonly startWith = startWith;
 }
