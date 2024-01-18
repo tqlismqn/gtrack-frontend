@@ -17,8 +17,8 @@ import { Currencies, CurrenciesArray } from '../../../../types/currencies';
 import { merge, startWith, takeUntil, tap } from 'rxjs';
 import { CdkTableDataSourceInput } from '@angular/cdk/table';
 import { HttpClient } from '@angular/common/http';
-import { environment } from "../../../../../environments/environment";
-
+import { environment } from '../../../../../environments/environment';
+import { keyframes } from "@angular/animations";
 
 @Component({
   selector: 'app-settings-form',
@@ -53,7 +53,7 @@ export class SettingsFormComponent implements OnInit, OnDestroy {
   destroy$ = new EventEmitter<void>();
 
   loading = false;
-  dataSource!: CdkTableDataSourceInput<Currencies>;
+  dataSource!: { rate: any; ID: any }[];
 
   constructor(
     protected companyService: CompanyService,
@@ -89,7 +89,15 @@ export class SettingsFormComponent implements OnInit, OnDestroy {
 
   updateFormView() {
     if (this.company) {
-      this.dataSource = this.company.currencies;
+      for (const controlName in this.currenciesForm.controls){
+        this.currenciesForm.removeControl(controlName);
+      }
+      this.company.currencies.map((data: any) => {
+        this.currenciesForm.addControl(data.ID, new FormControl(data.rate));
+      });
+      this.dataSource = this.company.currencies.map((key: any) => {
+        return { ID: key.ID, rate: key.rate };
+      });
       this.form.controls.available_currencies.setValue(
         this.company.currencies.map((currency: any) => currency.ID),
       );
@@ -122,11 +130,6 @@ export class SettingsFormComponent implements OnInit, OnDestroy {
   }
 
   updateCurrencies() {
-    if(this.company){
-      this.company.currencies.map((data: any) => {
-        this.currenciesForm.addControl(data.ID, new FormControl(data.rate));
-      });
-    }
     const currencies = Object.keys(this.currenciesForm.value).map((key) => ({
       ID: key,
       rate: parseFloat(this.currenciesForm.value[key]).toFixed(2),
