@@ -15,10 +15,8 @@ import {
 import { CompanyService } from '../../../../services/company.service';
 import { Currencies, CurrenciesArray } from '../../../../types/currencies';
 import { merge, startWith, takeUntil, tap } from 'rxjs';
-import { CdkTableDataSourceInput } from '@angular/cdk/table';
 import { HttpClient } from '@angular/common/http';
-import { environment } from "../../../../../environments/environment";
-
+import { environment } from '../../../../../environments/environment';
 
 @Component({
   selector: 'app-settings-form',
@@ -53,7 +51,7 @@ export class SettingsFormComponent implements OnInit, OnDestroy {
   destroy$ = new EventEmitter<void>();
 
   loading = false;
-  dataSource!: CdkTableDataSourceInput<Currencies>;
+  dataSource!: { rate: any; ID: any }[];
 
   constructor(
     protected companyService: CompanyService,
@@ -66,10 +64,13 @@ export class SettingsFormComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     if (this.company) {
-      this.company.currencies.map((data: any) => {
-        this.currenciesForm.addControl(data.ID, new FormControl(data.rate));
-      });
+      this.form.controls.available_currencies.setValue(
+        this.company.currencies.map((currency: any) => currency.ID),
+      );
     }
+    this.form.controls.available_currencies.valueChanges.subscribe(() => {
+      this.submit();
+    });
     merge(
       this.companyService.companyChanged$,
       this.companyService.companiesUpdated$,
@@ -94,10 +95,21 @@ export class SettingsFormComponent implements OnInit, OnDestroy {
 
   updateFormView() {
     if (this.company) {
-      this.dataSource = this.company.currencies;
-      this.form.controls.available_currencies.setValue(
-        this.company.currencies.map((currency: any) => currency.ID),
-      );
+      for (const controlName in this.currenciesForm.controls) {
+        this.currenciesForm.removeControl(controlName);
+      }
+      this.company.currencies.map((data: any) => {
+        this.currenciesForm.addControl(
+          data.ID,
+          new FormControl(data.rate, {
+            validators: [Validators.required],
+            nonNullable: true,
+          }),
+        );
+      });
+      this.dataSource = this.company.currencies.map((key: any) => {
+        return { ID: key.ID, rate: key.rate };
+      });
       this.form.controls.website.setValue(this.company.website);
       this.form.controls.name.setValue(this.company.name);
       this.form.controls.employees_number.setValue(
@@ -127,6 +139,9 @@ export class SettingsFormComponent implements OnInit, OnDestroy {
   }
 
   updateCurrencies() {
+    if (!this.currenciesForm.valid) {
+      return;
+    }
     const currencies = Object.keys(this.currenciesForm.value).map((key) => ({
       ID: key,
       rate: parseFloat(this.currenciesForm.value[key]).toFixed(2),
@@ -147,6 +162,5 @@ export class SettingsFormComponent implements OnInit, OnDestroy {
           throw err;
         },
       });
-    console.log(currencies);
   }
 }

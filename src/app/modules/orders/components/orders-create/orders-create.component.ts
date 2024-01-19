@@ -86,7 +86,11 @@ export class OrdersCreateComponent
   });
 
   get currencies() {
-    return this.deps.companyService.currencies ?? [];
+    return (
+      this.deps.companyService.currencies?.map((currency: any) => {
+        return currency.ID;
+      }) ?? []
+    );
   }
 
   get currency() {
@@ -119,7 +123,7 @@ export class OrdersCreateComponent
           );
           this.form.controls.vat_id.setValue(customer?.vat_id ?? '');
           this.form.controls.remark.setValue(customer?.remark ?? '');
-
+          //todo
           const limits = this.calculateLimits(customer);
           this.form.controls.credit_limit.setValue(0);
           this.form.controls.available_limit.setValue(0);
@@ -142,6 +146,7 @@ export class OrdersCreateComponent
       .subscribe();
   }
 
+  //todo
   protected calculateLimits(customer?: CustomerSelection) {
     return {
       credit_limit: customer?.insurance_credit_limit,
@@ -203,6 +208,8 @@ export class OrdersCreateComponent
     if (this.fileUpload.files) {
       formData.append('order_file', this.fileUpload.files[0]);
     }
+
+    //todo
 
     return formData;
   }
