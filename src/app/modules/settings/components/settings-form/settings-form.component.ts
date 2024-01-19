@@ -69,7 +69,7 @@ export class SettingsFormComponent implements OnInit, OnDestroy {
       );
     }
     this.form.controls.available_currencies.valueChanges.subscribe(() => {
-      this.submit();
+      this.updateCurrenciesFormView();
     });
     merge(
       this.companyService.companyChanged$,
@@ -80,6 +80,7 @@ export class SettingsFormComponent implements OnInit, OnDestroy {
         takeUntil(this.destroy$),
         tap(() => {
           this.updateFormView();
+          this.updateCurrenciesFormView();
         }),
       )
       .subscribe();
@@ -93,12 +94,27 @@ export class SettingsFormComponent implements OnInit, OnDestroy {
     return this.companyService.selectedCompany;
   }
 
-  updateFormView() {
+  updateCurrenciesFormView() {
     if (this.company) {
+      const currenciesMap = new Map(
+        this.company.currencies.map((currency: any) => [
+          currency.ID,
+          currency.rate,
+        ]),
+      );
+      const selectedCurrencies =
+        this.form.controls.available_currencies.value.map((currency: any) => {
+          if (currenciesMap.has(currency)) {
+            return { ID: currency, rate: currenciesMap.get(currency) };
+          } else {
+            return { ID: currency, rate: '1.00' };
+          }
+        });
+
       for (const controlName in this.currenciesForm.controls) {
         this.currenciesForm.removeControl(controlName);
       }
-      this.company.currencies.map((data: any) => {
+      selectedCurrencies.map((data: any) => {
         this.currenciesForm.addControl(
           data.ID,
           new FormControl(data.rate, {
@@ -107,9 +123,14 @@ export class SettingsFormComponent implements OnInit, OnDestroy {
           }),
         );
       });
-      this.dataSource = this.company.currencies.map((key: any) => {
+      this.dataSource = selectedCurrencies.map((key: any) => {
         return { ID: key.ID, rate: key.rate };
       });
+    }
+  }
+
+  updateFormView() {
+    if (this.company) {
       this.form.controls.website.setValue(this.company.website);
       this.form.controls.name.setValue(this.company.name);
       this.form.controls.employees_number.setValue(
