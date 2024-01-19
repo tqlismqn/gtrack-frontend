@@ -17,6 +17,7 @@ import { Currencies, CurrenciesArray } from '../../../../types/currencies';
 import { merge, startWith, takeUntil, tap } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../../environments/environment';
+import { CompanyResponse } from "../../../../types/company.type";
 
 @Component({
   selector: 'app-settings-form',
@@ -173,7 +174,10 @@ export class SettingsFormComponent implements OnInit, OnDestroy {
         { currencies: currencies },
       )
       .subscribe({
-        next: () => {
+        next: (response) => {
+          const company = response as CompanyResponse;
+
+          this.companyService.updateCompaniesLocally(company);
           this.loading = false;
           this.cdr.markForCheck();
         },
