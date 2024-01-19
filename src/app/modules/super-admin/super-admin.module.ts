@@ -12,8 +12,6 @@ import { RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { BankCollectionTableComponent } from './components/bank-collection/bank-collection-table/bank-collection-table.component';
 import { BankCollectionEditComponent } from './components/bank-collection/bank-collection-edit/bank-collection-edit.component';
-import { CurrenciesEditComponent } from './components/currencies/currencies-edit/currencies-edit.component';
-import { CurrenciesTableComponent } from './components/currencies/currencies-table/currencies-table.component';
 import { SuperAdminUsersService } from './services/super-admin-users.service';
 import { MatTableModule } from '@angular/material/table';
 import { SuperAdminUsersEditComponent } from './components/users/super-admin-users-edit/super-admin-users-edit.component';
@@ -25,8 +23,6 @@ import { SuperAdminUsersTableComponent } from './components/users/super-admin-us
     AdminCompaniesEditComponent,
     BankCollectionTableComponent,
     BankCollectionEditComponent,
-    CurrenciesEditComponent,
-    CurrenciesTableComponent,
     SuperAdminUsersEditComponent,
     SuperAdminUsersTableComponent,
   ],
