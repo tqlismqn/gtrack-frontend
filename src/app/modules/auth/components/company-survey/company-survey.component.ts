@@ -50,10 +50,16 @@ export class CompanySurveyComponent {
       return;
     }
     this.authForm?.startLoading();
+    const selectedCurrencies = this.form.controls.currencies.value.map(
+      (currency: string) => {
+        return { ID: currency, rate: 1 };
+      },
+    );
+    const formData = { ...this.form.value, currencies: selectedCurrencies };
     this.http
       .post(
         `${environment.apiUrl}/api/v1/companies/pass-survey`,
-        this.form.value,
+        formData,
       )
       .subscribe({
         next: () => {

@@ -131,10 +131,6 @@ export class SidenavComponent implements OnInit, OnDestroy {
         name: 'Bank Collection',
         link: SuperAdminModules.BANK_COLLECTIONS,
       });
-      this.superAdminContainer.push({
-        name: 'Currencies',
-        link: SuperAdminModules.CURRENCIES,
-      });
     }
 
     this.cdr.markForCheck();

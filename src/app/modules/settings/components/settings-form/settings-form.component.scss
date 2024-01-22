@@ -5,5 +5,27 @@
   form {
     display: grid;
     max-width: 480px;
+    padding: {
+      top: 42px;
+      bottom: 78px;
+    };
+  }
+
+  .table {
+    margin-top: 24px;
+
+    td.table__actions {
+      white-space: nowrap;
+
+      > * {
+        &:not(:last-child) {
+          margin-right: 14px;
+        }
+      }
+    }
+
+    th.table__actions {
+      width: 0;
+    }
   }
 }
