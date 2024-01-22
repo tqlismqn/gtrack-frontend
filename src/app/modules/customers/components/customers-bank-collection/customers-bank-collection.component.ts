@@ -61,7 +61,11 @@ export class CustomersBankCollectionComponent
   banks: BankCollection[] = [];
 
   get currencies() {
-    return this.companyService.currencies ?? [];
+    return (
+      this.companyService.currencies?.map((currency: any) => {
+        return currency.ID;
+      }) ?? []
+    );
   }
 
   bankFilterControl = new FormControl<string>('');

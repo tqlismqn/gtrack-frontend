@@ -109,7 +109,7 @@ export class OrdersCreateComponent
 
   override ngOnInit() {
     super.ngOnInit();
-
+    this.deps.companyService.test(this.currency);
     merge(
       this.form.controls.customer_id.valueChanges,
       this.form.controls.currency.valueChanges,
@@ -123,10 +123,9 @@ export class OrdersCreateComponent
           );
           this.form.controls.vat_id.setValue(customer?.vat_id ?? '');
           this.form.controls.remark.setValue(customer?.remark ?? '');
-          //todo
           const limits = this.calculateLimits(customer);
-          this.form.controls.credit_limit.setValue(0);
-          this.form.controls.available_limit.setValue(0);
+          this.form.controls.credit_limit.setValue(limits.credit_limit);
+          this.form.controls.available_limit.setValue(limits.available_limit);
           this.cdr.markForCheck();
         }),
       )
@@ -146,12 +145,22 @@ export class OrdersCreateComponent
       .subscribe();
   }
 
-  //todo
+
   protected calculateLimits(customer?: CustomerSelection) {
     return {
-      credit_limit: customer?.insurance_credit_limit,
+      credit_limit: customer?.insurance_credit_limit
+        ? this.deps.companyService.fromEur(
+          this.currency,
+          customer.insurance_credit_limit,
+        )
+        : null,
 
-      available_limit: customer?.total_available_credit_limit,
+      available_limit: customer?.total_available_credit_limit
+        ? this.deps.companyService.fromEur(
+          this.currency,
+          customer.total_available_credit_limit,
+        )
+        : null,
     };
   }
 
@@ -205,11 +214,22 @@ export class OrdersCreateComponent
     const formData = new FormData();
     formData.append('customer_id', this.form.controls.customer_id.value);
     formData.append('currency', this.form.controls.currency.value);
+    formData.append(
+      'order_price',
+      String(
+        this.deps.companyService.toEur(
+          this.currency,
+          this.form.controls.order_price.value,
+        ),
+      ),
+    );
+    formData.append(
+      'rate',
+      String(this.deps.companyService.getRate(this.currency)),
+    );
     if (this.fileUpload.files) {
       formData.append('order_file', this.fileUpload.files[0]);
     }
-
-    //todo
 
     return formData;
   }
