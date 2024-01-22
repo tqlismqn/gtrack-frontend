@@ -5,6 +5,10 @@
   form {
     display: grid;
     max-width: 480px;
+    padding: {
+      top: 42px;
+      bottom: 78px;
+    };
   }
 
   .table {
