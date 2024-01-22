@@ -109,7 +109,6 @@ export class OrdersCreateComponent
 
   override ngOnInit() {
     super.ngOnInit();
-    this.deps.companyService.test(this.currency);
     merge(
       this.form.controls.customer_id.valueChanges,
       this.form.controls.currency.valueChanges,
@@ -216,12 +215,7 @@ export class OrdersCreateComponent
     formData.append('currency', this.form.controls.currency.value);
     formData.append(
       'order_price',
-      String(
-        this.deps.companyService.toEur(
-          this.currency,
-          this.form.controls.order_price.value,
-        ),
-      ),
+      String(this.form.controls.order_price.value),
     );
     formData.append(
       'rate',
@@ -230,6 +224,15 @@ export class OrdersCreateComponent
     if (this.fileUpload.files) {
       formData.append('order_file', this.fileUpload.files[0]);
     }
+    formData.append(
+      'price_eur',
+      String(
+        this.deps.companyService.toEur(
+          this.currency,
+          this.form.controls.order_price.value,
+        ),
+      ),
+    )
 
     return formData;
   }

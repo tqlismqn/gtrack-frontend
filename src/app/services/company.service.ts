@@ -103,14 +103,7 @@ export class CompanyService {
 
     return false;
   }
-  test(
-    to: Currencies
-  ) {
-    if (this.currencies) {
-      const findCurrencies : any = this.currencies.find((currency: any) => currency.ID === to);
-      console.log(findCurrencies.rate);
-    }
-  }
+
   selectFirstCompany(): boolean {
     if (this.companies.length === 0) {
       return false;
