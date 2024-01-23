@@ -7,7 +7,7 @@ import {
   OnInit,
   signal,
 } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from "@angular/forms";
 import {
   EditComponentComponent,
   EditComponentDeps,
@@ -53,6 +53,64 @@ export class OrdersUpdateComponent
   extends EditComponentComponent<OrderResponse, Order>
   implements AfterViewInit, OnInit
 {
+  LoadingPointsForm = new FormGroup({
+    type: new FormControl<string>('', {
+      validators: [Validators.required],
+      nonNullable: true,
+    }),
+    nation: new FormControl<string>('', {
+      validators: [Validators.required],
+      nonNullable: true,
+    }),
+    zip_code: new FormControl<string>('', {
+      validators: [Validators.required],
+      nonNullable: true,
+    }),
+    city: new FormControl<string>('', {
+      validators: [Validators.required],
+      nonNullable: true,
+    }),
+    address: new FormControl<string>('', {
+      validators: [Validators.required],
+      nonNullable: true,
+    }),
+    company_name: new FormControl<string>('', {
+      validators: [Validators.required],
+      nonNullable: true,
+    }),
+    date: new FormControl<string>('', {
+      validators: [Validators.required],
+      nonNullable: true,
+    }),
+    trailer_type: new FormControl<string>('', {
+      validators: [Validators.required],
+      nonNullable: true,
+    }),
+    adr: new FormControl<string>('', {
+      validators: [Validators.required],
+      nonNullable: true,
+    }),
+    pallets: new FormControl<string>('', {
+      validators: [Validators.required],
+      nonNullable: true,
+    }),
+    temperature: new FormControl<string>('', {
+      validators: [Validators.required],
+      nonNullable: true,
+    }),
+    netweight: new FormControl<string>('', {
+      validators: [Validators.required],
+      nonNullable: true,
+    }),
+    loading: new FormControl<string>('', {
+      validators: [Validators.required],
+      nonNullable: true,
+    }),
+    quantity_loading: new FormControl<string>('', {
+      validators: [Validators.required],
+      nonNullable: true,
+    }),
+  });
   constructor(
     protected override service: OrdersService,
     deps: EditComponentDeps,
@@ -215,5 +273,11 @@ export class OrdersUpdateComponent
         a.click();
         a.remove();
       });
+  }
+
+  loadingPointsSubmit() {
+    if (!this.LoadingPointsForm.valid) {
+      return;
+    }
   }
 }

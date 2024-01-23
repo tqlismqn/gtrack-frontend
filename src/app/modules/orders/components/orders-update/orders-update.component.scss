@@ -1,4 +1,28 @@
 :host {
+  .order-edit-form {
+    display: grid;
+    grid: {
+      template-columns: 600px auto;
+      column-gap: 48px;
+    }
+
+    .left-block {
+      height: fit-content;
+      display: grid;
+      grid: {
+        template-columns: 100%;
+      };
+    }
+
+    .right-block {
+      height: fit-content;
+      display: grid;
+      max-width: 900px;
+      grid: {
+        template-columns: 100%;
+      };
+    }
+  }
   .row {
     display: grid;
     grid: {
