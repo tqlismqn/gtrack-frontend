@@ -12,6 +12,7 @@ import {
 import { Nameable } from '../modules/base-module/types/nameable.type';
 import { SseService } from './sse.service';
 import WavePrivateChannel from 'laravel-wave/dist/echo-broadcaster/wave-private-channel';
+import { Currencies } from "../types/currencies";
 
 @Injectable({ providedIn: 'root' })
 export class CompanyService {
@@ -196,6 +197,36 @@ export class CompanyService {
     if (updated) {
       this.companiesUpdated$.emit();
     }
+  }
+
+  public getRate(currency: Currencies) {
+    const findCurrency: any = this.currencies?.find((findCurrency: any) => findCurrency.ID === currency);
+    return Number(findCurrency.rate);
+  }
+
+  public fromEur(
+    to: Currencies,
+    value: number,
+    rate: number | undefined = undefined,
+  ): number {
+
+    if (!rate) {
+      rate = this.getRate(to);
+    }
+
+    return Math.round(value * rate * 100) / 100;
+  }
+
+  public toEur(
+    from: Currencies,
+    value: number,
+    rate: number | undefined = undefined,
+  ): number {
+    if (!rate) {
+      rate = this.getRate(from);
+    }
+
+    return Math.round((value / rate) * 100) / 100;
   }
 
   update(
