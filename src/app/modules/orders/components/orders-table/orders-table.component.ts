@@ -25,6 +25,7 @@ export class OrdersTableComponent {
     'created_date',
     'delivery_date',
     'order_price',
+    'price_eur',
     'status',
     'actions',
   ];
@@ -40,6 +41,10 @@ export class OrdersTableComponent {
     {
       name: 'Order Price',
       value: 'order_price',
+    },
+    {
+      name: 'Price EUR',
+      value: 'price_eur',
     },
   ];
   sortableColumns: Selectable[] = [
@@ -66,6 +71,10 @@ export class OrdersTableComponent {
     {
       name: 'Order Price',
       value: 'order_price',
+    },
+    {
+      name: 'Price EUR',
+      value: 'price_eur',
     },
   ];
 }

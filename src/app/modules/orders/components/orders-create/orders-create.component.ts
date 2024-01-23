@@ -232,7 +232,7 @@ export class OrdersCreateComponent
           this.form.controls.order_price.value,
         ),
       ),
-    )
+    );
 
     return formData;
   }
