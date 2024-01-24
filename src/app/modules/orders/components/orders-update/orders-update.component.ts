@@ -7,7 +7,7 @@ import {
   OnInit,
   signal,
 } from '@angular/core';
-import { FormControl, FormGroup, Validators } from "@angular/forms";
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import {
   EditComponentComponent,
   EditComponentDeps,
@@ -17,6 +17,7 @@ import {
   Order,
   OrderDocument,
   OrderDocumentType,
+  OrderLoadingPoints,
   OrderResponse,
   OrderStatuses,
 } from '../../types/orders.type';
@@ -24,6 +25,8 @@ import { OrdersService } from '../../services/orders.service';
 import { CustomersService } from '../../../customers/services/customers.service';
 import { Nameable } from '../../../base-module/types/nameable.type';
 import { environment } from '../../../../../environments/environment';
+import { MatTableDataSource } from '@angular/material/table';
+import { countries } from 'countries-list';
 
 interface OrdersEditForm {
   internal_order_id: FormControl<number>;
@@ -121,6 +124,12 @@ export class OrdersUpdateComponent
     super(service, deps, cdr, route);
   }
 
+  loading = false;
+  edit = false;
+  selectedLoadingPoint!: OrderLoadingPoints;
+
+  countries = Object.keys(countries);
+
   override form = new FormGroup<OrdersEditForm>({
     internal_order_id: new FormControl<number>(0, {
       nonNullable: true,
@@ -182,6 +191,20 @@ export class OrdersUpdateComponent
       this.cdr.markForCheck();
     });
   }
+  dataSource!: MatTableDataSource<OrderLoadingPoints>;
+
+  displayedColumns = [
+    'Type',
+    'Quantity',
+    'Nation',
+    'Zip Code',
+    'City',
+    'NetWeight',
+    'Loading',
+    'Date',
+    'Edit',
+    'Delete',
+  ];
 
   updateFormView(item: Order) {
     this.form.controls.internal_order_id.setValue(item.internal_order_id);
@@ -199,6 +222,9 @@ export class OrdersUpdateComponent
     );
     this.form.controls.status.setValue(item.status.id);
     this.status.set(item.status.id);
+    this.dataSource = new MatTableDataSource<OrderLoadingPoints>(
+      item.loading_points_info || [],
+    );
   }
 
   protected override get values(): any {
@@ -275,9 +301,75 @@ export class OrdersUpdateComponent
       });
   }
 
+  editLoadingPoint(item: any) {
+    this.edit = true;
+    this.LoadingPointsForm.controls.type.setValue(item.type);
+    this.LoadingPointsForm.controls.nation.setValue(item.nation);
+    this.LoadingPointsForm.controls.zip_code.setValue(item.zip_code);
+    this.LoadingPointsForm.controls.city.setValue(item.city);
+    this.LoadingPointsForm.controls.address.setValue(item.address);
+    this.LoadingPointsForm.controls.company_name.setValue(item.company_name);
+    this.LoadingPointsForm.controls.date.setValue(item.date);
+    this.LoadingPointsForm.controls.trailer_type.setValue(item.trailer_type);
+    this.LoadingPointsForm.controls.adr.setValue(item.adr);
+    this.LoadingPointsForm.controls.pallets.setValue(item.pallets);
+    this.LoadingPointsForm.controls.temperature.setValue(item.temperature);
+    this.LoadingPointsForm.controls.netweight.setValue(item.netweight);
+    this.LoadingPointsForm.controls.loading.setValue(item.loading);
+    this.LoadingPointsForm.controls.quantity_loading.setValue(item.quantity_loading);
+    this.selectedLoadingPoint = item;
+  }
+
+  sendEditLoadingPoint() {
+    const index = this.dataSource.data.findIndex(
+      (point) => point === this.selectedLoadingPoint,
+    );
+    const point: any = this.LoadingPointsForm.value;
+    if (index >= 0) {
+      this.dataSource.data.splice(index, 1, point);
+    }
+    this.updateLoadingPoints(this.dataSource.data);
+  }
+  deleteLoadingPoint(item: OrderLoadingPoints) {
+    const index = this.dataSource.data.findIndex((point) => point === item);
+    if (index >= 0) {
+      this.dataSource.data.splice(index, 1);
+    }
+    this.updateLoadingPoints(this.dataSource.data);
+  }
+
   loadingPointsSubmit() {
     if (!this.LoadingPointsForm.valid) {
       return;
     }
+    const data = [...this.dataSource.data, this.LoadingPointsForm.value];
+    this.updateLoadingPoints(data);
+  }
+
+  updateLoadingPoints(data: any) {
+    this.loading = true;
+    this.edit = false;
+    this.cdr.markForCheck();
+    this.deps.http
+      .patch(
+        `${environment.apiUrl}/api/v1/${this.module}/update/${this.item()
+          ?.id}?company_id=${this.deps.companyService.selectedCompany?.id}`,
+        {
+          loading_points_info: data,
+        },
+      )
+      .subscribe({
+        next: (response) => {
+          const order = response as Order;
+          this.loading = false;
+          this.cdr.markForCheck();
+          this.updateFormView(order);
+        },
+        error: (err) => {
+          this.loading = false;
+          this.cdr.markForCheck();
+          throw err;
+        },
+      });
   }
 }
