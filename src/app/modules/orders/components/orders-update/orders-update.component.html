@@ -72,7 +72,7 @@
 
       <mat-form-field *ngIf="form.controls.order_price as control">
         <mat-label>Price</mat-label>
-        <input matInput [formControl]="control" readonly />
+        <input type="number" matInput [formControl]="control" readonly />
       </mat-form-field>
 
       <mat-form-field *ngIf="form.controls.disponent_id as control">
