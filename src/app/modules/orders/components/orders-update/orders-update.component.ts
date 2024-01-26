@@ -229,12 +229,7 @@ export class OrdersUpdateComponent
   }
 
   protected override get values(): any {
-    const values = this.form.value;
-    if (values.order_price) {
-      delete values.order_price;
-    }
-
-    return values;
+    return this.form.value;
   }
 
   public onFileChange(type: OrderDocumentType, files?: FileList | null) {
