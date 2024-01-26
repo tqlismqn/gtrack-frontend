@@ -32,7 +32,7 @@ interface OrdersEditForm {
   internal_order_id: FormControl<number>;
   first_loading_date: FormControl<string | null>;
   last_uploading_date: FormControl<string | null>;
-  order_price: FormControl<string>;
+  order_price: FormControl<number>;
   disponent_id: FormControl<string>;
   delivery_responsible_id: FormControl<string>;
   truck_number: FormControl<string | null>;
@@ -142,7 +142,7 @@ export class OrdersUpdateComponent
       new Date().toISOString(),
       {},
     ),
-    order_price: new FormControl<string>('', {
+    order_price: new FormControl<number>(0, {
       nonNullable: true,
     }),
     disponent_id: new FormControl<string>('', {
@@ -210,6 +210,7 @@ export class OrdersUpdateComponent
     this.form.controls.internal_order_id.setValue(item.internal_order_id);
     this.form.controls.first_loading_date.setValue(item.first_loading_date);
     this.form.controls.last_uploading_date.setValue(item.last_uploading_date);
+    this.form.controls.order_price.setValue(item.order_price);
     this.form.controls.disponent_id.setValue(item.disponent_id);
     this.form.controls.delivery_responsible_id.setValue(
       item.delivery_responsible_id,
