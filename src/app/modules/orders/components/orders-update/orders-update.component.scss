@@ -47,4 +47,11 @@
   .download-docs {
     margin-top: 32px;
   }
+
+  .button-container {
+    display: grid;
+    grid: {
+      row-gap: 15px;
+    }
+  }
 }
