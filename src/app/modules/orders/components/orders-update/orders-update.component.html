@@ -138,28 +138,37 @@
           <mat-icon fontIcon="file_copy"></mat-icon>
         </button>
       </div>
-
-      <app-file-upload
-        label="Attach Order"
-        [uploadedFileName]="item()?.order_file?.name"
-        (files$)="onFileChange('order_file', $event)"
-      ></app-file-upload>
-      <app-file-upload
-        label="Attach CMR"
-        [uploadedFileName]="item()?.cmr_file?.name"
-        (files$)="onFileChange('cmr_file', $event)"
-      ></app-file-upload>
-      <app-file-upload
-        label="Attach Pallets"
-        [uploadedFileName]="item()?.pallets_file?.name"
-        (files$)="onFileChange('pallets_file', $event)"
-        [disabled]="true"
-      ></app-file-upload>
-      <app-file-upload
-        label="Attach Invoice"
-        [uploadedFileName]="item()?.invoice_file?.name"
-        (files$)="onFileChange('invoice_file', $event)"
-      ></app-file-upload>
+      <mat-grid-list cols="1" rowHeight="60px">
+        <mat-grid-tile>
+          <app-file-upload
+            label="Attach Order"
+            [uploadedFileName]="item()?.order_file?.name"
+            (files$)="onFileChange('order_file', $event)"
+          ></app-file-upload>
+        </mat-grid-tile>
+        <mat-grid-tile>
+          <app-file-upload
+            label="Attach CMR"
+            [uploadedFileName]="item()?.cmr_file?.name"
+            (files$)="onFileChange('cmr_file', $event)"
+          ></app-file-upload>
+        </mat-grid-tile>
+        <mat-grid-tile>
+          <app-file-upload
+            label="Attach Pallets"
+            [uploadedFileName]="item()?.pallets_file?.name"
+            (files$)="onFileChange('pallets_file', $event)"
+            [disabled]="true"
+          ></app-file-upload>
+        </mat-grid-tile>
+        <mat-grid-tile>
+          <app-file-upload
+            label="Attach Invoice"
+            [uploadedFileName]="item()?.invoice_file?.name"
+            (files$)="onFileChange('invoice_file', $event)"
+          ></app-file-upload>
+        </mat-grid-tile>
+      </mat-grid-list>
       <button
         type="button"
         mat-flat-button

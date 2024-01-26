@@ -16,6 +16,7 @@ import { OrdersUpdateComponent } from './components/orders-update/orders-update.
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { FileUploadComponent } from './components/file-upload/file-upload.component';
+import { MatGridListModule } from '@angular/material/grid-list';
 
 @NgModule({
   declarations: [
@@ -37,6 +38,7 @@ import { FileUploadComponent } from './components/file-upload/file-upload.compon
     MatSelectModule,
     MatDatepickerModule,
     MatNativeDateModule,
+    MatGridListModule
   ],
   providers: [OrdersService],
 })

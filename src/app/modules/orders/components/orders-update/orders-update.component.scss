@@ -22,6 +22,11 @@
         template-columns: 100%;
       };
       gap: 20px;
+
+      mat-form-field{
+        width: 200px;
+        margin: auto 10px;
+      }
     }
   }
   .row {
@@ -46,5 +51,9 @@
 
   .download-docs {
     margin-top: 32px;
+  }
+
+  app-file-upload {
+    width: 100%;
   }
 }
