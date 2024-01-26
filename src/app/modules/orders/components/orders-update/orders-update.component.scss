@@ -22,6 +22,11 @@
         template-columns: 100%;
       };
       gap: 20px;
+
+      mat-form-field{
+        width: 200px;
+        margin: auto 10px;
+      }
     }
   }
   .row {
