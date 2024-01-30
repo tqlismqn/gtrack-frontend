@@ -20,6 +20,7 @@ import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { CustomersService } from './services/customers.service';
 import { MatTabsModule } from '@angular/material/tabs';
 import { AddTabDirective } from './directives/add-tab.directive';
+import { MatCheckboxModule } from "@angular/material/checkbox";
 
 @NgModule({
   declarations: [
@@ -46,6 +47,7 @@ import { AddTabDirective } from './directives/add-tab.directive';
     MatTooltipModule,
     NgxMatSelectSearchModule,
     MatTabsModule,
+    MatCheckboxModule
   ],
   providers: [CustomersService],
   exports: [CustomersBankCollectionComponent, AddTabDirective],
