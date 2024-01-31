@@ -75,7 +75,7 @@ export class CustomersBankCollectionComponent
   >(1);
 
   constructor(
-    protected cdr: ChangeDetectorRef,
+    public cdr: ChangeDetectorRef,
     protected companyService: CompanyService,
   ) {}
 

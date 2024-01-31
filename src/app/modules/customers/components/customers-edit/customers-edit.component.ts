@@ -3,6 +3,8 @@ import {
   ChangeDetectorRef,
   Component,
   OnInit,
+  QueryList,
+  ViewChildren,
   WritableSignal,
 } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
@@ -21,7 +23,10 @@ import {
 import { countries } from 'countries-list';
 import { environment } from '../../../../../environments/environment';
 import { merge, Observable, takeUntil, tap } from 'rxjs';
-import { CustomerBankForm } from '../customers-bank-collection/customers-bank-collection.component';
+import {
+  CustomerBankForm,
+  CustomersBankCollectionComponent,
+} from '../customers-bank-collection/customers-bank-collection.component';
 import { Nameable } from '../../../base-module/types/nameable.type';
 import { CustomersService } from '../../services/customers.service';
 import { ActivatedRoute } from '@angular/router';
@@ -33,6 +38,7 @@ import { BankCollectionService } from '../../../../services/bank-collection.serv
 import { BankCollection } from '../../../super-admin/types/bank-collection';
 import { CompanyService } from '../../../../services/company.service';
 import { Roles } from '../../../admin/types/roles';
+import { MatColumnDef } from '@angular/material/table';
 
 interface CustomersEditForm {
   id?: FormControl<string>;
@@ -159,6 +165,10 @@ export class CustomersEditComponent
       nonNullable: true,
     }),
   });
+
+  @ViewChildren(CustomersBankCollectionComponent)
+  bankCollectionComponents: QueryList<CustomersBankCollectionComponent> =
+    new QueryList<CustomersBankCollectionComponent>();
 
   bankForms: FormGroup<CustomerBankForm>[] = [];
   get bankCollections(): WritableSignal<BankCollection[]> {
@@ -550,9 +560,12 @@ export class CustomersEditComponent
   protected override get formValid(): boolean {
     let result = super.formValid;
     if (this.form.controls.is_contractor.value) {
-      for (const form of this.bankForms) {
+      for (const bankComponent of this.bankCollectionComponents) {
+        const form = bankComponent.formGroup;
+        form.markAllAsTouched();
         form.markAllAsTouched();
         result &&= form.valid;
+        bankComponent.cdr.markForCheck();
       }
     }
     this.cdr.markForCheck();
