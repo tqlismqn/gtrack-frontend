@@ -137,6 +137,15 @@
         >
       </mat-form-field>
 
+      <div class="row">
+        <mat-checkbox [formControl]="form.controls.is_client"
+        >Is client</mat-checkbox
+        >
+        <mat-checkbox [formControl]="form.controls.is_contractor"
+        >Is contractor</mat-checkbox
+        >
+      </div>
+
       <h2>Payment Conditions</h2>
 
       <mat-form-field *ngIf="form.controls.terms_of_payment as control">

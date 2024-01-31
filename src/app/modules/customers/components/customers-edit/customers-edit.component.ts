@@ -52,6 +52,8 @@ interface CustomersEditForm {
   nation?: FormControl<string>;
   zip?: FormControl<string>;
   city?: FormControl<string>;
+  is_client: FormControl<boolean | null>;
+  is_contractor: FormControl<boolean | null>;
   street?: FormControl<string>;
   remark?: FormControl<string | null>;
   documents?: FormControl<CustomerDocument[]>;
@@ -131,6 +133,8 @@ export class CustomersEditComponent
       validators: [Validators.required],
       nonNullable: true,
     }),
+    is_client: new FormControl<boolean>(false),
+    is_contractor: new FormControl<boolean>(false),
 
     remark: new FormControl<string>(''),
     documents: new FormControl<CustomerDocument[]>([], { nonNullable: true }),
@@ -192,6 +196,8 @@ export class CustomersEditComponent
     this.form.controls.nation?.setValue(item.nation);
     this.form.controls.zip?.setValue(item.zip);
     this.form.controls.city?.setValue(item.city);
+    this.form.controls.is_client?.setValue(item.is_client);
+    this.form.controls.is_contractor?.setValue(item.is_contractor);
     this.form.controls.street?.setValue(item.street);
     this.form.controls.remark?.setValue(item.remark);
     this.form.controls.documents?.setValue(item.documents);

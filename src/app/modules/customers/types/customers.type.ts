@@ -16,6 +16,8 @@ export interface CustomerResponse extends ModuleBaseResponse {
   nation: string;
   zip: string;
   city: string;
+  is_client: boolean;
+  is_contractor: boolean;
   street: string;
   remark: string;
   documents: CustomerDocument[];
@@ -42,6 +44,8 @@ export interface Customer extends ModuleBase {
   nation: string;
   zip: string;
   city: string;
+  is_client: boolean;
+  is_contractor: boolean;
   street: string;
   remark: string;
   documents: CustomerDocument[];
