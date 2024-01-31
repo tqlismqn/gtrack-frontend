@@ -229,7 +229,7 @@
         </mat-form-field>
       </div>
 
-      <div class="banking-details">
+      <div class="banking-details" *ngIf="form.controls.is_contractor.value">
         <h2>Banking details</h2>
 
         <app-customers-bank-collection

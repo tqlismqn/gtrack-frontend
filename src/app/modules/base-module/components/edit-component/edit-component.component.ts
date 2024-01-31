@@ -175,7 +175,6 @@ export abstract class EditComponentComponent<
       }
 
       this.editFormComponent.startLoading();
-
       this.service.create(values).subscribe({
         next: (item) => {
           this.toUpdatePage();

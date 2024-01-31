@@ -176,10 +176,16 @@ export class CustomersEditComponent
   }
 
   get firstBank(): FormGroup<CustomerBankForm> | undefined {
+    if (!this.form.controls.is_contractor.value) {
+      return;
+    }
     return this.bankForms[0];
   }
 
-  get otherBanks(): FormGroup<CustomerBankForm>[] {
+  get otherBanks(): FormGroup<CustomerBankForm>[] | undefined {
+    if (!this.form.controls.is_contractor.value) {
+      return;
+    }
     return this.bankForms.slice(1);
   }
 
@@ -434,7 +440,9 @@ export class CustomersEditComponent
   }
 
   protected addBank() {
-    this.bankForms.push(this.getBankFormGroup(this.getEmptyBank()));
+    if (this.form.controls.is_contractor.value) {
+      this.bankForms.push(this.getBankFormGroup(this.getEmptyBank()));
+    }
   }
 
   protected uploadDocument(document: CustomerDocument) {
@@ -533,6 +541,9 @@ export class CustomersEditComponent
   }
 
   protected get banksValue() {
+    if (!this.form.controls.is_contractor.value) {
+      return [];
+    }
     return this.bankForms.map((item) => item.value);
   }
 
@@ -548,12 +559,13 @@ export class CustomersEditComponent
 
   protected override get formValid(): boolean {
     let result = super.formValid;
-    for (const bankComponent of this.bankCollectionComponents) {
-      const form = bankComponent.formGroup;
-      form.markAllAsTouched();
-      form.markAllAsTouched();
-      result &&= form.valid;
-      bankComponent.cdr.markForCheck();
+    if (this.form.controls.is_contractor.value) {
+      for (const bankComponent of this.bankCollectionComponents) {
+        const form = bankComponent.formGroup;
+        form.markAllAsTouched();
+        result &&= form.valid;
+        bankComponent.cdr.markForCheck();
+      }
     }
     this.cdr.markForCheck();
     return result;
