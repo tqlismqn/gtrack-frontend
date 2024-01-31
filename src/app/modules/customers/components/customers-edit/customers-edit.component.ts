@@ -542,7 +542,7 @@ export class CustomersEditComponent
 
   protected get banksValue() {
     if (!this.form.controls.is_contractor.value) {
-      return [this.getEmptyBank()];
+      return [];
     }
     return this.bankForms.map((item) => item.value);
   }
@@ -562,7 +562,6 @@ export class CustomersEditComponent
     if (this.form.controls.is_contractor.value) {
       for (const bankComponent of this.bankCollectionComponents) {
         const form = bankComponent.formGroup;
-        form.markAllAsTouched();
         form.markAllAsTouched();
         result &&= form.valid;
         bankComponent.cdr.markForCheck();
