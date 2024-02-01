@@ -92,7 +92,20 @@ export const OrderStatusesNames: Record<OrderStatuses, string> = {
 };
 
 export interface OrderLoadingPoints {
-  point: string;
+  type: LoadingPointsType;
+  nation: string;
+  zip_code: string;
+  city: string;
+  address: string;
+  company_name: string;
+  date: string;
+  trailer_type: LoadingPointsTrailerType;
+  adr: boolean;
+  pallets: boolean;
+  temperature: boolean;
+  temperature_value: number;
+  weight: string;
+  comments: string;
 }
 
 export enum LoadingPointsType {

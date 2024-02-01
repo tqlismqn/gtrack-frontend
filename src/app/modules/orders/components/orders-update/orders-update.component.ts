@@ -5,23 +5,18 @@ import {
   Component,
   computed,
   OnInit,
-  signal,
-} from '@angular/core';
-import {
-  AbstractControl,
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  Validators
-} from "@angular/forms";
+  signal
+} from "@angular/core";
+import { FormControl, FormGroup, Validators } from "@angular/forms";
 import {
   EditComponentComponent,
-  EditComponentDeps,
-} from '../../../base-module/components/edit-component/edit-component.component';
-import { ActivatedRoute } from '@angular/router';
+  EditComponentDeps
+} from "../../../base-module/components/edit-component/edit-component.component";
+import { ActivatedRoute } from "@angular/router";
 import {
   LoadingPointsStatus,
-  LoadingPointsStatusArray, LoadingPointsTrailerType,
+  LoadingPointsStatusArray,
+  LoadingPointsTrailerType,
   LoadingPointsTrailerTypeArray,
   LoadingPointsType,
   LoadingPointsTypeArray,
@@ -32,12 +27,12 @@ import {
   OrderResponse,
   OrderStatuses, OrderStatusesNames
 } from "../../types/orders.type";
-import { OrdersService } from '../../services/orders.service';
-import { CustomersService } from '../../../customers/services/customers.service';
-import { Nameable } from '../../../base-module/types/nameable.type';
-import { environment } from '../../../../../environments/environment';
-import { MatTableDataSource } from '@angular/material/table';
-import { countries } from 'countries-list';
+import { OrdersService } from "../../services/orders.service";
+import { CustomersService } from "../../../customers/services/customers.service";
+import { Nameable } from "../../../base-module/types/nameable.type";
+import { environment } from "../../../../../environments/environment";
+import { MatTableDataSource } from "@angular/material/table";
+import { countries } from "countries-list";
 
 interface OrdersEditForm {
   internal_order_id: FormControl<number>;
@@ -231,9 +226,11 @@ export class OrdersUpdateComponent
   ];
 
   updateFormView(item: Order) {
+    const first_loading_date = item.loading_points_info.find((point) => point.type === LoadingPointsType.Loading);
+    const last_loading_date = item.loading_points_info.filter((point) => point.type === LoadingPointsType.Unloading).pop();
     this.form.controls.internal_order_id.setValue(item.internal_order_id);
-    this.form.controls.first_loading_date.setValue(item.first_loading_date);
-    this.form.controls.last_uploading_date.setValue(item.last_uploading_date);
+    this.form.controls.first_loading_date.setValue(first_loading_date?.date ?? null);
+    this.form.controls.last_uploading_date.setValue(last_loading_date?.date ?? null);
     this.form.controls.order_price.setValue(item.order_price);
     this.form.controls.disponent_id.setValue(item.disponent_id);
     this.form.controls.delivery_responsible_id.setValue(
