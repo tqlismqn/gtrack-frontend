@@ -28,9 +28,9 @@ import {
   Order,
   OrderDocument,
   OrderDocumentType,
-  OrderLoadingPoints,
+  OrderLoadingPoints, OrderLoadingType, OrderLoadingTypeArray,
   OrderResponse,
-  OrderStatuses
+  OrderStatuses, OrderStatusesNames
 } from "../../types/orders.type";
 import { OrdersService } from '../../services/orders.service';
 import { CustomersService } from '../../../customers/services/customers.service';
@@ -51,6 +51,10 @@ interface OrdersEditForm {
   loading_address: FormControl<string | null>;
   unloading_address: FormControl<string | null>;
   status: FormControl<OrderStatuses>;
+  cargo_type: FormControl<string | null>;
+  pallets: FormControl<string | null>;
+  loading_type: FormControl<OrderLoadingType[] | null>;
+  trailer_type: FormControl<string | null>;
 }
 
 interface OrderStatusSelection extends Nameable {
@@ -132,6 +136,7 @@ export class OrdersUpdateComponent
   loadingPointsTypes = LoadingPointsTypeArray;
   loadingPointsTrailerTypes = LoadingPointsTrailerTypeArray;
   loadingPointsStatus = LoadingPointsStatusArray;
+  orderLoadingType = OrderLoadingTypeArray;
 
   countries = Object.keys(countries);
 
@@ -163,6 +168,10 @@ export class OrdersUpdateComponent
     status: new FormControl<OrderStatuses>(OrderStatuses.DRAFT, {
       nonNullable: true,
     }),
+    cargo_type: new FormControl<string | null>(null),
+    pallets: new FormControl<string | null>(null),
+    loading_type: new FormControl<OrderLoadingType[] | null>(null),
+    trailer_type: new FormControl<string | null>(null),
   });
 
   status = signal<OrderStatuses>(OrderStatuses.DRAFT);
@@ -237,10 +246,15 @@ export class OrdersUpdateComponent
       item.unloading_address ?? null,
     );
     this.form.controls.status.setValue(item.status.id);
+    this.form.controls.loading_type.setValue(item.loading_type ?? null);
+    this.form.controls.pallets.setValue(item.cargo_type ?? null);
+    this.form.controls.cargo_type.setValue(item.cargo_type ?? null);
+    this.form.controls.trailer_type.setValue(item.trailer_type ?? null);
     this.status.set(item.status.id);
     this.dataSource = new MatTableDataSource<OrderLoadingPoints>(
       item.loading_points_info || [],
     );
+    console.log(this.form.controls.status.value);
   }
 
   protected override get values(): any {
@@ -387,4 +401,5 @@ export class OrdersUpdateComponent
   protected readonly LoadingPointsStatusArray = LoadingPointsStatusArray;
   protected readonly LoadingPointsStatus = LoadingPointsStatus;
   protected readonly LoadingPointsType = LoadingPointsType;
+  protected readonly OrderStatuses = OrderStatuses;
 }
