@@ -7,20 +7,31 @@ import {
   OnInit,
   signal,
 } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators
+} from "@angular/forms";
 import {
   EditComponentComponent,
   EditComponentDeps,
 } from '../../../base-module/components/edit-component/edit-component.component';
 import { ActivatedRoute } from '@angular/router';
 import {
+  LoadingPointsStatus,
+  LoadingPointsStatusArray, LoadingPointsTrailerType,
+  LoadingPointsTrailerTypeArray,
+  LoadingPointsType,
+  LoadingPointsTypeArray,
   Order,
   OrderDocument,
   OrderDocumentType,
   OrderLoadingPoints,
   OrderResponse,
-  OrderStatuses,
-} from '../../types/orders.type';
+  OrderStatuses
+} from "../../types/orders.type";
 import { OrdersService } from '../../services/orders.service';
 import { CustomersService } from '../../../customers/services/customers.service';
 import { Nameable } from '../../../base-module/types/nameable.type';
@@ -89,30 +100,21 @@ export class OrdersUpdateComponent
       validators: [Validators.required],
       nonNullable: true,
     }),
-    adr: new FormControl<string>('', {
+    adr: new FormControl<boolean | null>(null, {
       validators: [Validators.required],
       nonNullable: true,
     }),
-    pallets: new FormControl<string>('', {
+    pallets: new FormControl<boolean | null>(null, {
       validators: [Validators.required],
       nonNullable: true,
     }),
-    temperature: new FormControl<string>('', {
+    temperature: new FormControl<boolean | null>(null, {}),
+    temperature_value: new FormControl<number>(0, {}),
+    weight: new FormControl<string>('', {
       validators: [Validators.required],
       nonNullable: true,
     }),
-    netweight: new FormControl<string>('', {
-      validators: [Validators.required],
-      nonNullable: true,
-    }),
-    loading: new FormControl<string>('', {
-      validators: [Validators.required],
-      nonNullable: true,
-    }),
-    quantity_loading: new FormControl<string>('', {
-      validators: [Validators.required],
-      nonNullable: true,
-    }),
+    comments: new FormControl<string>(''),
   });
   constructor(
     protected override service: OrdersService,
@@ -127,6 +129,9 @@ export class OrdersUpdateComponent
   loading = false;
   edit = false;
   selectedLoadingPoint!: OrderLoadingPoints;
+  loadingPointsTypes = LoadingPointsTypeArray;
+  loadingPointsTrailerTypes = LoadingPointsTrailerTypeArray;
+  loadingPointsStatus = LoadingPointsStatusArray;
 
   countries = Object.keys(countries);
 
@@ -185,22 +190,32 @@ export class OrdersUpdateComponent
 
   override ngOnInit() {
     super.ngOnInit();
-
     this.deps.companyService.getUserSelections().subscribe((users) => {
       this.users = users;
       this.cdr.markForCheck();
+    });
+    this.LoadingPointsForm.controls.trailer_type.valueChanges.subscribe(() => {
+      if (
+        this.LoadingPointsForm.controls.trailer_type.value !==
+        LoadingPointsTrailerType.Frigo
+      ) {
+        this.LoadingPointsForm.controls.temperature.setValue(null);
+      }
+    });
+    this.LoadingPointsForm.controls.temperature.valueChanges.subscribe(() => {
+      if (!this.LoadingPointsForm.controls.temperature.value) {
+        this.LoadingPointsForm.controls.temperature_value.setValue(null);
+      }
     });
   }
   dataSource!: MatTableDataSource<OrderLoadingPoints>;
 
   displayedColumns = [
     'Type',
-    'Quantity',
     'Nation',
     'Zip Code',
     'City',
-    'NetWeight',
-    'Loading',
+    'Weight',
     'Date',
     'Edit',
     'Delete',
@@ -310,9 +325,8 @@ export class OrdersUpdateComponent
     this.LoadingPointsForm.controls.adr.setValue(item.adr);
     this.LoadingPointsForm.controls.pallets.setValue(item.pallets);
     this.LoadingPointsForm.controls.temperature.setValue(item.temperature);
-    this.LoadingPointsForm.controls.netweight.setValue(item.netweight);
-    this.LoadingPointsForm.controls.loading.setValue(item.loading);
-    this.LoadingPointsForm.controls.quantity_loading.setValue(item.quantity_loading);
+    this.LoadingPointsForm.controls.temperature_value.setValue(item.temperature_value);
+    this.LoadingPointsForm.controls.weight.setValue(item.weight);
     this.selectedLoadingPoint = item;
   }
 
@@ -325,6 +339,7 @@ export class OrdersUpdateComponent
       this.dataSource.data.splice(index, 1, point);
     }
     this.updateLoadingPoints(this.dataSource.data);
+    this.LoadingPointsForm.reset();
   }
   deleteLoadingPoint(item: OrderLoadingPoints) {
     const index = this.dataSource.data.findIndex((point) => point === item);
@@ -368,4 +383,8 @@ export class OrdersUpdateComponent
         },
       });
   }
+
+  protected readonly LoadingPointsStatusArray = LoadingPointsStatusArray;
+  protected readonly LoadingPointsStatus = LoadingPointsStatus;
+  protected readonly LoadingPointsType = LoadingPointsType;
 }

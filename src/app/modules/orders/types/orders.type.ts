@@ -87,6 +87,28 @@ export interface OrderLoadingPoints {
   point: string;
 }
 
+export enum LoadingPointsType {
+  Loading = 'Loading',
+  Unloading = 'Unloading',
+}
+
+export enum  LoadingPointsTrailerType {
+  Standard = 'Standard',
+  Mega = 'Mega',
+  Frigo = 'Frigo',
+  VAN = 'VAN',
+  Other = 'Other',
+}
+
+export const LoadingPointsStatus: { [key: string]: boolean } = {
+  YES: true,
+  NO: false,
+};
+
+export const LoadingPointsTypeArray = Object.values(LoadingPointsType);
+export const LoadingPointsTrailerTypeArray = Object.values(LoadingPointsTrailerType);
+
+export const  LoadingPointsStatusArray = Object.keys(LoadingPointsStatus);
 export interface OrderDocument {
   name: string;
   id: string;

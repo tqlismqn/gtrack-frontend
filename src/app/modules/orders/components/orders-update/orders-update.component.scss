@@ -23,8 +23,11 @@
       };
       gap: 20px;
 
-      mat-form-field{
+      form > mat-form-field{
         width: 200px;
+        margin: auto 10px;
+      }
+      .row {
         margin: auto 10px;
       }
     }
