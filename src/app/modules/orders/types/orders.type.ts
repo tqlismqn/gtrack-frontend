@@ -30,6 +30,10 @@ export interface OrderResponse extends ModuleBaseResponse {
   trailer_number?: string;
   loading_address?: string;
   unloading_address?: string;
+  cargo_type?: string;
+  pallets?: string;
+  loading_type?: OrderLoadingType[];
+  trailer_type?: string;
 }
 
 export interface Order extends ModuleBase {
@@ -53,6 +57,10 @@ export interface Order extends ModuleBase {
   trailer_number?: string;
   loading_address?: string;
   unloading_address?: string;
+  cargo_type?: string;
+  pallets?: string;
+  loading_type?: OrderLoadingType[];
+  trailer_type?: string;
 }
 
 export interface OrderFrontendStatus extends Nameable {
@@ -92,7 +100,7 @@ export enum LoadingPointsType {
   Unloading = 'Unloading',
 }
 
-export enum  LoadingPointsTrailerType {
+export enum LoadingPointsTrailerType {
   Standard = 'Standard',
   Mega = 'Mega',
   Frigo = 'Frigo',
@@ -105,10 +113,21 @@ export const LoadingPointsStatus: { [key: string]: boolean } = {
   NO: false,
 };
 
-export const LoadingPointsTypeArray = Object.values(LoadingPointsType);
-export const LoadingPointsTrailerTypeArray = Object.values(LoadingPointsTrailerType);
+export enum OrderLoadingType {
+  fixig_belts = 'Fixing belts',
+  cover = 'Cover',
+  uncover = 'Uncover',
+  load_with_crane = 'Load with crane',
+}
 
-export const  LoadingPointsStatusArray = Object.keys(LoadingPointsStatus);
+export const LoadingPointsTypeArray = Object.values(LoadingPointsType);
+export const LoadingPointsTrailerTypeArray = Object.values(
+  LoadingPointsTrailerType,
+);
+
+export const LoadingPointsStatusArray = Object.keys(LoadingPointsStatus);
+
+export const OrderLoadingTypeArray = Object.values(OrderLoadingType);
 export interface OrderDocument {
   name: string;
   id: string;
