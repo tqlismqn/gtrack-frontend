@@ -123,6 +123,7 @@ export class OrdersUpdateComponent
     protected customersService: CustomersService,
   ) {
     super(service, deps, cdr, route);
+    this.dataSource = new MatTableDataSource<OrderLoadingPoints>([]);
   }
 
   loading = false;
@@ -212,7 +213,7 @@ export class OrdersUpdateComponent
       }
     });
   }
-  dataSource!: MatTableDataSource<OrderLoadingPoints>;
+  dataSource: MatTableDataSource<OrderLoadingPoints>;
 
   displayedColumns = [
     'Type',
