@@ -34,6 +34,9 @@ export interface OrderResponse extends ModuleBaseResponse {
   pallets?: string;
   loading_type?: OrderLoadingType[];
   trailer_type?: string;
+  empty_km?: string;
+  total_km?: string;
+  carrier_price?: number;
 }
 
 export interface Order extends ModuleBase {
@@ -61,6 +64,9 @@ export interface Order extends ModuleBase {
   pallets?: string;
   loading_type?: OrderLoadingType[];
   trailer_type?: string;
+  empty_km?: string;
+  total_km?: string;
+  carrier_price?: number;
 }
 
 export interface OrderFrontendStatus extends Nameable {
