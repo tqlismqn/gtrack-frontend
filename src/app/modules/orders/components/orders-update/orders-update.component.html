@@ -24,7 +24,7 @@
 
       <mat-form-field *ngIf="form.controls.status as control">
         <mat-label>Order Status</mat-label>
-        <mat-select [formControl]="control">
+        <mat-select [formControl]="control" (selectionChange)="orderChangeStatus()">
           <mat-option
             *ngFor="let status of statusSelections()"
             [value]="status.id"
@@ -37,6 +37,20 @@
           >This field is <b>required</b></mat-error
         >
       </mat-form-field>
+
+      <div *ngIf="changedStatus">
+        <div class="row row--stroke">
+          <mat-form-field *ngIf="form.controls.change_status as control">
+            <mat-label>Reason for status change</mat-label>
+            <input matInput [formControl]="control" />
+          </mat-form-field>
+        </div>
+        <app-file-upload
+          label="Attach change of status file"
+          [uploadedFileName]="item()?.change_status_file?.name"
+          (files$)="onFileChange('change_status_file', $event)"
+        ></app-file-upload>
+      </div>
 
       <div class="row row--equal">
         <mat-form-field *ngIf="form.controls.first_loading_date as control">
