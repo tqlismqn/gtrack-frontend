@@ -112,25 +112,61 @@
           >This field is <b>required</b></mat-error
         >
       </mat-form-field>
+      <div>
+        <h2>In progress</h2>
+        <div class="row">
+          <mat-form-field *ngIf="form.controls.customer_id as control">
+            <mat-label>Carrier</mat-label>
+            <mat-select [formControl]="control">
+              <mat-option *ngFor="let customer of customers" [value]="customer.id">
+                ({{ customer.internal_company_id }}) {{ customer.company_name }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="control.hasError('required')"
+              >This field is <b>required</b></mat-error
+            >
+          </mat-form-field>
+        </div>
+        <div class="row">
+          <mat-form-field *ngIf="form.controls.truck_number as control">
+            <mat-label>Truck Number</mat-label>
+            <input matInput [formControl]="control" />
+          </mat-form-field>
+          <button color="primary" mat-icon-button type="button">
+            <mat-icon fontIcon="file_copy"></mat-icon>
+          </button>
+        </div>
 
-      <div class="row">
-        <mat-form-field *ngIf="form.controls.truck_number as control">
-          <mat-label>Truck Number</mat-label>
-          <input matInput [formControl]="control" />
-        </mat-form-field>
-        <button color="primary" mat-icon-button type="button">
-          <mat-icon fontIcon="file_copy"></mat-icon>
-        </button>
-      </div>
+        <div class="row">
+          <mat-form-field *ngIf="form.controls.trailer_number as control">
+            <mat-label>Trailer Number</mat-label>
+            <input matInput [formControl]="control" />
+          </mat-form-field>
+          <button color="primary" mat-icon-button type="button">
+            <mat-icon fontIcon="file_copy"></mat-icon>
+          </button>
+        </div>
 
-      <div class="row">
-        <mat-form-field *ngIf="form.controls.trailer_number as control">
-          <mat-label>Trailer Number</mat-label>
-          <input matInput [formControl]="control" />
-        </mat-form-field>
-        <button color="primary" mat-icon-button type="button">
-          <mat-icon fontIcon="file_copy"></mat-icon>
-        </button>
+        <div class="row">
+          <mat-form-field *ngIf="form.controls.empty_km as control">
+            <mat-label>Empty KM</mat-label>
+            <input matInput [formControl]="control" />
+          </mat-form-field>
+        </div>
+
+        <div class="row">
+          <mat-form-field *ngIf="form.controls.total_km as control">
+            <mat-label>Total KM</mat-label>
+            <input matInput [formControl]="control" />
+          </mat-form-field>
+        </div>
+
+        <div class="row">
+          <mat-form-field *ngIf="form.controls.carrier_price as control">
+            <mat-label>Carrier price</mat-label>
+            <input type="number" matInput [formControl]="control">
+          </mat-form-field>
+        </div>
       </div>
 
       <div class="row">

@@ -37,6 +37,9 @@ export interface OrderResponse extends ModuleBaseResponse {
   change_status?: string;
   change_status_file?: OrderDocument;
   cmr?: string;
+  empty_km?: string;
+  total_km?: string;
+  carrier_price?: number;
 }
 
 export interface Order extends ModuleBase {
@@ -67,6 +70,9 @@ export interface Order extends ModuleBase {
   change_status?: string;
   change_status_file?: OrderDocument;
   cmr?: string;
+  empty_km?: string;
+  total_km?: string;
+  carrier_price?: number;
 }
 
 export interface OrderFrontendStatus extends Nameable {

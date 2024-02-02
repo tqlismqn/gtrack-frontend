@@ -3,7 +3,7 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  computed,
+  computed, EventEmitter,
   OnInit,
   signal
 } from "@angular/core";
@@ -33,6 +33,8 @@ import { Nameable } from "../../../base-module/types/nameable.type";
 import { environment } from "../../../../../environments/environment";
 import { MatTableDataSource } from "@angular/material/table";
 import { countries } from "countries-list";
+import { Customer } from "../../../customers/types/customers.type";
+import { merge, startWith, takeUntil, tap } from "rxjs";
 
 interface OrdersEditForm {
   internal_order_id: FormControl<number>;
@@ -52,12 +54,22 @@ interface OrdersEditForm {
   trailer_type: FormControl<string | null>;
   change_status: FormControl<string | null>;
   cmr: FormControl<string | null>;
+  customer_id: FormControl<string>;
+  empty_km: FormControl<string | null>;
+  total_km: FormControl<string | null>;
+  carrier_price: FormControl<number | null>;
 }
 
 interface OrderStatusSelection extends Nameable {
   disabled?: boolean;
 }
 
+type CustomerSelection = Pick<
+  Customer,
+  'id' | 'company_name' | 'internal_company_id'
+>;
+
+type CustomerSelections = CustomerSelection[];
 @Component({
   selector: 'app-orders-update',
   templateUrl: './orders-update.component.html',
@@ -135,6 +147,8 @@ export class OrdersUpdateComponent
   loadingPointsStatus = LoadingPointsStatusArray;
   orderLoadingType = OrderLoadingTypeArray;
   changedStatus: boolean = false;
+  customers: CustomerSelections = [];
+  customers$ = new EventEmitter<CustomerSelections>();
 
   countries = Object.keys(countries);
 
@@ -172,6 +186,13 @@ export class OrdersUpdateComponent
     trailer_type: new FormControl<string | null>(null),
     change_status: new FormControl<string | null>(null),
     cmr: new FormControl<string | null>(null),
+    customer_id: new FormControl<string>('', {
+      validators: [Validators.required],
+      nonNullable: true,
+    }),
+    empty_km: new FormControl<string | null>(''),
+    total_km: new FormControl<string | null>(''),
+    carrier_price: new FormControl<number | null>(0),
   });
 
   status = signal<OrderStatuses>(OrderStatuses.DRAFT);
@@ -217,6 +238,49 @@ export class OrdersUpdateComponent
       }
     });
   }
+
+  override ngAfterViewInit() {
+    super.ngAfterViewInit();
+
+    this.editFormComponent.startLoading();
+
+    merge(
+      this.customersService.created$,
+      this.customersService.deleted$,
+      this.customersService.updated$,
+    )
+      .pipe(
+        takeUntil(this.destroy$),
+        startWith(undefined),
+        tap(() => {
+          this.customersService
+            .read(
+              {
+                company_id: this.deps.companyService.selectedCompany?.id,
+                select: [
+                  'id',
+                  'company_name',
+                  'internal_company_id',
+                ] as (keyof CustomerSelection)[],
+              },
+              false,
+            )
+            .subscribe({
+              next: ([data]) => {
+                this.editFormComponent.endLoading('success');
+                this.customers = data as CustomerSelections;
+                this.customers$.emit(this.customers);
+                this.cdr.markForCheck();
+              },
+              error: (err) => {
+                this.editFormComponent.processError(err);
+              },
+            });
+        }),
+      )
+      .subscribe();
+  }
+
   dataSource!: MatTableDataSource<OrderLoadingPoints>;
 
   displayedColumns = [
@@ -254,6 +318,10 @@ export class OrdersUpdateComponent
     this.form.controls.trailer_type.setValue(item.trailer_type ?? null);
     this.form.controls.change_status.setValue(item.change_status ?? null);
     this.form.controls.cmr.setValue(item.cmr ?? null);
+    this.form.controls.customer_id.setValue(item.customer_id);
+    this.form.controls.empty_km.setValue(item.empty_km ?? null);
+    this.form.controls.total_km.setValue(item.total_km ?? null);
+    this.form.controls.carrier_price.setValue(item.carrier_price ?? null);
     this.status.set(item.status.id);
     this.dataSource = new MatTableDataSource<OrderLoadingPoints>(
       item.loading_points_info || [],
