@@ -16,7 +16,7 @@ import { CompanyService } from '../../../../services/company.service';
 import { EditFormComponent } from '../edit-form/edit-form.component';
 import { FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable, takeUntil, tap } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { BaseModuleService } from '../../services/base-module-service';
 
 @Injectable()
@@ -202,9 +202,17 @@ export abstract class EditComponentComponent<
 
   submit() {
     if (this.type === 'create') {
-      this.create().subscribe();
+      return this.create().pipe(
+        map((result) => {
+          return { result: !!result, action: 'create' };
+        }),
+      );
     } else {
-      this.update().subscribe();
+      return this.update().pipe(
+        map((result) => {
+          return { result: !!result, action: 'update' };
+        }),
+      );
     }
   }
 
