@@ -36,6 +36,7 @@ export interface OrderResponse extends ModuleBaseResponse {
   trailer_type?: string;
   change_status?: string;
   change_status_file?: OrderDocument;
+  cmr?: string;
   empty_km?: string;
   total_km?: string;
   carrier_price?: number;
@@ -68,6 +69,7 @@ export interface Order extends ModuleBase {
   trailer_type?: string;
   change_status?: string;
   change_status_file?: OrderDocument;
+  cmr?: string;
   empty_km?: string;
   total_km?: string;
   carrier_price?: number;

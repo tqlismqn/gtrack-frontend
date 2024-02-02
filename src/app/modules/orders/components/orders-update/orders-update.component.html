@@ -188,6 +188,15 @@
           <mat-icon fontIcon="file_copy"></mat-icon>
         </button>
       </div>
+      <div *ngIf="form.controls.status.value === OrderStatuses.READY_FOR_INVOICE">
+        <div class="row row--stroke">
+          <mat-form-field *ngIf="form.controls.cmr as control">
+            <mat-label>CMR</mat-label>
+            <input matInput [formControl]="control">
+          </mat-form-field>
+        </div>
+      </div>
+
       <div *ngIf="form.controls.status.value === OrderStatuses.OPEN">
         <div class="row">
           <mat-form-field *ngIf="form.controls.cargo_type as control">

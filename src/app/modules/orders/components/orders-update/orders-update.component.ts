@@ -53,6 +53,7 @@ interface OrdersEditForm {
   loading_type: FormControl<OrderLoadingType[] | null>;
   trailer_type: FormControl<string | null>;
   change_status: FormControl<string | null>;
+  cmr: FormControl<string | null>;
   customer_id: FormControl<string>;
   empty_km: FormControl<string | null>;
   total_km: FormControl<string | null>;
@@ -184,6 +185,7 @@ export class OrdersUpdateComponent
     loading_type: new FormControl<OrderLoadingType[] | null>(null),
     trailer_type: new FormControl<string | null>(null),
     change_status: new FormControl<string | null>(null),
+    cmr: new FormControl<string | null>(null),
     customer_id: new FormControl<string>('', {
       validators: [Validators.required],
       nonNullable: true,
@@ -315,6 +317,7 @@ export class OrdersUpdateComponent
     this.form.controls.cargo_type.setValue(item.cargo_type ?? null);
     this.form.controls.trailer_type.setValue(item.trailer_type ?? null);
     this.form.controls.change_status.setValue(item.change_status ?? null);
+    this.form.controls.cmr.setValue(item.cmr ?? null);
     this.form.controls.customer_id.setValue(item.customer_id);
     this.form.controls.empty_km.setValue(item.empty_km ?? null);
     this.form.controls.total_km.setValue(item.total_km ?? null);
