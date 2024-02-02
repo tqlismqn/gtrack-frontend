@@ -50,6 +50,10 @@
     &--equal {
       grid-template-columns: 1fr 1fr;
     }
+
+    &--stroke {
+      column-gap: 0;
+    }
   }
 
   .download-docs {

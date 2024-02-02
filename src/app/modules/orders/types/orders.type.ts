@@ -34,6 +34,8 @@ export interface OrderResponse extends ModuleBaseResponse {
   pallets?: string;
   loading_type?: OrderLoadingType[];
   trailer_type?: string;
+  change_status?: string;
+  change_status_file?: OrderDocument;
   empty_km?: string;
   total_km?: string;
   carrier_price?: number;
@@ -64,6 +66,8 @@ export interface Order extends ModuleBase {
   pallets?: string;
   loading_type?: OrderLoadingType[];
   trailer_type?: string;
+  change_status?: string;
+  change_status_file?: OrderDocument;
   empty_km?: string;
   total_km?: string;
   carrier_price?: number;
@@ -156,4 +160,5 @@ export type OrderDocumentType =
   | 'order_file'
   | 'cmr_file'
   | 'invoice_file'
-  | 'pallets_file';
+  | 'pallets_file'
+  | 'change_status_file';
