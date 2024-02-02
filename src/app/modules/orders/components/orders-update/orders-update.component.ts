@@ -50,6 +50,8 @@ interface OrdersEditForm {
   pallets: FormControl<string | null>;
   loading_type: FormControl<OrderLoadingType[] | null>;
   trailer_type: FormControl<string | null>;
+  change_status: FormControl<string | null>;
+  cmr: FormControl<string | null>;
 }
 
 interface OrderStatusSelection extends Nameable {
@@ -132,6 +134,7 @@ export class OrdersUpdateComponent
   loadingPointsTrailerTypes = LoadingPointsTrailerTypeArray;
   loadingPointsStatus = LoadingPointsStatusArray;
   orderLoadingType = OrderLoadingTypeArray;
+  changedStatus: boolean = false;
 
   countries = Object.keys(countries);
 
@@ -167,6 +170,8 @@ export class OrdersUpdateComponent
     pallets: new FormControl<string | null>(null),
     loading_type: new FormControl<OrderLoadingType[] | null>(null),
     trailer_type: new FormControl<string | null>(null),
+    change_status: new FormControl<string | null>(null),
+    cmr: new FormControl<string | null>(null),
   });
 
   status = signal<OrderStatuses>(OrderStatuses.DRAFT);
@@ -247,11 +252,18 @@ export class OrdersUpdateComponent
     this.form.controls.pallets.setValue(item.cargo_type ?? null);
     this.form.controls.cargo_type.setValue(item.cargo_type ?? null);
     this.form.controls.trailer_type.setValue(item.trailer_type ?? null);
+    this.form.controls.change_status.setValue(item.change_status ?? null);
+    this.form.controls.cmr.setValue(item.cmr ?? null);
     this.status.set(item.status.id);
     this.dataSource = new MatTableDataSource<OrderLoadingPoints>(
       item.loading_points_info || [],
     );
     console.log(this.form.controls.status.value);
+  }
+
+  orderChangeStatus() {
+    this.changedStatus = true;
+    this.form.controls.change_status.setValue(null);
   }
 
   protected override get values(): any {
@@ -296,7 +308,13 @@ export class OrdersUpdateComponent
 
   downloadAll() {
     const item = this.item();
-    [item?.order_file, item?.pallets_file, item?.cmr_file, item?.invoice_file]
+    [
+      item?.order_file,
+      item?.pallets_file,
+      item?.cmr_file,
+      item?.invoice_file,
+      item?.change_status_file,
+    ]
       .filter((item) => !!item)
       .forEach((item) => this.downloadDoc(item as OrderDocument));
   }
