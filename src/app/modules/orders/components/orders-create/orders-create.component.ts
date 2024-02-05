@@ -5,21 +5,21 @@ import {
   Component,
   EventEmitter,
   OnInit,
-  ViewChild,
-} from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+  ViewChild
+} from "@angular/core";
+import { FormControl, FormGroup, Validators } from "@angular/forms";
 import {
   EditComponentComponent,
-  EditComponentDeps,
-} from '../../../base-module/components/edit-component/edit-component.component';
-import { ActivatedRoute } from '@angular/router';
-import { Order, OrderResponse } from '../../types/orders.type';
-import { OrdersService } from '../../services/orders.service';
-import { CustomersService } from '../../../customers/services/customers.service';
-import { Customer } from '../../../customers/types/customers.type';
-import { merge, startWith, takeUntil, tap } from 'rxjs';
-import { FileUploadComponent } from '../file-upload/file-upload.component';
-import { Currencies } from '../../../../types/currencies';
+  EditComponentDeps
+} from "../../../base-module/components/edit-component/edit-component.component";
+import { ActivatedRoute } from "@angular/router";
+import { Order, OrderResponse } from "../../types/orders.type";
+import { OrdersService } from "../../services/orders.service";
+import { CustomersService } from "../../../customers/services/customers.service";
+import { Customer } from "../../../customers/types/customers.type";
+import { merge, startWith, takeUntil, tap } from "rxjs";
+import { FileUploadComponent } from "../file-upload/file-upload.component";
+import { Currencies } from "../../../../types/currencies";
 
 interface OrdersEditForm {
   customer_id: FormControl<string>;
@@ -149,16 +149,16 @@ export class OrdersCreateComponent
     return {
       credit_limit: customer?.insurance_credit_limit
         ? this.deps.companyService.fromEur(
-          this.currency,
-          customer.insurance_credit_limit,
-        )
+            this.currency,
+            customer.insurance_credit_limit,
+          )
         : null,
 
       available_limit: customer?.total_available_credit_limit
         ? this.deps.companyService.fromEur(
-          this.currency,
-          customer.total_available_credit_limit,
-        )
+            this.currency,
+            customer.total_available_credit_limit,
+          )
         : null,
     };
   }
@@ -210,6 +210,7 @@ export class OrdersCreateComponent
   }
 
   protected override get values(): any {
+    console.log('passed');
     const formData = new FormData();
     formData.append('customer_id', this.form.controls.customer_id.value);
     formData.append('currency', this.form.controls.currency.value);
@@ -238,15 +239,14 @@ export class OrdersCreateComponent
   }
 
   protected override get formValid(): boolean {
-    let result = super.formValid;
-    if (!this.fileUpload.files || this.fileUpload.files.length === 0) {
-      result = false;
-      this.fileError = true;
-    } else {
-      this.fileError = false;
-    }
+    // if (!this.fileUpload.files || this.fileUpload.files.length === 0) {
+    //   result = false;
+    //   this.fileError = true;
+    // } else {
+    //   this.fileError = false;
+    // }
 
-    return result;
+    return super.formValid;
   }
 
   protected onFilesChange(files: FileList | null) {

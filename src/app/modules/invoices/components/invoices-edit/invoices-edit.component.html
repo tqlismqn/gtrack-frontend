@@ -1,6 +1,6 @@
 <app-edit-form
   #editFormComponent
-  (submit$)="submit()"
+  (submit$)="submit().subscribe()"
   formTitle="Create Invoice"
   [disableGrid]="true"
   [history]="item()?.history"

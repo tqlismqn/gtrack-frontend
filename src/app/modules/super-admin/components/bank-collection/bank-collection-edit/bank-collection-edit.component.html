@@ -1,4 +1,4 @@
-<app-edit-form #editFormComponent (submit$)="submit()" formTitle="Create Bank">
+<app-edit-form #editFormComponent (submit$)="submit().subscribe()" formTitle="Create Bank">
   <mat-form-field
     *ngIf="form.controls.name as control"
     subscriptSizing="dynamic"

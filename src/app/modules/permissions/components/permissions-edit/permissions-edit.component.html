@@ -1,6 +1,6 @@
 <app-edit-form
   #editFormComponent
-  (submit$)="submit()"
+  (submit$)="submit().subscribe()"
   formTitle="Create Permission"
 >
   <mat-form-field *ngIf="form.controls.module_id as control">

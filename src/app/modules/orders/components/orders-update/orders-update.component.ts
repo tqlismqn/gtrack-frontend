@@ -3,16 +3,17 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  computed, EventEmitter,
+  computed,
+  EventEmitter,
   OnInit,
-  signal
-} from "@angular/core";
-import { FormControl, FormGroup, Validators } from "@angular/forms";
+  signal,
+} from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import {
   EditComponentComponent,
-  EditComponentDeps
-} from "../../../base-module/components/edit-component/edit-component.component";
-import { ActivatedRoute } from "@angular/router";
+  EditComponentDeps,
+} from '../../../base-module/components/edit-component/edit-component.component';
+import { ActivatedRoute } from '@angular/router';
 import {
   LoadingPointsStatus,
   LoadingPointsStatusArray,
@@ -23,16 +24,20 @@ import {
   Order,
   OrderDocument,
   OrderDocumentType,
-  OrderLoadingPoints, OrderLoadingType, OrderLoadingTypeArray,
+  OrderLoadingPoints,
+  OrderLoadingType,
+  OrderLoadingTypeArray,
   OrderResponse,
-  OrderStatuses, OrderStatusesNames
-} from "../../types/orders.type";
-import { OrdersService } from "../../services/orders.service";
-import { CustomersService } from "../../../customers/services/customers.service";
-import { Nameable } from "../../../base-module/types/nameable.type";
-import { environment } from "../../../../../environments/environment";
-import { MatTableDataSource } from "@angular/material/table";
-import { countries } from "countries-list";
+  OrderStatuses,
+} from '../../types/orders.type';
+import { OrdersService } from '../../services/orders.service';
+import { CustomersService } from '../../../customers/services/customers.service';
+import { Nameable } from '../../../base-module/types/nameable.type';
+import { environment } from '../../../../../environments/environment';
+import { MatTableDataSource } from '@angular/material/table';
+import { countries } from 'countries-list';
+import { Customer } from '../../../customers/types/customers.type';
+import { merge, startWith, takeUntil, tap } from 'rxjs';
 
 interface OrdersEditForm {
   internal_order_id: FormControl<number>;
@@ -281,8 +286,6 @@ export class OrdersUpdateComponent
       .subscribe();
   }
 
-  dataSource!: MatTableDataSource<OrderLoadingPoints>;
-
   displayedColumns = [
     'Type',
     'Nation',
@@ -306,8 +309,12 @@ export class OrdersUpdateComponent
         .pop();
     }
     this.form.controls.internal_order_id.setValue(item.internal_order_id);
-    this.form.controls.first_loading_date.setValue(first_loading?.date ?? null);
-    this.form.controls.last_uploading_date.setValue(last_loading?.date ?? null);
+    this.form.controls.first_loading_date.setValue(
+      first_loading?.date ?? item?.first_loading_date ?? null,
+    );
+    this.form.controls.last_uploading_date.setValue(
+      last_loading?.date ?? item?.last_uploading_date ?? null,
+    );
     this.form.controls.order_price.setValue(item.order_price);
     this.form.controls.disponent_id.setValue(item.disponent_id);
     this.form.controls.delivery_responsible_id.setValue(
