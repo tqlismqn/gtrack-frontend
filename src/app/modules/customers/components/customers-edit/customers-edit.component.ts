@@ -39,6 +39,7 @@ import { BankCollection } from '../../../super-admin/types/bank-collection';
 import { CompanyService } from '../../../../services/company.service';
 import { Roles } from '../../../admin/types/roles';
 import { MatColumnDef } from '@angular/material/table';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 interface CustomersEditForm {
   id?: FormControl<string>;
@@ -82,6 +83,7 @@ export class CustomersEditComponent
     route: ActivatedRoute,
     protected banksService: BankCollectionService,
     protected companyService: CompanyService,
+    protected _snackBar: MatSnackBar,
   ) {
     super(service, deps, cdr, route);
   }
@@ -670,5 +672,25 @@ export class CustomersEditComponent
     return [Roles.SuperAdmin, Roles.Admin].includes(
       this.companyService.selectedCompany?.role ?? Roles.User,
     );
+  }
+
+  onSubmit() {
+    this.submit().subscribe((success) => {
+      if (success.action === 'create' && success.result) {
+        this.openSnackBar('The record was successfully created', 'Close');
+        return;
+      }
+
+      if (success.action === 'update' && success.result) {
+        this.openSnackBar('The record was successfully updated', 'Close');
+        return;
+      }
+    });
+  }
+
+  openSnackBar(message: string, action: string) {
+    this._snackBar.open(message, action, {
+      duration: 2000,
+    });
   }
 }
