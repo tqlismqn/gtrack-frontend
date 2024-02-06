@@ -1,37 +1,4 @@
 :host {
-  .order-edit-form {
-    display: grid;
-    grid: {
-      template-columns: 600px auto;
-      column-gap: 48px;
-    }
-
-    .left-block {
-      height: fit-content;
-      display: grid;
-      grid: {
-        template-columns: 100%;
-      };
-    }
-
-    .right-block {
-      height: fit-content;
-      display: grid;
-      max-width: 900px;
-      grid: {
-        template-columns: 100%;
-      };
-      gap: 20px;
-
-      form > mat-form-field{
-        width: 200px;
-        margin: auto 10px;
-      }
-      .row {
-        margin: auto 10px;
-      }
-    }
-  }
   .row {
     display: grid;
     grid: {
@@ -62,5 +29,24 @@
 
   app-file-upload {
     width: 100%;
+  }
+}
+.loading_points {
+  height: fit-content;
+  display: grid;
+  grid: {
+    template-columns: 100%;
+  };
+  gap: 20px;
+
+  form > mat-form-field{
+    width: 150px;
+    margin: 20px 10px;
+    &.selector {
+      width: 100px;
+    }
+  }
+  .row {
+    margin: auto 10px;
   }
 }

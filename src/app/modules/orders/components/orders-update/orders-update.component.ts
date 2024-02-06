@@ -6,14 +6,14 @@ import {
   computed,
   EventEmitter,
   OnInit,
-  signal,
-} from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+  signal
+} from "@angular/core";
+import { FormControl, FormGroup, Validators } from "@angular/forms";
 import {
   EditComponentComponent,
-  EditComponentDeps,
-} from '../../../base-module/components/edit-component/edit-component.component';
-import { ActivatedRoute } from '@angular/router';
+  EditComponentDeps
+} from "../../../base-module/components/edit-component/edit-component.component";
+import { ActivatedRoute } from "@angular/router";
 import {
   LoadingPointsStatus,
   LoadingPointsStatusArray,
@@ -28,16 +28,16 @@ import {
   OrderLoadingType,
   OrderLoadingTypeArray,
   OrderResponse,
-  OrderStatuses,
-} from '../../types/orders.type';
-import { OrdersService } from '../../services/orders.service';
-import { CustomersService } from '../../../customers/services/customers.service';
-import { Nameable } from '../../../base-module/types/nameable.type';
-import { environment } from '../../../../../environments/environment';
-import { MatTableDataSource } from '@angular/material/table';
-import { countries } from 'countries-list';
-import { Customer } from '../../../customers/types/customers.type';
-import { merge, startWith, takeUntil, tap } from 'rxjs';
+  OrderStatuses
+} from "../../types/orders.type";
+import { OrdersService } from "../../services/orders.service";
+import { CustomersService } from "../../../customers/services/customers.service";
+import { Nameable } from "../../../base-module/types/nameable.type";
+import { environment } from "../../../../../environments/environment";
+import { MatTableDataSource } from "@angular/material/table";
+import { countries } from "countries-list";
+import { Customer } from "../../../customers/types/customers.type";
+import { merge, startWith, takeUntil, tap } from "rxjs";
 
 interface OrdersEditForm {
   internal_order_id: FormControl<number>;
@@ -130,7 +130,9 @@ export class OrdersUpdateComponent
       validators: [Validators.required],
       nonNullable: true,
     }),
-    comments: new FormControl<string>(''),
+    loading_reference: new FormControl<string>('', {}),
+    unloading_reference: new FormControl<string>('', {}),
+    notes: new FormControl<string>(''),
   });
   constructor(
     protected override service: OrdersService,
@@ -344,8 +346,16 @@ export class OrdersUpdateComponent
   }
 
   orderChangeStatus() {
-    this.changedStatus = true;
-    this.form.controls.change_status.setValue(null);
+    if (
+      [OrderStatuses.LOADED, OrderStatuses.UNLOADED].includes(
+        this.form.controls.status.value,
+      )
+    ) {
+      this.changedStatus = true;
+      this.form.controls.change_status.setValue(null);
+      return;
+    }
+    this.changedStatus = false;
   }
 
   protected override get values(): any {
@@ -423,6 +433,45 @@ export class OrdersUpdateComponent
       });
   }
 
+  get validLoadingPoints() {
+    let result = true;
+    if (!this.LoadingPointsForm.valid) {
+      result = false;
+    }
+    if (
+      this.dataSource.data.find(
+        (point) => point.type === this.LoadingPointsForm.controls.type.value,
+      ) &&
+      !this.edit
+    ) {
+      result = false;
+    }
+
+    if (
+      this.LoadingPointsForm.controls.type.value ===
+        LoadingPointsType.Loading &&
+      this.LoadingPointsForm.controls.loading_reference.value === ''
+    ) {
+      this.LoadingPointsForm.controls.loading_reference.setErrors({
+        required: true,
+      });
+      result = false;
+    }
+
+    if (
+      this.LoadingPointsForm.controls.type.value ===
+        LoadingPointsType.Unloading &&
+      this.LoadingPointsForm.controls.unloading_reference.value === ''
+    ) {
+      this.LoadingPointsForm.controls.unloading_reference.setErrors({
+        required: true,
+      });
+      result = false;
+    }
+
+    return result;
+  }
+
   editLoadingPoint(item: any) {
     this.edit = true;
     this.LoadingPointsForm.controls.type.setValue(item.type);
@@ -440,10 +489,20 @@ export class OrdersUpdateComponent
       item.temperature_value,
     );
     this.LoadingPointsForm.controls.weight.setValue(item.weight);
+    this.LoadingPointsForm.controls.loading_reference.setValue(
+      item.loading_reference,
+    );
+    this.LoadingPointsForm.controls.unloading_reference.setValue(
+      item.unloading_reference,
+    );
+    this.LoadingPointsForm.controls.notes.setValue(item.notes);
     this.selectedLoadingPoint = item;
   }
 
   sendEditLoadingPoint() {
+    if (!this.validLoadingPoints) {
+      return;
+    }
     const index = this.dataSource.data.findIndex(
       (point) => point === this.selectedLoadingPoint,
     );
@@ -463,12 +522,7 @@ export class OrdersUpdateComponent
   }
 
   loadingPointsSubmit() {
-    if (
-      !this.LoadingPointsForm.valid ||
-      this.dataSource.data.find(
-        (point) => point.type === this.LoadingPointsForm.controls.type.value,
-      )
-    ) {
+    if (!this.validLoadingPoints) {
       return;
     }
     const data = [...this.dataSource.data, this.LoadingPointsForm.value];

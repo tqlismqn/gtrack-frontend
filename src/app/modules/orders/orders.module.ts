@@ -17,6 +17,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { FileUploadComponent } from './components/file-upload/file-upload.component';
 import { MatGridListModule } from '@angular/material/grid-list';
+import { MatExpansionModule } from "@angular/material/expansion";
 
 @NgModule({
   declarations: [
@@ -38,7 +39,8 @@ import { MatGridListModule } from '@angular/material/grid-list';
     MatSelectModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    MatGridListModule
+    MatGridListModule,
+    MatExpansionModule
   ],
   providers: [OrdersService],
 })
