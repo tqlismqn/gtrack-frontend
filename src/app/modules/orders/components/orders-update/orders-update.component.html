@@ -21,10 +21,7 @@
 
   <mat-form-field *ngIf="form.controls.status as control">
     <mat-label>Order Status</mat-label>
-    <mat-select
-      [formControl]="control"
-      (selectionChange)="orderChangeStatus()"
-    >
+    <mat-select [formControl]="control" (selectionChange)="orderChangeStatus()">
       <mat-option
         *ngFor="let status of statusSelections()"
         [value]="status.id"
@@ -451,6 +448,49 @@
         >Date is required</mat-error
       >
     </mat-form-field>
+    <mat-checkbox [formControl]="this.LoadingPointsForm.controls.fixed_times">Fixed times</mat-checkbox>
+    <div
+      class="TimePicker"
+      *ngIf="this.LoadingPointsForm.controls.fixed_times.value"
+    >
+      <mat-form-field *ngIf="LoadingPointsForm.controls.hours as control">
+        <input
+          matInput
+          type="number"
+          min="1"
+          max="12"
+          [value]="control.value | number: '2.0-0'"
+          [formControl]="control"
+          maxlength="2"
+        />
+        <mat-error *ngIf="control.hasError('required')">
+          Hours is required
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field *ngIf="LoadingPointsForm.controls.minutes as control">
+        <input
+          matInput
+          type="number"
+          min="0"
+          max="59"
+          [value]="control.value | number: '2.0-0'"
+          [formControl]="control"
+          maxlength="2"
+        />
+        <mat-error *ngIf="control.hasError('required')">
+          Minutes is required
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field *ngIf="LoadingPointsForm.controls.period as control">
+        <mat-select [formControl]="control">
+          <mat-option value="AM">AM</mat-option>
+          <mat-option value="PM">PM</mat-option>
+        </mat-select>
+        <mat-error *ngIf="control.hasError('required')">
+          Period is required
+        </mat-error>
+      </mat-form-field>
+    </div>
     <mat-form-field *ngIf="LoadingPointsForm.controls.trailer_type as control">
       <mat-label>Trailer Type</mat-label>
       <mat-select [formControl]="control">

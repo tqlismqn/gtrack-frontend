@@ -39,7 +39,18 @@
   };
   gap: 20px;
 
-  form > mat-form-field{
+  .TimePicker {
+    display: inline;
+    margin: 20px 10px;
+  }
+
+  .TimePicker > mat-form-field {
+    width: 75px;
+  }
+
+
+  form > mat-form-field,
+  form > mat-checkbox{
     width: 150px;
     margin: 20px 10px;
     &.selector {
