@@ -159,6 +159,7 @@ export class OrdersUpdateComponent
   changedStatus: boolean = false;
   customers: CustomerSelections = [];
   customers$ = new EventEmitter<CustomerSelections>();
+  show_full_form: boolean = false;
 
   countries = Object.keys(countries);
 
@@ -245,6 +246,13 @@ export class OrdersUpdateComponent
     this.LoadingPointsForm.controls.temperature.valueChanges.subscribe(() => {
       if (!this.LoadingPointsForm.controls.temperature.value) {
         this.LoadingPointsForm.controls.temperature_value.setValue(null);
+      }
+    });
+    this.LoadingPointsForm.controls.fixed_times.valueChanges.subscribe(() => {
+      if (!this.LoadingPointsForm.controls.fixed_times.value) {
+        this.LoadingPointsForm.controls.hours.setValue(null);
+        this.LoadingPointsForm.controls.minutes.setValue(null);
+        this.LoadingPointsForm.controls.period.setValue(null);
       }
     });
   }
