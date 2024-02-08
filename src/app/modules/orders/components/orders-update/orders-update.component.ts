@@ -136,7 +136,7 @@ export class OrdersUpdateComponent
     fixed_times: new FormControl<boolean>(false, {}),
     hours: new FormControl<string | null>(null, {}),
     minutes: new FormControl<string | null>(null, {}),
-    period: new FormControl<string | null>(null, {}),
+    period: new FormControl<string | null>('AM', {}),
   });
   constructor(
     protected override service: OrdersService,
@@ -252,7 +252,7 @@ export class OrdersUpdateComponent
       if (!this.LoadingPointsForm.controls.fixed_times.value) {
         this.LoadingPointsForm.controls.hours.setValue(null);
         this.LoadingPointsForm.controls.minutes.setValue(null);
-        this.LoadingPointsForm.controls.period.setValue(null);
+        this.LoadingPointsForm.controls.period.setValue('AM');
       }
     });
   }
@@ -581,7 +581,8 @@ export class OrdersUpdateComponent
       )
       .subscribe({
         next: (response) => {
-          const order = response as Order;
+          const orderResponse = response as OrderResponse;
+          const order = this.service.toDto(orderResponse);
           this.loading = false;
           this.cdr.markForCheck();
           this.updateFormView(order);
