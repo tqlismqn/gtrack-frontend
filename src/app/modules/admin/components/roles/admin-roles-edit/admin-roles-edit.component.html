@@ -1,6 +1,6 @@
 <app-edit-form
   #editFormComponent
-  (submit$)="submit()"
+  (submit$)="submit().subscribe()"
   [formTitle]="(type === 'update' ? 'Update' : 'Create') + ' Role'"
   [history]="item()?.history"
 >

@@ -141,7 +141,7 @@ export class CustomersEditComponent
     remark: new FormControl<string>(''),
     documents: new FormControl<CustomerDocument[]>([], { nonNullable: true }),
 
-    terms_of_payment: new FormControl<number>(TermsOfPaymentEnum.PREPAYMENT, {
+    terms_of_payment: new FormControl<number>(TermsOfPaymentEnum.DAY_60, {
       validators: [Validators.required],
       nonNullable: true,
     }),

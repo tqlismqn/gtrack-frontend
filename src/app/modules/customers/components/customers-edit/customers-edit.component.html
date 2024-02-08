@@ -9,6 +9,16 @@
   <div class="customers-edit-form">
     <div class="left-block">
       <div class="row row--actions row--2">
+        <mat-form-field *ngIf="form.controls.internal_company_id as control">
+          <mat-label>Company ID</mat-label>
+          <input readonly matInput [formControl]="control" />
+        </mat-form-field>
+        <button color="primary" mat-icon-button type="button">
+          <mat-icon fontIcon="file_copy"></mat-icon>
+        </button>
+      </div>
+
+      <div class="row row--actions row--2">
         <mat-form-field *ngIf="form.controls.company_name as control">
           <mat-label>Company Name</mat-label>
           <input matInput [formControl]="control" />
@@ -33,16 +43,6 @@
           <mat-icon fontIcon="file_copy"></mat-icon>
         </button>
         <button type="button" color="accent" mat-flat-button>Check</button>
-      </div>
-
-      <div class="row row--actions row--2">
-        <mat-form-field *ngIf="form.controls.internal_company_id as control">
-          <mat-label>Company ID</mat-label>
-          <input readonly matInput [formControl]="control" />
-        </mat-form-field>
-        <button color="primary" mat-icon-button type="button">
-          <mat-icon fontIcon="file_copy"></mat-icon>
-        </button>
       </div>
 
       <mat-form-field *ngIf="form.controls.contact_name as control">

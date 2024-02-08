@@ -3,16 +3,17 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  computed, EventEmitter,
+  computed,
+  EventEmitter,
   OnInit,
-  signal
-} from "@angular/core";
-import { FormControl, FormGroup, Validators } from "@angular/forms";
+  signal,
+} from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import {
   EditComponentComponent,
-  EditComponentDeps
-} from "../../../base-module/components/edit-component/edit-component.component";
-import { ActivatedRoute } from "@angular/router";
+  EditComponentDeps,
+} from '../../../base-module/components/edit-component/edit-component.component';
+import { ActivatedRoute } from '@angular/router';
 import {
   LoadingPointsStatus,
   LoadingPointsStatusArray,
@@ -23,18 +24,20 @@ import {
   Order,
   OrderDocument,
   OrderDocumentType,
-  OrderLoadingPoints, OrderLoadingType, OrderLoadingTypeArray,
+  OrderLoadingPoints,
+  OrderLoadingType,
+  OrderLoadingTypeArray,
   OrderResponse,
-  OrderStatuses, OrderStatusesNames
-} from "../../types/orders.type";
-import { OrdersService } from "../../services/orders.service";
-import { CustomersService } from "../../../customers/services/customers.service";
-import { Nameable } from "../../../base-module/types/nameable.type";
-import { environment } from "../../../../../environments/environment";
-import { MatTableDataSource } from "@angular/material/table";
-import { countries } from "countries-list";
-import { Customer } from "../../../customers/types/customers.type";
-import { merge, startWith, takeUntil, tap } from "rxjs";
+  OrderStatuses,
+} from '../../types/orders.type';
+import { OrdersService } from '../../services/orders.service';
+import { CustomersService } from '../../../customers/services/customers.service';
+import { Nameable } from '../../../base-module/types/nameable.type';
+import { environment } from '../../../../../environments/environment';
+import { MatTableDataSource } from '@angular/material/table';
+import { countries } from 'countries-list';
+import { Customer } from '../../../customers/types/customers.type';
+import { merge, startWith, takeUntil, tap } from 'rxjs';
 
 interface OrdersEditForm {
   internal_order_id: FormControl<number>;
@@ -127,7 +130,13 @@ export class OrdersUpdateComponent
       validators: [Validators.required],
       nonNullable: true,
     }),
-    comments: new FormControl<string>(''),
+    loading_reference: new FormControl<string>('', {}),
+    unloading_reference: new FormControl<string>('', {}),
+    notes: new FormControl<string>(''),
+    fixed_times: new FormControl<boolean>(false, {}),
+    hours: new FormControl<string | null>(null, {}),
+    minutes: new FormControl<string | null>(null, {}),
+    period: new FormControl<string | null>(null, {}),
   });
   constructor(
     protected override service: OrdersService,
@@ -137,6 +146,7 @@ export class OrdersUpdateComponent
     protected customersService: CustomersService,
   ) {
     super(service, deps, cdr, route);
+    this.dataSource = new MatTableDataSource<OrderLoadingPoints>([]);
   }
 
   loading = false;
@@ -149,6 +159,7 @@ export class OrdersUpdateComponent
   changedStatus: boolean = false;
   customers: CustomerSelections = [];
   customers$ = new EventEmitter<CustomerSelections>();
+  show_full_form: boolean = false;
 
   countries = Object.keys(countries);
 
@@ -237,7 +248,15 @@ export class OrdersUpdateComponent
         this.LoadingPointsForm.controls.temperature_value.setValue(null);
       }
     });
+    this.LoadingPointsForm.controls.fixed_times.valueChanges.subscribe(() => {
+      if (!this.LoadingPointsForm.controls.fixed_times.value) {
+        this.LoadingPointsForm.controls.hours.setValue(null);
+        this.LoadingPointsForm.controls.minutes.setValue(null);
+        this.LoadingPointsForm.controls.period.setValue(null);
+      }
+    });
   }
+  dataSource: MatTableDataSource<OrderLoadingPoints>;
 
   override ngAfterViewInit() {
     super.ngAfterViewInit();
@@ -281,8 +300,6 @@ export class OrdersUpdateComponent
       .subscribe();
   }
 
-  dataSource!: MatTableDataSource<OrderLoadingPoints>;
-
   displayedColumns = [
     'Type',
     'Nation',
@@ -295,11 +312,23 @@ export class OrdersUpdateComponent
   ];
 
   updateFormView(item: Order) {
-    const first_loading_date = item.loading_points_info.find((point) => point.type === LoadingPointsType.Loading);
-    const last_loading_date = item.loading_points_info.filter((point) => point.type === LoadingPointsType.Unloading).pop();
+    let first_loading: OrderLoadingPoints | undefined;
+    let last_loading: OrderLoadingPoints | undefined;
+    if (item.loading_points_info) {
+      first_loading = item.loading_points_info.find(
+        (point) => point.type === LoadingPointsType.Loading,
+      );
+      last_loading = item.loading_points_info
+        .filter((point) => point.type === LoadingPointsType.Unloading)
+        .pop();
+    }
     this.form.controls.internal_order_id.setValue(item.internal_order_id);
-    this.form.controls.first_loading_date.setValue(first_loading_date?.date ?? null);
-    this.form.controls.last_uploading_date.setValue(last_loading_date?.date ?? null);
+    this.form.controls.first_loading_date.setValue(
+      first_loading?.date ?? item?.first_loading_date ?? null,
+    );
+    this.form.controls.last_uploading_date.setValue(
+      last_loading?.date ?? item?.last_uploading_date ?? null,
+    );
     this.form.controls.order_price.setValue(item.order_price);
     this.form.controls.disponent_id.setValue(item.disponent_id);
     this.form.controls.delivery_responsible_id.setValue(
@@ -307,9 +336,9 @@ export class OrdersUpdateComponent
     );
     this.form.controls.truck_number.setValue(item.truck_number ?? null);
     this.form.controls.trailer_number.setValue(item.trailer_number ?? null);
-    this.form.controls.loading_address.setValue(item.loading_address ?? null);
+    this.form.controls.loading_address.setValue(first_loading?.address ?? null);
     this.form.controls.unloading_address.setValue(
-      item.unloading_address ?? null,
+      last_loading?.address ?? null,
     );
     this.form.controls.status.setValue(item.status.id);
     this.form.controls.loading_type.setValue(item.loading_type ?? null);
@@ -326,12 +355,19 @@ export class OrdersUpdateComponent
     this.dataSource = new MatTableDataSource<OrderLoadingPoints>(
       item.loading_points_info || [],
     );
-    console.log(this.form.controls.status.value);
   }
 
   orderChangeStatus() {
-    this.changedStatus = true;
-    this.form.controls.change_status.setValue(null);
+    if (
+      [OrderStatuses.LOADED, OrderStatuses.UNLOADED].includes(
+        this.form.controls.status.value,
+      )
+    ) {
+      this.changedStatus = true;
+      this.form.controls.change_status.setValue(null);
+      return;
+    }
+    this.changedStatus = false;
   }
 
   protected override get values(): any {
@@ -409,6 +445,67 @@ export class OrdersUpdateComponent
       });
   }
 
+  get validLoadingPoints() {
+    let result = true;
+    if (!this.LoadingPointsForm.valid) {
+      result = false;
+    }
+    if (
+      this.dataSource.data.find(
+        (point) => point.type === this.LoadingPointsForm.controls.type.value,
+      ) &&
+      !this.edit
+    ) {
+      result = false;
+    }
+
+    if (
+      this.LoadingPointsForm.controls.type.value ===
+        LoadingPointsType.Loading &&
+      this.LoadingPointsForm.controls.loading_reference.value === ''
+    ) {
+      this.LoadingPointsForm.controls.loading_reference.setErrors({
+        required: true,
+      });
+      result = false;
+    }
+
+    if (
+      this.LoadingPointsForm.controls.type.value ===
+        LoadingPointsType.Unloading &&
+      this.LoadingPointsForm.controls.unloading_reference.value === ''
+    ) {
+      this.LoadingPointsForm.controls.unloading_reference.setErrors({
+        required: true,
+      });
+      result = false;
+    }
+
+    if (
+      this.LoadingPointsForm.controls.fixed_times.value &&
+      this.LoadingPointsForm.controls.hours.value === null
+    ) {
+      this.LoadingPointsForm.controls.hours.setErrors({ required: true });
+      result = false;
+    }
+    if (
+      this.LoadingPointsForm.controls.fixed_times.value &&
+      this.LoadingPointsForm.controls.minutes.value === null
+    ) {
+      this.LoadingPointsForm.controls.minutes.setErrors({ required: true });
+      result = false;
+    }
+    if (
+      this.LoadingPointsForm.controls.fixed_times.value &&
+      this.LoadingPointsForm.controls.period.value === null
+    ) {
+      this.LoadingPointsForm.controls.period.setErrors({ required: true });
+      result = false;
+    }
+
+    return result;
+  }
+
   editLoadingPoint(item: any) {
     this.edit = true;
     this.LoadingPointsForm.controls.type.setValue(item.type);
@@ -418,16 +515,32 @@ export class OrdersUpdateComponent
     this.LoadingPointsForm.controls.address.setValue(item.address);
     this.LoadingPointsForm.controls.company_name.setValue(item.company_name);
     this.LoadingPointsForm.controls.date.setValue(item.date);
+    this.LoadingPointsForm.controls.fixed_times.setValue(item.fixed_times);
+    this.LoadingPointsForm.controls.hours.setValue(item.hours);
+    this.LoadingPointsForm.controls.minutes.setValue(item.minutes);
+    this.LoadingPointsForm.controls.period.setValue(item.period);
     this.LoadingPointsForm.controls.trailer_type.setValue(item.trailer_type);
     this.LoadingPointsForm.controls.adr.setValue(item.adr);
     this.LoadingPointsForm.controls.pallets.setValue(item.pallets);
     this.LoadingPointsForm.controls.temperature.setValue(item.temperature);
-    this.LoadingPointsForm.controls.temperature_value.setValue(item.temperature_value);
+    this.LoadingPointsForm.controls.temperature_value.setValue(
+      item.temperature_value,
+    );
     this.LoadingPointsForm.controls.weight.setValue(item.weight);
+    this.LoadingPointsForm.controls.loading_reference.setValue(
+      item.loading_reference,
+    );
+    this.LoadingPointsForm.controls.unloading_reference.setValue(
+      item.unloading_reference,
+    );
+    this.LoadingPointsForm.controls.notes.setValue(item.notes);
     this.selectedLoadingPoint = item;
   }
 
   sendEditLoadingPoint() {
+    if (!this.validLoadingPoints) {
+      return;
+    }
     const index = this.dataSource.data.findIndex(
       (point) => point === this.selectedLoadingPoint,
     );
@@ -447,7 +560,7 @@ export class OrdersUpdateComponent
   }
 
   loadingPointsSubmit() {
-    if (!this.LoadingPointsForm.valid) {
+    if (!this.validLoadingPoints) {
       return;
     }
     const data = [...this.dataSource.data, this.LoadingPointsForm.value];

@@ -9,7 +9,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { RouterLink } from '@angular/router';
 import { MatSelectModule } from '@angular/material/select';
 import { OrdersUpdateComponent } from './components/orders-update/orders-update.component';
@@ -17,6 +17,8 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { FileUploadComponent } from './components/file-upload/file-upload.component';
 import { MatGridListModule } from '@angular/material/grid-list';
+import { MatExpansionModule } from "@angular/material/expansion";
+import { MatCheckboxModule } from "@angular/material/checkbox";
 
 @NgModule({
   declarations: [
@@ -38,7 +40,10 @@ import { MatGridListModule } from '@angular/material/grid-list';
     MatSelectModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    MatGridListModule
+    MatGridListModule,
+    MatExpansionModule,
+    MatCheckboxModule,
+    FormsModule
   ],
   providers: [OrdersService],
 })
