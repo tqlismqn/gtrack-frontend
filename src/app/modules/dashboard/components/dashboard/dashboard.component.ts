@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { AuthService } from '../../../auth/services/auth.service';
+import { MatTableDataSource } from "@angular/material/table";
 
 @Component({
   selector: 'app-dashboard',
@@ -8,5 +9,132 @@ import { AuthService } from '../../../auth/services/auth.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DashboardComponent {
-  constructor(public auth: AuthService) {}
+  constructor(public auth: AuthService) {
+    this.dataSource = new MatTableDataSource<any>(this.Orders);
+  }
+
+  Columns: { [key: string]: string } = {
+    job_status: 'Job Status',
+    order_number: 'Order Number',
+    client: 'Client',
+    client_reference: 'Client reference',
+    client_payment_status: 'Client Payment Status',
+    invoice_number_telax: 'Invoice Number TELAX',
+    telax_invoice_status: 'TELAX Invoice Status',
+    date_of_order: 'Date of Order',
+    date_client_invoice: 'Date Client Invoice',
+    payment_term: 'Payment term',
+    due_date_client: 'Due date Client',
+    days_left_client: 'Days left Client',
+    carrier: 'Carrier',
+    tva: 'TVA 21%',
+    date_of_order_sale: 'Date of order sale',
+    invoice_status: 'Invoice Status',
+    cmr: 'CMR',
+    carrier_invoice_nr: 'Carrier Invoice Nr.',
+    date_of_carrier_invoice: 'Date of Carrier Invoice',
+    payment_term_carrier: 'Payment term carrier',
+    due_date_carrier: 'Due date Carrier',
+    days_left_carrier: 'Days left Carrier',
+    carrier_payment_status: 'Carrier Payment Status',
+    order_price: 'Order Price',
+    selling_price: 'Selling Price',
+    revenue: 'Revenue',
+    recommended_selling: 'Recommended Selling Price + TVA21%',
+  };
+
+  displayedColumns = Object.values(this.Columns);
+  keysColumns = Object.keys(this.Columns);
+
+  dataSource: MatTableDataSource<any>;
+
+  Orders = [
+    {
+      job_status: 'Open',
+      order_number: '202311001',
+      client: 'Vibema',
+      client_reference: '25 Oktober 2023',
+      client_payment_status: 'Received',
+      invoice_number_telax: '20230143',
+      telax_invoice_status: 'Sent',
+      date_of_order: '10/30/2023',
+      date_client_invoice: '11/21/2023',
+      payment_term: '30',
+      due_date_client: '12/21/2023',
+      days_left_client: 'OK',
+      carrier: 'Remona',
+      tva: 'No',
+      date_of_order_sale: '11/3/2023',
+      invoice_status: 'Received',
+      cmr: 'Yes',
+      carrier_invoice_nr: '2023-03152',
+      date_of_carrier_invoice: '11/21/2023',
+      payment_term_carrier: '60',
+      due_date_carrier: '1/20/2024',
+      days_left_carrier: '-20',
+      carrier_payment_status: 'Not Payed',
+      order_price: 1600,
+      selling_price: 1300,
+      revenue: 300,
+      recommended_selling: '',
+    },
+    {
+      job_status: 'Open',
+      order_number: '202311002',
+      client: 'Vibema',
+      client_reference: '30 Oktober 2023',
+      client_payment_status: 'Received',
+      invoice_number_telax: '20230135',
+      telax_invoice_status: 'Sent',
+      date_of_order: '10/30/2023',
+      date_client_invoice: '11/17/2023',
+      payment_term: '30',
+      due_date_client: '12/17/2023',
+      days_left_client: 'OK',
+      carrier: 'Remona',
+      tva: 'No',
+      date_of_order_sale: '11/3/2023',
+      invoice_status: 'Received',
+      cmr: 'Yes',
+      carrier_invoice_nr: '2023-03166',
+      date_of_carrier_invoice: '11/17/2023',
+      payment_term_carrier: '60',
+      due_date_carrier: '1/16/2024',
+      days_left_carrier: '-24',
+      carrier_payment_status: 'Not Payed',
+      order_price: 1500,
+      selling_price: 1250,
+      revenue: 250,
+      recommended_selling: '',
+    },
+    {
+      job_status: 'Open',
+      order_number: '202311004',
+      client: 'Tracer',
+      client_reference: 'TT301133',
+      client_payment_status: 'Received',
+      invoice_number_telax: '20230126',
+      telax_invoice_status: 'Sent',
+      date_of_order: '11/2/2023',
+      date_client_invoice: '11/7/2023',
+      payment_term: '45',
+      due_date_client: '12/22/2023',
+      days_left_client: 'OK',
+      carrier: 'Rosteka',
+      tva: 'No',
+      date_of_order_sale: '11/2/2023',
+      invoice_status: 'Received',
+      cmr: 'Yes',
+      carrier_invoice_nr: 'REK010910',
+      date_of_carrier_invoice: '11/20/2023',
+      payment_term_carrier: '60',
+      due_date_carrier: '1/19/2024',
+      days_left_carrier: '-21',
+      carrier_payment_status: 'Not Payed',
+      order_price: 1550,
+      selling_price: 1400,
+      revenue: 150,
+      recommended_selling: '',
+    },
+  ];
 }
