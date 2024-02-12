@@ -558,11 +558,19 @@
       Download All Available Docs
     </button>
     <div class="loading_points">
-      <form [formGroup]="LoadingPointsForm" (ngSubmit)="loadingPointsSubmit()" id="LoadingPointsForm">
+      <form
+        [formGroup]="LoadingPointsForm"
+        (ngSubmit)="loadingPointsSubmit()"
+        id="LoadingPointsForm"
+      >
         <mat-form-field *ngIf="LoadingPointsForm.controls.type as control">
           <mat-label>Type</mat-label>
           <mat-select [formControl]="control">
-            <mat-option *ngFor="let type of loadingPointsTypes" [value]="type">
+            <mat-option
+              *ngFor="let type of loadingPointsTypes"
+              [value]="type"
+              [style.font-size.px]="10"
+            >
               {{ type }}
             </mat-option>
           </mat-select>
@@ -573,7 +581,11 @@
         <mat-form-field *ngIf="LoadingPointsForm.controls.nation as control">
           <mat-label>Nation</mat-label>
           <mat-select [formControl]="control">
-            <mat-option *ngFor="let code of countries" [value]="code">
+            <mat-option
+              *ngFor="let code of countries"
+              [value]="code"
+              [style.font-size.px]="10"
+            >
               {{ code }}
             </mat-option>
           </mat-select>
@@ -611,13 +623,17 @@
             >Company Name is required
           </mat-error>
         </mat-form-field>
-        <mat-form-field *ngIf="LoadingPointsForm.controls.date as control">
+        <mat-form-field
+          *ngIf="LoadingPointsForm.controls.date as control"
+          [style.width.px]="110"
+        >
           <mat-label>Date</mat-label>
           <input
             matInput
             [matDatepicker]="picker1"
             [formControl]="control"
             readonly
+            [style.width.px]="100"
           />
           <mat-datepicker-toggle
             matIconSuffix
@@ -630,6 +646,7 @@
         </mat-form-field>
         <mat-checkbox
           [formControl]="this.LoadingPointsForm.controls.fixed_times"
+          [style.font-size.px]="10"
           >Fixed times</mat-checkbox
         >
         <div
@@ -637,6 +654,7 @@
           *ngIf="this.LoadingPointsForm.controls.fixed_times.value"
         >
           <mat-form-field *ngIf="LoadingPointsForm.controls.hours as control">
+            <mat-label>Hours</mat-label>
             <input
               matInput
               type="number"
@@ -651,6 +669,7 @@
             </mat-error>
           </mat-form-field>
           <mat-form-field *ngIf="LoadingPointsForm.controls.minutes as control">
+            <mat-label>Minutes</mat-label>
             <input
               matInput
               type="number"
@@ -665,9 +684,10 @@
             </mat-error>
           </mat-form-field>
           <mat-form-field *ngIf="LoadingPointsForm.controls.period as control">
+            <mat-label>AM/PM</mat-label>
             <mat-select [formControl]="control">
-              <mat-option value="AM">AM</mat-option>
-              <mat-option value="PM">PM</mat-option>
+              <mat-option value="AM" [style.font-size.px]="10">AM</mat-option>
+              <mat-option value="PM" [style.font-size.px]="10">PM</mat-option>
             </mat-select>
             <mat-error *ngIf="control.hasError('required')">
               Period is required
@@ -682,6 +702,7 @@
             <mat-option
               *ngFor="let trailerType of loadingPointsTrailerTypes"
               [value]="trailerType"
+              [style.font-size.px]="10"
             >
               {{ trailerType }}
             </mat-option>
@@ -696,6 +717,7 @@
             <mat-option
               *ngFor="let status of loadingPointsStatus"
               [value]="LoadingPointsStatus[status]"
+              [style.font-size.px]="10"
             >
               {{ status }}
             </mat-option>
@@ -710,6 +732,7 @@
             <mat-option
               *ngFor="let status of loadingPointsStatus"
               [value]="LoadingPointsStatus[status]"
+              [style.font-size.px]="10"
             >
               {{ status }}
             </mat-option>
@@ -723,12 +746,14 @@
             LoadingPointsForm.controls.trailer_type.value === 'Frigo' &&
             LoadingPointsForm.controls.temperature as control
           "
+          [style.width.px]="110"
         >
           <mat-label>Temperature</mat-label>
           <mat-select [formControl]="control">
             <mat-option
               *ngFor="let status of loadingPointsStatus"
               [value]="LoadingPointsStatus[status]"
+              [style.font-size.px]="10"
             >
               {{ status }}
             </mat-option>

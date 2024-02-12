@@ -54,9 +54,42 @@
         mat-form-field,
         mat-checkbox,
         .TimePicker{
-          width: 150px;
-          margin: 20px 15px 0 0;
+          width: 80px;
+          margin: 20px 10px 0 0;
         }
+
+        mat-form-field ::ng-deep .mat-mdc-floating-label,
+        mat-form-field ::ng-deep .mat-mdc-input-element,
+        mat-form-field ::ng-deep .mat-mdc-form-field-error,
+        mat-select ::ng-deep .mat-mdc-select-value-text{
+          font-size: 9px;
+        }
+
+        mat-form-field ::ng-deep .mat-mdc-input-element::-webkit-inner-spin-button,
+        mat-form-field ::ng-deep .mat-mdc-input-element::-webkit-outer-spin-button {
+          -webkit-appearance: none;
+          margin: 0;
+        }
+
+
+        mat-form-field ::ng-deep .mat-mdc-input-element {
+          -moz-appearance: textfield;
+        }
+
+        mat-form-field ::ng-deep .mdc-floating-label,
+        mat-form-field ::ng-deep .mat-mdc-select-value {
+          overflow: visible;
+          white-space: pre-wrap;
+        }
+
+        mat-form-field ::ng-deep .mat-mdc-form-field-icon-suffix {
+          transform: scale(0.75);
+        }
+
+        mat-checkbox {
+          transform: scale(0.75);
+        }
+
 
         .TimePicker {
           display: inline-flex;
@@ -64,7 +97,10 @@
           width: inherit;
           mat-form-field {
             margin: 0;
-            width: 90px;
+            width: 45px;
+          }
+          mat-form-field:last-child {
+            width: 50px;
           }
         }
       }
