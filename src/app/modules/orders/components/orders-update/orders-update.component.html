@@ -3,303 +3,83 @@
   (submit$)="submit().subscribe()"
   formTitle="Edit Order"
   submitTitle="Save"
+  [disableGrid]="true"
   [module]="module"
   [history]="item()?.history"
 >
-  <div class="row">
-    <mat-form-field *ngIf="form.controls.internal_order_id as control">
-      <mat-label>Order number</mat-label>
-      <input matInput [formControl]="control" readonly />
+  <div class="order_edit_form">
+    <div class="row">
+      <mat-form-field *ngIf="form.controls.internal_order_id as control">
+        <mat-label>Order number</mat-label>
+        <input matInput [formControl]="control" readonly />
+        <mat-error *ngIf="control.hasError('required')"
+          >This field is <b>required</b></mat-error
+        >
+      </mat-form-field>
+      <button color="primary" mat-icon-button type="button">
+        <mat-icon fontIcon="file_copy"></mat-icon>
+      </button>
+    </div>
+
+    <mat-form-field *ngIf="form.controls.status as control">
+      <mat-label>Order Status</mat-label>
+      <mat-select
+        [formControl]="control"
+        (selectionChange)="orderChangeStatus()"
+      >
+        <mat-option
+          *ngFor="let status of statusSelections()"
+          [value]="status.id"
+        >
+          {{ status.name }}
+        </mat-option>
+      </mat-select>
       <mat-error *ngIf="control.hasError('required')"
         >This field is <b>required</b></mat-error
       >
     </mat-form-field>
-    <button color="primary" mat-icon-button type="button">
-      <mat-icon fontIcon="file_copy"></mat-icon>
-    </button>
-  </div>
 
-  <mat-form-field *ngIf="form.controls.status as control">
-    <mat-label>Order Status</mat-label>
-    <mat-select [formControl]="control" (selectionChange)="orderChangeStatus()">
-      <mat-option *ngFor="let status of statusSelections()" [value]="status.id">
-        {{ status.name }}
-      </mat-option>
-    </mat-select>
-    <mat-error *ngIf="control.hasError('required')"
-      >This field is <b>required</b></mat-error
-    >
-  </mat-form-field>
-
-  <div
-    class="draft_status"
-    *ngIf="form.controls.status.value === OrderStatuses.DRAFT"
-  >
-    <div class="row row--equal">
-      <mat-form-field *ngIf="form.controls.first_loading_date as control">
-        <mat-label>First Loading Date</mat-label>
-        <input
-          matInput
-          [matDatepicker]="picker1"
-          [formControl]="control"
-          readonly
-        />
-        <mat-datepicker-toggle
-          matIconSuffix
-          [for]="picker1"
-        ></mat-datepicker-toggle>
-        <mat-datepicker #picker1></mat-datepicker>
-      </mat-form-field>
-
-      <mat-form-field *ngIf="form.controls.last_uploading_date as control">
-        <mat-label>Last Uploading Date</mat-label>
-        <input
-          matInput
-          [matDatepicker]="picker2"
-          [formControl]="control"
-          readonly
-        />
-        <mat-datepicker-toggle
-          matIconSuffix
-          [for]="picker2"
-        ></mat-datepicker-toggle>
-        <mat-datepicker #picker2></mat-datepicker>
-      </mat-form-field>
-    </div>
-    <div class="row row--stroke">
-      <mat-form-field *ngIf="form.controls.order_price as control">
-        <mat-label>Price</mat-label>
-        <input type="number" matInput [formControl]="control" step="0.01" />
-      </mat-form-field>
-    </div>
-    <div class="row row--stroke">
-      <mat-form-field *ngIf="form.controls.disponent_id as control">
-        <mat-label>Disponent</mat-label>
-        <mat-select [formControl]="control">
-          <mat-option *ngFor="let user of users" [value]="user.id">
-            {{ user.name }}
-          </mat-option>
-        </mat-select>
-        <mat-error *ngIf="control.hasError('required')"
-          >This field is <b>required</b></mat-error
-        >
-      </mat-form-field>
-    </div>
-    <div class="row row--stroke">
-      <mat-form-field *ngIf="form.controls.delivery_responsible_id as control">
-        <mat-label>Delivery Responsible(Verfolger)</mat-label>
-        <mat-select [formControl]="control">
-          <mat-option *ngFor="let user of users" [value]="user.id">
-            {{ user.name }}
-          </mat-option>
-        </mat-select>
-        <mat-error *ngIf="control.hasError('required')"
-          >This field is <b>required</b></mat-error
-        >
-      </mat-form-field>
-    </div>
-    <div class="row">
-      <mat-form-field *ngIf="form.controls.loading_address as control">
-        <mat-label>Loading Address</mat-label>
-        <input matInput [formControl]="control" />
-      </mat-form-field>
-      <button color="primary" mat-icon-button type="button">
-        <mat-icon fontIcon="file_copy"></mat-icon>
-      </button>
-    </div>
-    <div class="row">
-      <mat-form-field *ngIf="form.controls.unloading_address as control">
-        <mat-label>Unloading Address</mat-label>
-        <input matInput [formControl]="control" />
-      </mat-form-field>
-      <button color="primary" mat-icon-button type="button">
-        <mat-icon fontIcon="file_copy"></mat-icon>
-      </button>
-    </div>
-  </div>
-
-  <div
-    class="open_status"
-    *ngIf="form.controls.status.value === OrderStatuses.OPEN"
-  >
-    <div class="row row--stroke">
-      <mat-form-field *ngIf="form.controls.order_price as control">
-        <mat-label>Price</mat-label>
-        <input type="number" matInput [formControl]="control" step="0.01" />
-      </mat-form-field>
-    </div>
-    <div class="row row--equal">
-      <mat-form-field *ngIf="form.controls.first_loading_date as control">
-        <mat-label>First Loading Date</mat-label>
-        <input
-          matInput
-          [matDatepicker]="picker1"
-          [formControl]="control"
-          readonly
-        />
-        <mat-datepicker-toggle
-          matIconSuffix
-          [for]="picker1"
-        ></mat-datepicker-toggle>
-        <mat-datepicker #picker1></mat-datepicker>
-      </mat-form-field>
-
-      <mat-form-field *ngIf="form.controls.last_uploading_date as control">
-        <mat-label>Last Uploading Date</mat-label>
-        <input
-          matInput
-          [matDatepicker]="picker2"
-          [formControl]="control"
-          readonly
-        />
-        <mat-datepicker-toggle
-          matIconSuffix
-          [for]="picker2"
-        ></mat-datepicker-toggle>
-        <mat-datepicker #picker2></mat-datepicker>
-      </mat-form-field>
-    </div>
-    <div class="row">
-      <mat-form-field *ngIf="form.controls.loading_address as control">
-        <mat-label>Loading Address</mat-label>
-        <input matInput [formControl]="control" />
-      </mat-form-field>
-      <button color="primary" mat-icon-button type="button">
-        <mat-icon fontIcon="file_copy"></mat-icon>
-      </button>
-    </div>
-    <div class="row">
-      <mat-form-field *ngIf="form.controls.unloading_address as control">
-        <mat-label>Unloading Address</mat-label>
-        <input matInput [formControl]="control" />
-      </mat-form-field>
-      <button color="primary" mat-icon-button type="button">
-        <mat-icon fontIcon="file_copy"></mat-icon>
-      </button>
-    </div>
-    <div class="row row--stroke">
-      <mat-form-field *ngIf="form.controls.cargo_type as control">
-        <mat-label>Cargo type</mat-label>
-        <input matInput [formControl]="control" />
-      </mat-form-field>
-    </div>
-    <div class="row row--stroke">
-      <mat-form-field *ngIf="form.controls.pallets as control">
-        <mat-label>Pallets</mat-label>
-        <input matInput [formControl]="control" />
-      </mat-form-field>
-    </div>
-    <div class="row row--stroke">
-      <mat-form-field *ngIf="form.controls.loading_type as control">
-        <mat-label>Loading type</mat-label>
-        <mat-select [formControl]="control" multiple>
-          <mat-option *ngFor="let type of orderLoadingType" [value]="type">{{
-            type
-          }}</mat-option>
-        </mat-select>
-      </mat-form-field>
-    </div>
-    <div class="row row--stroke">
-      <mat-form-field *ngIf="form.controls.trailer_type as control">
-        <mat-label>Trailer type</mat-label>
-        <input matInput [formControl]="control" />
-      </mat-form-field>
-    </div>
-  </div>
-
-  <div *ngIf="form.controls.status.value === OrderStatuses.IN_PROGRESS">
-    <div class="row row--stroke">
-      <mat-form-field *ngIf="form.controls.customer_id as control">
-        <mat-label>Carrier</mat-label>
-        <mat-select [formControl]="control">
-          <mat-option *ngFor="let customer of customers" [value]="customer.id">
-            ({{ customer.internal_company_id }}) {{ customer.company_name }}
-          </mat-option>
-        </mat-select>
-        <mat-error *ngIf="control.hasError('required')"
-          >This field is <b>required</b></mat-error
-        >
-      </mat-form-field>
-    </div>
-    <div class="row">
-      <mat-form-field *ngIf="form.controls.truck_number as control">
-        <mat-label>Truck Number</mat-label>
-        <input matInput [formControl]="control" />
-      </mat-form-field>
-      <button color="primary" mat-icon-button type="button">
-        <mat-icon fontIcon="file_copy"></mat-icon>
-      </button>
-    </div>
-
-    <div class="row">
-      <mat-form-field *ngIf="form.controls.trailer_number as control">
-        <mat-label>Trailer Number</mat-label>
-        <input matInput [formControl]="control" />
-      </mat-form-field>
-      <button color="primary" mat-icon-button type="button">
-        <mat-icon fontIcon="file_copy"></mat-icon>
-      </button>
-    </div>
-
-    <div class="row row--stroke">
-      <mat-form-field *ngIf="form.controls.empty_km as control">
-        <mat-label>Empty KM</mat-label>
-        <input matInput [formControl]="control" />
-      </mat-form-field>
-    </div>
-
-    <div class="row row--stroke">
-      <mat-form-field *ngIf="form.controls.total_km as control">
-        <mat-label>Total KM</mat-label>
-        <input matInput [formControl]="control" />
-      </mat-form-field>
-    </div>
-
-    <div class="row row--stroke">
-      <mat-form-field *ngIf="form.controls.carrier_price as control">
-        <mat-label>Carrier price</mat-label>
-        <input type="number" matInput [formControl]="control" step="0.01" />
-      </mat-form-field>
-    </div>
-  </div>
-
-  <div class="loaded/unloaded_status" *ngIf="changedStatus">
-    <div class="row row--stroke">
-      <mat-form-field *ngIf="form.controls.change_status as control">
-        <mat-label>Reason for status change</mat-label>
-        <input matInput [formControl]="control" />
-      </mat-form-field>
-    </div>
-    <app-file-upload
-      label="Attach change of status file"
-      [uploadedFileName]="item()?.change_status_file?.name"
-      (files$)="onFileChange('change_status_file', $event)"
-    ></app-file-upload>
-  </div>
-  <div *ngIf="form.controls.status.value === OrderStatuses.READY_FOR_INVOICE">
-    <div class="row row--stroke">
-      <mat-form-field *ngIf="form.controls.cmr as control">
-        <mat-label>CMR</mat-label>
-        <input matInput [formControl]="control" />
-      </mat-form-field>
-    </div>
-  </div>
-
-  <button
-    type="button"
-    mat-flat-button
-    color="basic"
-    (click)="show_full_form = true"
-    [disabled]="show_full_form"
-  >
-    Show full form
-  </button>
-
-  <div class="hiden_fields" *ngIf="show_full_form">
     <div
       class="draft_status"
-      *ngIf="form.controls.status.value !== OrderStatuses.DRAFT"
+      *ngIf="form.controls.status.value === OrderStatuses.DRAFT"
     >
+      <div class="row row--equal">
+        <mat-form-field *ngIf="form.controls.first_loading_date as control">
+          <mat-label>First Loading Date</mat-label>
+          <input
+            matInput
+            [matDatepicker]="picker1"
+            [formControl]="control"
+            readonly
+          />
+          <mat-datepicker-toggle
+            matIconSuffix
+            [for]="picker1"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #picker1></mat-datepicker>
+        </mat-form-field>
+
+        <mat-form-field *ngIf="form.controls.last_uploading_date as control">
+          <mat-label>Last Uploading Date</mat-label>
+          <input
+            matInput
+            [matDatepicker]="picker2"
+            [formControl]="control"
+            readonly
+          />
+          <mat-datepicker-toggle
+            matIconSuffix
+            [for]="picker2"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #picker2></mat-datepicker>
+        </mat-form-field>
+      </div>
+      <div class="row row--stroke">
+        <mat-form-field *ngIf="form.controls.order_price as control">
+          <mat-label>Price</mat-label>
+          <input type="number" matInput [formControl]="control" step="0.01" />
+        </mat-form-field>
+      </div>
       <div class="row row--stroke">
         <mat-form-field *ngIf="form.controls.disponent_id as control">
           <mat-label>Disponent</mat-label>
@@ -328,11 +108,29 @@
           >
         </mat-form-field>
       </div>
+      <div class="row">
+        <mat-form-field *ngIf="form.controls.loading_address as control">
+          <mat-label>Loading Address</mat-label>
+          <input matInput [formControl]="control" />
+        </mat-form-field>
+        <button color="primary" mat-icon-button type="button">
+          <mat-icon fontIcon="file_copy"></mat-icon>
+        </button>
+      </div>
+      <div class="row">
+        <mat-form-field *ngIf="form.controls.unloading_address as control">
+          <mat-label>Unloading Address</mat-label>
+          <input matInput [formControl]="control" />
+        </mat-form-field>
+        <button color="primary" mat-icon-button type="button">
+          <mat-icon fontIcon="file_copy"></mat-icon>
+        </button>
+      </div>
     </div>
 
     <div
       class="open_status"
-      *ngIf="form.controls.status.value !== OrderStatuses.OPEN"
+      *ngIf="form.controls.status.value === OrderStatuses.OPEN"
     >
       <div class="row row--stroke">
         <mat-form-field *ngIf="form.controls.order_price as control">
@@ -419,7 +217,7 @@
       </div>
     </div>
 
-    <div *ngIf="form.controls.status.value !== OrderStatuses.IN_PROGRESS">
+    <div *ngIf="form.controls.status.value === OrderStatuses.IN_PROGRESS">
       <div class="row row--stroke">
         <mat-form-field *ngIf="form.controls.customer_id as control">
           <mat-label>Carrier</mat-label>
@@ -478,7 +276,7 @@
       </div>
     </div>
 
-    <div class="loaded/unloaded_status" *ngIf="!changedStatus">
+    <div class="loaded/unloaded_status" *ngIf="changedStatus">
       <div class="row row--stroke">
         <mat-form-field *ngIf="form.controls.change_status as control">
           <mat-label>Reason for status change</mat-label>
@@ -491,7 +289,7 @@
         (files$)="onFileChange('change_status_file', $event)"
       ></app-file-upload>
     </div>
-    <div *ngIf="form.controls.status.value !== OrderStatuses.READY_FOR_INVOICE">
+    <div *ngIf="form.controls.status.value === OrderStatuses.READY_FOR_INVOICE">
       <div class="row row--stroke">
         <mat-form-field *ngIf="form.controls.cmr as control">
           <mat-label>CMR</mat-label>
@@ -499,350 +297,603 @@
         </mat-form-field>
       </div>
     </div>
+
+    <button
+      type="button"
+      mat-flat-button
+      color="basic"
+      (click)="show_full_form = true"
+      [disabled]="show_full_form"
+    >
+      Show full form
+    </button>
+
+    <div class="hiden_fields" *ngIf="show_full_form">
+      <div
+        class="draft_status"
+        *ngIf="form.controls.status.value !== OrderStatuses.DRAFT"
+      >
+        <div class="row row--stroke">
+          <mat-form-field *ngIf="form.controls.disponent_id as control">
+            <mat-label>Disponent</mat-label>
+            <mat-select [formControl]="control">
+              <mat-option *ngFor="let user of users" [value]="user.id">
+                {{ user.name }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="control.hasError('required')"
+              >This field is <b>required</b></mat-error
+            >
+          </mat-form-field>
+        </div>
+        <div class="row row--stroke">
+          <mat-form-field
+            *ngIf="form.controls.delivery_responsible_id as control"
+          >
+            <mat-label>Delivery Responsible(Verfolger)</mat-label>
+            <mat-select [formControl]="control">
+              <mat-option *ngFor="let user of users" [value]="user.id">
+                {{ user.name }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="control.hasError('required')"
+              >This field is <b>required</b></mat-error
+            >
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div
+        class="open_status"
+        *ngIf="form.controls.status.value !== OrderStatuses.OPEN"
+      >
+        <div class="row row--stroke">
+          <mat-form-field *ngIf="form.controls.order_price as control">
+            <mat-label>Price</mat-label>
+            <input type="number" matInput [formControl]="control" step="0.01" />
+          </mat-form-field>
+        </div>
+        <div class="row row--equal">
+          <mat-form-field *ngIf="form.controls.first_loading_date as control">
+            <mat-label>First Loading Date</mat-label>
+            <input
+              matInput
+              [matDatepicker]="picker1"
+              [formControl]="control"
+              readonly
+            />
+            <mat-datepicker-toggle
+              matIconSuffix
+              [for]="picker1"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #picker1></mat-datepicker>
+          </mat-form-field>
+
+          <mat-form-field *ngIf="form.controls.last_uploading_date as control">
+            <mat-label>Last Uploading Date</mat-label>
+            <input
+              matInput
+              [matDatepicker]="picker2"
+              [formControl]="control"
+              readonly
+            />
+            <mat-datepicker-toggle
+              matIconSuffix
+              [for]="picker2"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #picker2></mat-datepicker>
+          </mat-form-field>
+        </div>
+        <div class="row">
+          <mat-form-field *ngIf="form.controls.loading_address as control">
+            <mat-label>Loading Address</mat-label>
+            <input matInput [formControl]="control" />
+          </mat-form-field>
+          <button color="primary" mat-icon-button type="button">
+            <mat-icon fontIcon="file_copy"></mat-icon>
+          </button>
+        </div>
+        <div class="row">
+          <mat-form-field *ngIf="form.controls.unloading_address as control">
+            <mat-label>Unloading Address</mat-label>
+            <input matInput [formControl]="control" />
+          </mat-form-field>
+          <button color="primary" mat-icon-button type="button">
+            <mat-icon fontIcon="file_copy"></mat-icon>
+          </button>
+        </div>
+        <div class="row row--stroke">
+          <mat-form-field *ngIf="form.controls.cargo_type as control">
+            <mat-label>Cargo type</mat-label>
+            <input matInput [formControl]="control" />
+          </mat-form-field>
+        </div>
+        <div class="row row--stroke">
+          <mat-form-field *ngIf="form.controls.pallets as control">
+            <mat-label>Pallets</mat-label>
+            <input matInput [formControl]="control" />
+          </mat-form-field>
+        </div>
+        <div class="row row--stroke">
+          <mat-form-field *ngIf="form.controls.loading_type as control">
+            <mat-label>Loading type</mat-label>
+            <mat-select [formControl]="control" multiple>
+              <mat-option
+                *ngFor="let type of orderLoadingType"
+                [value]="type"
+                >{{ type }}</mat-option
+              >
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="row row--stroke">
+          <mat-form-field *ngIf="form.controls.trailer_type as control">
+            <mat-label>Trailer type</mat-label>
+            <input matInput [formControl]="control" />
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div *ngIf="form.controls.status.value !== OrderStatuses.IN_PROGRESS">
+        <div class="row row--stroke">
+          <mat-form-field *ngIf="form.controls.customer_id as control">
+            <mat-label>Carrier</mat-label>
+            <mat-select [formControl]="control">
+              <mat-option
+                *ngFor="let customer of customers"
+                [value]="customer.id"
+              >
+                ({{ customer.internal_company_id }}) {{ customer.company_name }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="control.hasError('required')"
+              >This field is <b>required</b></mat-error
+            >
+          </mat-form-field>
+        </div>
+        <div class="row">
+          <mat-form-field *ngIf="form.controls.truck_number as control">
+            <mat-label>Truck Number</mat-label>
+            <input matInput [formControl]="control" />
+          </mat-form-field>
+          <button color="primary" mat-icon-button type="button">
+            <mat-icon fontIcon="file_copy"></mat-icon>
+          </button>
+        </div>
+
+        <div class="row">
+          <mat-form-field *ngIf="form.controls.trailer_number as control">
+            <mat-label>Trailer Number</mat-label>
+            <input matInput [formControl]="control" />
+          </mat-form-field>
+          <button color="primary" mat-icon-button type="button">
+            <mat-icon fontIcon="file_copy"></mat-icon>
+          </button>
+        </div>
+
+        <div class="row row--stroke">
+          <mat-form-field *ngIf="form.controls.empty_km as control">
+            <mat-label>Empty KM</mat-label>
+            <input matInput [formControl]="control" />
+          </mat-form-field>
+        </div>
+
+        <div class="row row--stroke">
+          <mat-form-field *ngIf="form.controls.total_km as control">
+            <mat-label>Total KM</mat-label>
+            <input matInput [formControl]="control" />
+          </mat-form-field>
+        </div>
+
+        <div class="row row--stroke">
+          <mat-form-field *ngIf="form.controls.carrier_price as control">
+            <mat-label>Carrier price</mat-label>
+            <input type="number" matInput [formControl]="control" step="0.01" />
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="loaded/unloaded_status" *ngIf="!changedStatus">
+        <div class="row row--stroke">
+          <mat-form-field *ngIf="form.controls.change_status as control">
+            <mat-label>Reason for status change</mat-label>
+            <input matInput [formControl]="control" />
+          </mat-form-field>
+        </div>
+        <app-file-upload
+          label="Attach change of status file"
+          [uploadedFileName]="item()?.change_status_file?.name"
+          (files$)="onFileChange('change_status_file', $event)"
+        ></app-file-upload>
+      </div>
+      <div
+        *ngIf="form.controls.status.value !== OrderStatuses.READY_FOR_INVOICE"
+      >
+        <div class="row row--stroke">
+          <mat-form-field *ngIf="form.controls.cmr as control">
+            <mat-label>CMR</mat-label>
+            <input matInput [formControl]="control" />
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+    <mat-grid-list cols="1" rowHeight="60px">
+      <mat-grid-tile>
+        <app-file-upload
+          label="Attach Order"
+          [uploadedFileName]="item()?.order_file?.name"
+          (files$)="onFileChange('order_file', $event)"
+        ></app-file-upload>
+      </mat-grid-tile>
+      <mat-grid-tile>
+        <app-file-upload
+          label="Attach CMR"
+          [uploadedFileName]="item()?.cmr_file?.name"
+          (files$)="onFileChange('cmr_file', $event)"
+        ></app-file-upload>
+      </mat-grid-tile>
+      <mat-grid-tile>
+        <app-file-upload
+          label="Attach Pallets"
+          [uploadedFileName]="item()?.pallets_file?.name"
+          (files$)="onFileChange('pallets_file', $event)"
+          [disabled]="true"
+        ></app-file-upload>
+      </mat-grid-tile>
+      <mat-grid-tile>
+        <app-file-upload
+          label="Attach Invoice"
+          [uploadedFileName]="item()?.invoice_file?.name"
+          (files$)="onFileChange('invoice_file', $event)"
+        ></app-file-upload>
+      </mat-grid-tile>
+    </mat-grid-list>
+    <button
+      type="button"
+      mat-flat-button
+      color="accent"
+      class="download-docs"
+      (click)="downloadAll()"
+    >
+      Download All Available Docs
+    </button>
+    <div class="loading_points">
+      <form
+        [formGroup]="LoadingPointsForm"
+        (ngSubmit)="loadingPointsSubmit()"
+        id="LoadingPointsForm"
+      >
+        <mat-form-field *ngIf="LoadingPointsForm.controls.type as control">
+          <mat-label>Type</mat-label>
+          <mat-select [formControl]="control">
+            <mat-option
+              *ngFor="let type of loadingPointsTypes"
+              [value]="type"
+              [style.font-size.px]="10"
+            >
+              {{ type }}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="control.hasError('required')"
+            >Type is required
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field *ngIf="LoadingPointsForm.controls.nation as control">
+          <mat-label>Nation</mat-label>
+          <mat-select [formControl]="control">
+            <mat-option
+              *ngFor="let code of countries"
+              [value]="code"
+              [style.font-size.px]="10"
+            >
+              {{ code }}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="control.hasError('required')"
+            >Nation is required
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field *ngIf="LoadingPointsForm.controls.zip_code as control">
+          <mat-label>Zip Code</mat-label>
+          <input matInput [formControl]="control" />
+          <mat-error *ngIf="control.hasError('required')"
+            >Zip Code is required
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field *ngIf="LoadingPointsForm.controls.city as control">
+          <mat-label>City</mat-label>
+          <input matInput [formControl]="control" />
+          <mat-error *ngIf="control.hasError('required')"
+            >City is required
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field *ngIf="LoadingPointsForm.controls.address as control">
+          <mat-label>Address</mat-label>
+          <input matInput [formControl]="control" />
+          <mat-error *ngIf="control.hasError('required')"
+            >Address is required
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field
+          *ngIf="LoadingPointsForm.controls.company_name as control"
+        >
+          <mat-label>Company Name</mat-label>
+          <input matInput [formControl]="control" />
+          <mat-error *ngIf="control.hasError('required')"
+            >Company Name is required
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field
+          *ngIf="LoadingPointsForm.controls.date as control"
+          [style.width.px]="110"
+        >
+          <mat-label>Date</mat-label>
+          <input
+            matInput
+            [matDatepicker]="picker1"
+            [formControl]="control"
+            readonly
+            [style.width.px]="100"
+          />
+          <mat-datepicker-toggle
+            matIconSuffix
+            [for]="picker1"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #picker1></mat-datepicker>
+          <mat-error *ngIf="control.hasError('required')"
+            >Date is required</mat-error
+          >
+        </mat-form-field>
+        <mat-checkbox
+          [formControl]="this.LoadingPointsForm.controls.fixed_times"
+          [style.font-size.px]="10"
+          >Fixed times</mat-checkbox
+        >
+        <div
+          class="TimePicker"
+          *ngIf="this.LoadingPointsForm.controls.fixed_times.value"
+        >
+          <mat-form-field *ngIf="LoadingPointsForm.controls.hours as control">
+            <mat-label>Hours</mat-label>
+            <input
+              matInput
+              type="number"
+              min="01"
+              max="12"
+              [value]="control.value | number: '2.0-0'"
+              [formControl]="control"
+              maxlength="2"
+            />
+            <mat-error *ngIf="control.hasError('required')">
+              Hours is required
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field *ngIf="LoadingPointsForm.controls.minutes as control">
+            <mat-label>Minutes</mat-label>
+            <input
+              matInput
+              type="number"
+              min="00"
+              max="59"
+              [value]="control.value | number: '2.0-0'"
+              [formControl]="control"
+              maxlength="2"
+            />
+            <mat-error *ngIf="control.hasError('required')">
+              Minutes is required
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field *ngIf="LoadingPointsForm.controls.period as control">
+            <mat-label>AM/PM</mat-label>
+            <mat-select [formControl]="control">
+              <mat-option value="AM" [style.font-size.px]="10">AM</mat-option>
+              <mat-option value="PM" [style.font-size.px]="10">PM</mat-option>
+            </mat-select>
+            <mat-error *ngIf="control.hasError('required')">
+              Period is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <mat-form-field
+          *ngIf="LoadingPointsForm.controls.trailer_type as control"
+        >
+          <mat-label>Trailer Type</mat-label>
+          <mat-select [formControl]="control">
+            <mat-option
+              *ngFor="let trailerType of loadingPointsTrailerTypes"
+              [value]="trailerType"
+              [style.font-size.px]="10"
+            >
+              {{ trailerType }}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="control.hasError('required')"
+            >Trailer Type is required
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field *ngIf="LoadingPointsForm.controls.adr as control">
+          <mat-label>ADR</mat-label>
+          <mat-select [formControl]="control">
+            <mat-option
+              *ngFor="let status of loadingPointsStatus"
+              [value]="LoadingPointsStatus[status]"
+              [style.font-size.px]="10"
+            >
+              {{ status }}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="control.hasError('required')"
+            >ADR is required
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field *ngIf="LoadingPointsForm.controls.pallets as control">
+          <mat-label>Pallets</mat-label>
+          <mat-select [formControl]="control">
+            <mat-option
+              *ngFor="let status of loadingPointsStatus"
+              [value]="LoadingPointsStatus[status]"
+              [style.font-size.px]="10"
+            >
+              {{ status }}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="control.hasError('required')"
+            >Pallets is required
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field
+          *ngIf="
+            LoadingPointsForm.controls.trailer_type.value === 'Frigo' &&
+            LoadingPointsForm.controls.temperature as control
+          "
+          [style.width.px]="110"
+        >
+          <mat-label>Temperature</mat-label>
+          <mat-select [formControl]="control">
+            <mat-option
+              *ngFor="let status of loadingPointsStatus"
+              [value]="LoadingPointsStatus[status]"
+              [style.font-size.px]="10"
+            >
+              {{ status }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field
+          *ngIf="
+            LoadingPointsForm.controls.temperature.value &&
+            LoadingPointsForm.controls.temperature_value as control
+          "
+        >
+          <mat-label>Temperature value</mat-label>
+          <input type="number" step="0.01" matInput [formControl]="control" />
+        </mat-form-field>
+        <mat-form-field *ngIf="LoadingPointsForm.controls.weight as control">
+          <mat-label>Weight</mat-label>
+          <input matInput [formControl]="control" />
+          <mat-error *ngIf="control.hasError('required')"
+            >NetWeight is required
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field
+          *ngIf="
+            LoadingPointsForm.controls.type.value ===
+              LoadingPointsType.Unloading &&
+            LoadingPointsForm.controls.unloading_reference as control
+          "
+        >
+          <mat-label>Unloading reference</mat-label>
+          <input matInput [formControl]="control" />
+          <mat-error *ngIf="control.hasError('required')"
+            >Unloading refrence is required</mat-error
+          >
+        </mat-form-field>
+        <mat-form-field
+          *ngIf="
+            LoadingPointsForm.controls.type.value ===
+              LoadingPointsType.Loading &&
+            LoadingPointsForm.controls.loading_reference as control
+          "
+        >
+          <mat-label>Loading reference</mat-label>
+          <input matInput [formControl]="control" />
+          <mat-error *ngIf="control.hasError('required')"
+            >Loading refrence is required</mat-error
+          >
+        </mat-form-field>
+        <mat-form-field *ngIf="LoadingPointsForm.controls.notes as control">
+          <mat-label>Notes</mat-label>
+          <input matInput [formControl]="control" />
+        </mat-form-field>
+      </form>
+      <div class="row">
+        <button
+          type="submit"
+          mat-flat-button
+          color="primary"
+          [disabled]="loading"
+          *ngIf="!edit"
+          form="LoadingPointsForm"
+        >
+          Add
+        </button>
+        <button
+          type="button"
+          mat-flat-button
+          color="primary"
+          [disabled]="loading"
+          *ngIf="edit"
+          (click)="sendEditLoadingPoint()"
+        >
+          Save
+        </button>
+      </div>
+      <div class="row">
+        <table mat-table [dataSource]="dataSource">
+          <ng-container matColumnDef="Type">
+            <th mat-header-cell *matHeaderCellDef>Type</th>
+            <td mat-cell *matCellDef="let element">
+              {{ element.type }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="Nation">
+            <th mat-header-cell *matHeaderCellDef>Nation</th>
+            <td mat-cell *matCellDef="let element">
+              {{ element.nation }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="Zip Code">
+            <th mat-header-cell *matHeaderCellDef>Zip Code</th>
+            <td mat-cell *matCellDef="let element">
+              {{ element.zip_code }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="City">
+            <th mat-header-cell *matHeaderCellDef>City</th>
+            <td mat-cell *matCellDef="let element">
+              {{ element.city }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="Weight">
+            <th mat-header-cell *matHeaderCellDef>Weight</th>
+            <td mat-cell *matCellDef="let element">
+              {{ element.weight }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="Date">
+            <th mat-header-cell *matHeaderCellDef>Date</th>
+            <td mat-cell *matCellDef="let element">
+              {{ element.date | date: "MM/dd/yyyy" }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="Edit">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let element">
+              <button
+                type="button"
+                mat-icon-button
+                (click)="editLoadingPoint(element)"
+              >
+                <mat-icon>edit</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="Delete">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let element">
+              <button
+                type="button"
+                mat-icon-button
+                (click)="deleteLoadingPoint(element)"
+              >
+                <mat-icon>delete</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        </table>
+      </div>
+    </div>
   </div>
-  <mat-grid-list cols="1" rowHeight="60px">
-    <mat-grid-tile>
-      <app-file-upload
-        label="Attach Order"
-        [uploadedFileName]="item()?.order_file?.name"
-        (files$)="onFileChange('order_file', $event)"
-      ></app-file-upload>
-    </mat-grid-tile>
-    <mat-grid-tile>
-      <app-file-upload
-        label="Attach CMR"
-        [uploadedFileName]="item()?.cmr_file?.name"
-        (files$)="onFileChange('cmr_file', $event)"
-      ></app-file-upload>
-    </mat-grid-tile>
-    <mat-grid-tile>
-      <app-file-upload
-        label="Attach Pallets"
-        [uploadedFileName]="item()?.pallets_file?.name"
-        (files$)="onFileChange('pallets_file', $event)"
-        [disabled]="true"
-      ></app-file-upload>
-    </mat-grid-tile>
-    <mat-grid-tile>
-      <app-file-upload
-        label="Attach Invoice"
-        [uploadedFileName]="item()?.invoice_file?.name"
-        (files$)="onFileChange('invoice_file', $event)"
-      ></app-file-upload>
-    </mat-grid-tile>
-  </mat-grid-list>
-  <button
-    type="button"
-    mat-flat-button
-    color="accent"
-    class="download-docs"
-    (click)="downloadAll()"
-  >
-    Download All Available Docs
-  </button>
 </app-edit-form>
-<div class="loading_points">
-  <form [formGroup]="LoadingPointsForm" (ngSubmit)="loadingPointsSubmit()">
-    <mat-form-field *ngIf="LoadingPointsForm.controls.type as control">
-      <mat-label>Type</mat-label>
-      <mat-select [formControl]="control">
-        <mat-option *ngFor="let type of loadingPointsTypes" [value]="type">
-          {{ type }}
-        </mat-option>
-      </mat-select>
-      <mat-error *ngIf="control.hasError('required')"
-        >Type is required
-      </mat-error>
-    </mat-form-field>
-    <mat-form-field *ngIf="LoadingPointsForm.controls.nation as control">
-      <mat-label>Nation</mat-label>
-      <mat-select [formControl]="control">
-        <mat-option *ngFor="let code of countries" [value]="code">
-          {{ code }}
-        </mat-option>
-      </mat-select>
-      <mat-error *ngIf="control.hasError('required')"
-        >Nation is required
-      </mat-error>
-    </mat-form-field>
-    <mat-form-field *ngIf="LoadingPointsForm.controls.zip_code as control">
-      <mat-label>Zip Code</mat-label>
-      <input matInput [formControl]="control" />
-      <mat-error *ngIf="control.hasError('required')"
-        >Zip Code is required
-      </mat-error>
-    </mat-form-field>
-    <mat-form-field *ngIf="LoadingPointsForm.controls.city as control">
-      <mat-label>City</mat-label>
-      <input matInput [formControl]="control" />
-      <mat-error *ngIf="control.hasError('required')"
-        >City is required
-      </mat-error>
-    </mat-form-field>
-    <mat-form-field *ngIf="LoadingPointsForm.controls.address as control">
-      <mat-label>Address</mat-label>
-      <input matInput [formControl]="control" />
-      <mat-error *ngIf="control.hasError('required')"
-        >Address is required
-      </mat-error>
-    </mat-form-field>
-    <mat-form-field *ngIf="LoadingPointsForm.controls.company_name as control">
-      <mat-label>Company Name</mat-label>
-      <input matInput [formControl]="control" />
-      <mat-error *ngIf="control.hasError('required')"
-        >Company Name is required
-      </mat-error>
-    </mat-form-field>
-    <mat-form-field *ngIf="LoadingPointsForm.controls.date as control">
-      <mat-label>Date</mat-label>
-      <input
-        matInput
-        [matDatepicker]="picker1"
-        [formControl]="control"
-        readonly
-      />
-      <mat-datepicker-toggle
-        matIconSuffix
-        [for]="picker1"
-      ></mat-datepicker-toggle>
-      <mat-datepicker #picker1></mat-datepicker>
-      <mat-error *ngIf="control.hasError('required')"
-        >Date is required</mat-error
-      >
-    </mat-form-field>
-    <mat-checkbox [formControl]="this.LoadingPointsForm.controls.fixed_times"
-      >Fixed times</mat-checkbox
-    >
-    <div
-      class="TimePicker"
-      *ngIf="this.LoadingPointsForm.controls.fixed_times.value"
-    >
-      <mat-form-field *ngIf="LoadingPointsForm.controls.hours as control">
-        <input
-          matInput
-          type="number"
-          min="01"
-          max="12"
-          [value]="control.value | number: '2.0-0'"
-          [formControl]="control"
-          maxlength="2"
-        />
-        <mat-error *ngIf="control.hasError('required')">
-          Hours is required
-        </mat-error>
-      </mat-form-field>
-      <mat-form-field *ngIf="LoadingPointsForm.controls.minutes as control">
-        <input
-          matInput
-          type="number"
-          min="00"
-          max="59"
-          [value]="control.value | number: '2.0-0'"
-          [formControl]="control"
-          maxlength="2"
-        />
-        <mat-error *ngIf="control.hasError('required')">
-          Minutes is required
-        </mat-error>
-      </mat-form-field>
-      <mat-form-field *ngIf="LoadingPointsForm.controls.period as control">
-        <mat-select [formControl]="control">
-          <mat-option value="AM">AM</mat-option>
-          <mat-option value="PM">PM</mat-option>
-        </mat-select>
-        <mat-error *ngIf="control.hasError('required')">
-          Period is required
-        </mat-error>
-      </mat-form-field>
-    </div>
-    <mat-form-field *ngIf="LoadingPointsForm.controls.trailer_type as control">
-      <mat-label>Trailer Type</mat-label>
-      <mat-select [formControl]="control">
-        <mat-option
-          *ngFor="let trailerType of loadingPointsTrailerTypes"
-          [value]="trailerType"
-        >
-          {{ trailerType }}
-        </mat-option>
-      </mat-select>
-      <mat-error *ngIf="control.hasError('required')"
-        >Trailer Type is required
-      </mat-error>
-    </mat-form-field>
-    <mat-form-field *ngIf="LoadingPointsForm.controls.adr as control">
-      <mat-label>ADR</mat-label>
-      <mat-select [formControl]="control">
-        <mat-option
-          *ngFor="let status of loadingPointsStatus"
-          [value]="LoadingPointsStatus[status]"
-        >
-          {{ status }}
-        </mat-option>
-      </mat-select>
-      <mat-error *ngIf="control.hasError('required')"
-        >ADR is required
-      </mat-error>
-    </mat-form-field>
-    <mat-form-field *ngIf="LoadingPointsForm.controls.pallets as control">
-      <mat-label>Pallets</mat-label>
-      <mat-select [formControl]="control">
-        <mat-option
-          *ngFor="let status of loadingPointsStatus"
-          [value]="LoadingPointsStatus[status]"
-        >
-          {{ status }}
-        </mat-option>
-      </mat-select>
-      <mat-error *ngIf="control.hasError('required')"
-        >Pallets is required
-      </mat-error>
-    </mat-form-field>
-    <mat-form-field
-      *ngIf="
-        LoadingPointsForm.controls.trailer_type.value === 'Frigo' &&
-        LoadingPointsForm.controls.temperature as control
-      "
-    >
-      <mat-label>Temperature</mat-label>
-      <mat-select [formControl]="control">
-        <mat-option
-          *ngFor="let status of loadingPointsStatus"
-          [value]="LoadingPointsStatus[status]"
-        >
-          {{ status }}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
-    <mat-form-field
-      *ngIf="
-        LoadingPointsForm.controls.temperature.value &&
-        LoadingPointsForm.controls.temperature_value as control
-      "
-    >
-      <mat-label>Temperature value</mat-label>
-      <input type="number" step="0.01" matInput [formControl]="control" />
-    </mat-form-field>
-    <mat-form-field *ngIf="LoadingPointsForm.controls.weight as control">
-      <mat-label>Weight</mat-label>
-      <input matInput [formControl]="control" />
-      <mat-error *ngIf="control.hasError('required')"
-        >NetWeight is required
-      </mat-error>
-    </mat-form-field>
-    <mat-form-field
-      *ngIf="
-        LoadingPointsForm.controls.type.value === LoadingPointsType.Unloading &&
-        LoadingPointsForm.controls.unloading_reference as control
-      "
-    >
-      <mat-label>Unloading reference</mat-label>
-      <input matInput [formControl]="control" />
-      <mat-error *ngIf="control.hasError('required')"
-        >Unloading refrence is required</mat-error
-      >
-    </mat-form-field>
-    <mat-form-field
-      *ngIf="
-        LoadingPointsForm.controls.type.value === LoadingPointsType.Loading &&
-        LoadingPointsForm.controls.loading_reference as control
-      "
-    >
-      <mat-label>Loading reference</mat-label>
-      <input matInput [formControl]="control" />
-      <mat-error *ngIf="control.hasError('required')"
-        >Loading refrence is required</mat-error
-      >
-    </mat-form-field>
-    <mat-form-field *ngIf="LoadingPointsForm.controls.notes as control">
-      <mat-label>Notes</mat-label>
-      <input matInput [formControl]="control" />
-    </mat-form-field>
-    <div class="row">
-      <button
-        type="submit"
-        mat-flat-button
-        color="primary"
-        [disabled]="loading"
-        *ngIf="!edit"
-      >
-        Add
-      </button>
-      <button
-        type="button"
-        mat-flat-button
-        color="primary"
-        [disabled]="loading"
-        *ngIf="edit"
-        (click)="sendEditLoadingPoint()"
-      >
-        Save
-      </button>
-    </div>
-  </form>
-  <div class="row">
-    <table mat-table [dataSource]="dataSource">
-      <ng-container matColumnDef="Type">
-        <th mat-header-cell *matHeaderCellDef>Type</th>
-        <td mat-cell *matCellDef="let element">
-          {{ element.type }}
-        </td>
-      </ng-container>
-      <ng-container matColumnDef="Nation">
-        <th mat-header-cell *matHeaderCellDef>Nation</th>
-        <td mat-cell *matCellDef="let element">
-          {{ element.nation }}
-        </td>
-      </ng-container>
-      <ng-container matColumnDef="Zip Code">
-        <th mat-header-cell *matHeaderCellDef>Zip Code</th>
-        <td mat-cell *matCellDef="let element">
-          {{ element.zip_code }}
-        </td>
-      </ng-container>
-      <ng-container matColumnDef="City">
-        <th mat-header-cell *matHeaderCellDef>City</th>
-        <td mat-cell *matCellDef="let element">
-          {{ element.city }}
-        </td>
-      </ng-container>
-      <ng-container matColumnDef="Weight">
-        <th mat-header-cell *matHeaderCellDef>Weight</th>
-        <td mat-cell *matCellDef="let element">
-          {{ element.weight }}
-        </td>
-      </ng-container>
-      <ng-container matColumnDef="Date">
-        <th mat-header-cell *matHeaderCellDef>Date</th>
-        <td mat-cell *matCellDef="let element">
-          {{ element.date | date: "MM/dd/yyyy" }}
-        </td>
-      </ng-container>
-      <ng-container matColumnDef="Edit">
-        <th mat-header-cell *matHeaderCellDef></th>
-        <td mat-cell *matCellDef="let element">
-          <button
-            type="button"
-            mat-icon-button
-            (click)="editLoadingPoint(element)"
-          >
-            <mat-icon>edit</mat-icon>
-          </button>
-        </td>
-      </ng-container>
-      <ng-container matColumnDef="Delete">
-        <th mat-header-cell *matHeaderCellDef></th>
-        <td mat-cell *matCellDef="let element">
-          <button
-            type="button"
-            mat-icon-button
-            (click)="deleteLoadingPoint(element)"
-          >
-            <mat-icon>delete</mat-icon>
-          </button>
-        </td>
-      </ng-container>
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-    </table>
-  </div>
-</div>
