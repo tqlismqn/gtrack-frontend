@@ -1,1 +1,12 @@
 <p>dashboard works!</p>
+<table mat-table [dataSource]="dataSource">
+  <ng-container
+    *ngFor="let keyColumn of keysColumns"
+    [matColumnDef]="Columns[keyColumn]"
+  >
+    <th mat-header-cell *matHeaderCellDef>{{ Columns[keyColumn] }}</th>
+    <td mat-cell *matCellDef="let element">{{ element[keyColumn] }}</td>
+  </ng-container>
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+</table>
