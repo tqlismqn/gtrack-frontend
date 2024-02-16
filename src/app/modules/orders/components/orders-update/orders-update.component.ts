@@ -15,8 +15,6 @@ import {
 } from '../../../base-module/components/edit-component/edit-component.component';
 import { ActivatedRoute } from '@angular/router';
 import {
-  LoadingPointsStatus,
-  LoadingPointsStatusArray,
   LoadingPointsTrailerType,
   LoadingPointsTrailerTypeArray,
   LoadingPointsType,
@@ -28,8 +26,11 @@ import {
   OrderLoadingType,
   OrderLoadingTypeArray,
   OrderResponse,
-  OrderStatuses,
-} from '../../types/orders.type';
+  OrdersSelectStatus,
+  OrdersSelectStatusArray,
+  OrderStatuses, ReceviedSelectStatus, ReceviedSelectStatusArray, SelectStatus,
+  SelectStatusArray
+} from "../../types/orders.type";
 import { OrdersService } from '../../services/orders.service';
 import { CustomersService } from '../../../customers/services/customers.service';
 import { Nameable } from '../../../base-module/types/nameable.type';
@@ -61,6 +62,16 @@ interface OrdersEditForm {
   empty_km: FormControl<string | null>;
   total_km: FormControl<string | null>;
   carrier_price: FormControl<number | null>;
+  client_reference: FormControl<string | null>;
+  telax_invoice_status: FormControl<boolean | null>;
+  telax_invoice_due_date: FormControl<string>;
+  telax_invoice_days_left: FormControl<number>;
+  tva: FormControl<boolean>;
+  date_of_order_sale: FormControl<string | null>;
+  carrier_invoice_status: FormControl<boolean | null>;
+  carrier_invoice_nr: FormControl<string | null>;
+  carrier_invoice_due_date: FormControl<string>;
+  carrier_invoice_day_left: FormControl<number>;
 }
 
 interface OrderStatusSelection extends Nameable {
@@ -154,8 +165,9 @@ export class OrdersUpdateComponent
   selectedLoadingPoint!: OrderLoadingPoints;
   loadingPointsTypes = LoadingPointsTypeArray;
   loadingPointsTrailerTypes = LoadingPointsTrailerTypeArray;
-  loadingPointsStatus = LoadingPointsStatusArray;
+  selectStatusArray = SelectStatusArray;
   orderLoadingType = OrderLoadingTypeArray;
+  receviedSelectStatusArray = ReceviedSelectStatusArray;
   changedStatus: boolean = false;
   customers: CustomerSelections = [];
   customers$ = new EventEmitter<CustomerSelections>();
@@ -204,6 +216,36 @@ export class OrdersUpdateComponent
     empty_km: new FormControl<string | null>(''),
     total_km: new FormControl<string | null>(''),
     carrier_price: new FormControl<number | null>(0),
+    client_reference: new FormControl<string | null>(''),
+    telax_invoice_status: new FormControl<boolean | null>(false),
+    telax_invoice_due_date: new FormControl<string>(new Date().toISOString(), {
+      validators: [Validators.required],
+      nonNullable: true,
+    }),
+    telax_invoice_days_left: new FormControl<number>(0, {
+      validators: [Validators.required],
+      nonNullable: true,
+    }),
+    tva: new FormControl<boolean>(false, {
+      validators: [Validators.required],
+      nonNullable: true,
+    }),
+    date_of_order_sale: new FormControl<string | null>(
+      new Date().toISOString(),
+    ),
+    carrier_invoice_status: new FormControl<boolean | null>(false),
+    carrier_invoice_nr: new FormControl<string | null>(''),
+    carrier_invoice_due_date: new FormControl<string>(
+      new Date().toISOString(),
+      {
+        validators: [Validators.required],
+        nonNullable: true,
+      },
+    ),
+    carrier_invoice_day_left: new FormControl<number>(0, {
+      validators: [Validators.required],
+      nonNullable: true,
+    }),
   });
 
   status = signal<OrderStatuses>(OrderStatuses.DRAFT);
@@ -254,6 +296,18 @@ export class OrdersUpdateComponent
         this.LoadingPointsForm.controls.minutes.setValue(null);
         this.LoadingPointsForm.controls.period.setValue('AM');
       }
+    });
+    this.form.controls.telax_invoice_due_date.valueChanges.subscribe(() => {
+      this.form.controls.telax_invoice_days_left.setValue(
+        this.calculateDaysLeft(this.form.controls.telax_invoice_due_date.value),
+      );
+    });
+    this.form.controls.carrier_invoice_due_date.valueChanges.subscribe(() => {
+      this.form.controls.carrier_invoice_day_left.setValue(
+        this.calculateDaysLeft(
+          this.form.controls.carrier_invoice_due_date.value,
+        ),
+      );
     });
   }
   dataSource: MatTableDataSource<OrderLoadingPoints>;
@@ -351,10 +405,46 @@ export class OrdersUpdateComponent
     this.form.controls.empty_km.setValue(item.empty_km ?? null);
     this.form.controls.total_km.setValue(item.total_km ?? null);
     this.form.controls.carrier_price.setValue(item.carrier_price ?? null);
+    this.form.controls.client_reference.setValue(item.client_reference ?? null);
+    this.form.controls.telax_invoice_status.setValue(
+      item.telax_invoice_status ?? false,
+    );
+    this.form.controls.telax_invoice_due_date.setValue(
+      item.telax_invoice_due_date,
+    );
+    this.form.controls.telax_invoice_days_left.setValue(
+      item.telax_invoice_days_left ??
+        this.calculateDaysLeft(this.form.controls.telax_invoice_due_date.value),
+    );
+    this.form.controls.tva.setValue(item.tva ?? false);
+    this.form.controls.date_of_order_sale.setValue(
+      item.date_of_order_sale ?? null,
+    );
+    this.form.controls.carrier_invoice_status.setValue(
+      item.carrier_invoice_status ?? false,
+    );
+    this.form.controls.carrier_invoice_nr.setValue(
+      item.carrier_invoice_nr ?? null,
+    );
+    this.form.controls.carrier_invoice_due_date.setValue(
+      item.carrier_invoice_due_date,
+    );
+    this.form.controls.carrier_invoice_day_left.setValue(
+      item.carrier_invoice_day_left ??
+        this.calculateDaysLeft(
+          this.form.controls.carrier_invoice_due_date.value,
+        ),
+    );
     this.status.set(item.status.id);
     this.dataSource = new MatTableDataSource<OrderLoadingPoints>(
       item.loading_points_info || [],
     );
+  }
+
+  calculateDaysLeft(date: string) {
+    const currentDate = new Date();
+    const diffTime = new Date(date).getTime() - currentDate.getTime();
+    return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
   }
 
   orderChangeStatus() {
@@ -594,9 +684,10 @@ export class OrdersUpdateComponent
         },
       });
   }
-
-  protected readonly LoadingPointsStatusArray = LoadingPointsStatusArray;
-  protected readonly LoadingPointsStatus = LoadingPointsStatus;
   protected readonly LoadingPointsType = LoadingPointsType;
   protected readonly OrderStatuses = OrderStatuses;
+  protected readonly OrdersSelectStatusArray = OrdersSelectStatusArray;
+  protected readonly OrdersSelectStatus = OrdersSelectStatus;
+  protected readonly SelectStatus = SelectStatus;
+  protected readonly ReceviedSelectStatus = ReceviedSelectStatus;
 }

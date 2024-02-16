@@ -298,6 +298,125 @@
       </div>
     </div>
 
+    <div>
+      <div class="row row--stroke">
+        <mat-form-field *ngIf="form.controls.client_reference as control">
+          <mat-label>Client reference</mat-label>
+          <input matInput [formControl]="control" />
+        </mat-form-field>
+      </div>
+      <div class="row row--stroke">
+        <mat-form-field *ngIf="form.controls.telax_invoice_status as control">
+          <mat-label>TELAX Invoice Status</mat-label>
+          <mat-select [formControl]="control">
+            <mat-option
+              *ngFor="let status of OrdersSelectStatusArray"
+              [value]="OrdersSelectStatus[status]"
+            >
+              {{ status }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="row row--stroke">
+        <mat-form-field *ngIf="form.controls.telax_invoice_due_date as control">
+          <mat-label>TELAX Invoice Due Date</mat-label>
+          <input
+            matInput
+            [matDatepicker]="picker1"
+            [formControl]="control"
+            readonly
+          />
+          <mat-datepicker-toggle
+            matIconSuffix
+            [for]="picker1"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #picker1></mat-datepicker>
+        </mat-form-field>
+      </div>
+      <div class="row row--stroke">
+        <mat-form-field
+          *ngIf="form.controls.telax_invoice_days_left as control"
+        >
+          <mat-label>Days left</mat-label>
+          <input matInput [formControl]="control" readonly />
+        </mat-form-field>
+      </div>
+      <div class="row row--stroke">
+        <mat-form-field *ngIf="form.controls.tva as control">
+          <mat-label>TVA 21%</mat-label>
+          <mat-select [formControl]="control">
+            <mat-option
+              *ngFor="let status of selectStatusArray"
+              [value]="SelectStatus[status]"
+            >
+              {{ status }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="row row--stroke">
+        <mat-form-field *ngIf="form.controls.date_of_order_sale as control">
+          <mat-label>Date of order sale</mat-label>
+          <input
+            matInput
+            [matDatepicker]="picker1"
+            [formControl]="control"
+            readonly
+          />
+          <mat-datepicker-toggle
+            matIconSuffix
+            [for]="picker1"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #picker1></mat-datepicker>
+        </mat-form-field>
+      </div>
+      <div class="row row--stroke">
+        <mat-form-field *ngIf="form.controls.carrier_invoice_status as control">
+          <mat-label>Carrier Invoice Status</mat-label>
+          <mat-select [formControl]="control">
+            <mat-option
+              *ngFor="let status of receviedSelectStatusArray"
+              [value]="ReceviedSelectStatus[status]"
+              >{{ status }}</mat-option
+            >
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="row row--stroke">
+        <mat-form-field *ngIf="form.controls.carrier_invoice_nr as control">
+          <mat-label>Carrier Invoice Nr.</mat-label>
+          <input matInput [formControl]="control" />
+        </mat-form-field>
+      </div>
+      <div class="row row--stroke">
+        <mat-form-field
+          *ngIf="form.controls.carrier_invoice_due_date as control"
+        >
+          <mat-label>Carrier Invoice Due Date</mat-label>
+          <input
+            matInput
+            [matDatepicker]="picker1"
+            [formControl]="control"
+            readonly
+          />
+          <mat-datepicker-toggle
+            matIconSuffix
+            [for]="picker1"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #picker1></mat-datepicker>
+        </mat-form-field>
+      </div>
+      <div class="row row--stroke">
+        <mat-form-field
+          *ngIf="form.controls.carrier_invoice_day_left as control"
+        >
+          <mat-label>Carrier Invoice Days left</mat-label>
+          <input matInput [formControl]="control" readonly />
+        </mat-form-field>
+      </div>
+    </div>
+
     <button
       type="button"
       mat-flat-button
@@ -715,8 +834,8 @@
           <mat-label>ADR</mat-label>
           <mat-select [formControl]="control">
             <mat-option
-              *ngFor="let status of loadingPointsStatus"
-              [value]="LoadingPointsStatus[status]"
+              *ngFor="let status of selectStatusArray"
+              [value]="SelectStatus[status]"
               [style.font-size.px]="10"
             >
               {{ status }}
@@ -730,8 +849,8 @@
           <mat-label>Pallets</mat-label>
           <mat-select [formControl]="control">
             <mat-option
-              *ngFor="let status of loadingPointsStatus"
-              [value]="LoadingPointsStatus[status]"
+              *ngFor="let status of selectStatusArray"
+              [value]="SelectStatus[status]"
               [style.font-size.px]="10"
             >
               {{ status }}
@@ -751,8 +870,8 @@
           <mat-label>Temperature</mat-label>
           <mat-select [formControl]="control">
             <mat-option
-              *ngFor="let status of loadingPointsStatus"
-              [value]="LoadingPointsStatus[status]"
+              *ngFor="let status of selectStatusArray"
+              [value]="SelectStatus[status]"
               [style.font-size.px]="10"
             >
               {{ status }}

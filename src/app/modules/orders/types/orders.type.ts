@@ -40,6 +40,16 @@ export interface OrderResponse extends ModuleBaseResponse {
   empty_km?: string;
   total_km?: string;
   carrier_price?: number;
+  client_reference?: string;
+  telax_invoice_status?: boolean;
+  telax_invoice_due_date: string;
+  telax_invoice_days_left?: number;
+  tva: boolean;
+  date_of_order_sale?: string;
+  carrier_invoice_status?: boolean;
+  carrier_invoice_nr?: string;
+  carrier_invoice_due_date: string;
+  carrier_invoice_day_left: number;
 }
 
 export interface Order extends ModuleBase {
@@ -73,6 +83,16 @@ export interface Order extends ModuleBase {
   empty_km?: string;
   total_km?: string;
   carrier_price?: number;
+  client_reference?: string;
+  telax_invoice_status?: boolean;
+  telax_invoice_due_date: string;
+  telax_invoice_days_left?: number;
+  tva: boolean;
+  date_of_order_sale?: string;
+  carrier_invoice_status?: boolean;
+  carrier_invoice_nr?: string;
+  carrier_invoice_due_date: string;
+  carrier_invoice_day_left: number;
 }
 
 export interface OrderFrontendStatus extends Nameable {
@@ -133,9 +153,19 @@ export enum LoadingPointsTrailerType {
   Other = 'Other',
 }
 
-export const LoadingPointsStatus: { [key: string]: boolean } = {
+export const SelectStatus: { [key: string]: boolean } = {
   YES: true,
   NO: false,
+};
+
+export const OrdersSelectStatus: { [key: string]: boolean } = {
+  Sent: true,
+  'Not Sent': false,
+};
+
+export const ReceviedSelectStatus: { [key: string]: boolean } = {
+  Received: true,
+  'Not Received': false,
 };
 
 export enum OrderLoadingType {
@@ -150,7 +180,11 @@ export const LoadingPointsTrailerTypeArray = Object.values(
   LoadingPointsTrailerType,
 );
 
-export const LoadingPointsStatusArray = Object.keys(LoadingPointsStatus);
+export const SelectStatusArray = Object.keys(SelectStatus);
+
+export const OrdersSelectStatusArray = Object.keys(OrdersSelectStatus);
+
+export const ReceviedSelectStatusArray = Object.keys(ReceviedSelectStatus);
 
 export const OrderLoadingTypeArray = Object.values(OrderLoadingType);
 export interface OrderDocument {
@@ -164,3 +198,6 @@ export type OrderDocumentType =
   | 'invoice_file'
   | 'pallets_file'
   | 'change_status_file';
+
+export class LoadingPointsStatus {
+}
