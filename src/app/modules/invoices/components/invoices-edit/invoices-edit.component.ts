@@ -160,7 +160,11 @@ export class InvoicesEditComponent
   protected readonly termsOfPayment = Object.values(termsOfPayment);
 
   get currencies() {
-    return this.deps.companyService.currencies ?? [];
+    return (
+      this.deps.companyService.currencies?.map((currency: any) => {
+        return currency.ID;
+      }) ?? []
+    );
   }
 
   updateFormView(item: Invoice) {
@@ -311,7 +315,12 @@ export class InvoicesEditComponent
         }),
       )
       .subscribe();
-
+    this.form.controls.currency.valueChanges.subscribe(() => {
+      const rate: any = this.deps.companyService.currencies?.find(
+        (currency: any) => currency.ID === this.form.controls.currency.value,
+      );
+      this.form.controls.course.setValue(rate.rate);
+    });
     this.setItemsListeners();
   }
 
@@ -349,6 +358,7 @@ export class InvoicesEditComponent
     let result = super.formValid;
     this.bankGroup.markAllAsTouched();
     result &&= this.bankGroup.valid;
+    this.bankCollectionComponent?.cdr.markForCheck();
     this.cdr.markForCheck();
     return result;
   }
