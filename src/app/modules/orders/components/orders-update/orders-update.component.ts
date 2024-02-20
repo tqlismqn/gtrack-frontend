@@ -328,9 +328,17 @@ export class OrdersUpdateComponent
         this.calculateRevenue(),
       )
     });
+    this.form.controls.tva.valueChanges.subscribe(() => {
+      this.form.controls.recommended_selling_price.setValue(
+        this.calculateRecommendedSellingPrice(),
+      )
+    });
     this.form.controls.selling_price.valueChanges.subscribe(() => {
       this.form.controls.revenue.setValue(
         this.calculateRevenue(),
+      )
+      this.form.controls.recommended_selling_price.setValue(
+        this.calculateRecommendedSellingPrice(),
       )
     });
   }
@@ -462,7 +470,7 @@ export class OrdersUpdateComponent
     this.form.controls.carrier_payment_status.setValue(item.carrier_payment_status ?? false);
     this.form.controls.selling_price.setValue(item.selling_price ?? null);
     this.form.controls.revenue.setValue(item.revenue ?? this.calculateRevenue());
-    this.form.controls.recommended_selling_price.setValue(item.recommended_selling_price ?? null);
+    this.form.controls.recommended_selling_price.setValue(item.recommended_selling_price ?? this.calculateRecommendedSellingPrice());
     this.status.set(item.status.id);
     this.dataSource = new MatTableDataSource<OrderLoadingPoints>(
       item.loading_points_info || [],
@@ -477,6 +485,18 @@ export class OrdersUpdateComponent
 
   calculateRevenue() {
     return this.form.controls.order_price.value - (this.form.controls.selling_price.value ?? 0);
+  }
+
+  calculateRecommendedSellingPrice(): number {
+    let recommendedSellingPrice: number = Number(this.form.controls.selling_price.value) ?? 0;
+    if (this.form.controls.tva.value) {
+      recommendedSellingPrice += this.calculateTVA(recommendedSellingPrice);
+    }
+    return Number(recommendedSellingPrice.toFixed(2));
+  }
+
+  calculateTVA(selling_price:number): number{
+    return Number((selling_price * 0.21).toFixed(2));
   }
 
   orderChangeStatus() {
