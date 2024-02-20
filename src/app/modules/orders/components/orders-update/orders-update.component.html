@@ -415,6 +415,32 @@
           <input matInput [formControl]="control" readonly />
         </mat-form-field>
       </div>
+      <div class="row row--stroke">
+        <mat-form-field *ngIf="form.controls.carrier_payment_status as control">
+          <mat-label>Carrier payment status</mat-label>
+          <mat-select [formControl]="control">
+            <mat-option *ngFor="let status of paymentSelectStatusArray" [value]="PaymentSelectStatus[status]">{{ status }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="row row--stroke">
+        <mat-form-field *ngIf="form.controls.selling_price as control">
+          <mat-label>Selling Price</mat-label>
+          <input matInput [formControl]="control" type="number" step="0.01">
+        </mat-form-field>
+      </div>
+      <div class="row row--stroke">
+        <mat-form-field *ngIf="form.controls.revenue as control">
+          <mat-label>Revenue</mat-label>
+          <input matInput [formControl]="control" type="number" step="0.01">
+        </mat-form-field>
+      </div>
+      <div class="row row--stroke">
+        <mat-form-field *ngIf="form.controls.recommended_selling_price as control">
+          <mat-label> Recommended Selling Price+ TVA21%</mat-label>
+          <input matInput [formControl]="control" type="number" step="0.01">
+        </mat-form-field>
+      </div>
     </div>
 
     <button

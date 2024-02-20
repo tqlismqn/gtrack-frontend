@@ -28,7 +28,12 @@ import {
   OrderResponse,
   OrdersSelectStatus,
   OrdersSelectStatusArray,
-  OrderStatuses, ReceviedSelectStatus, ReceviedSelectStatusArray, SelectStatus,
+  OrderStatuses,
+  PaymentSelectStatus,
+  PaymentSelectStatusArray,
+  ReceviedSelectStatus,
+  ReceviedSelectStatusArray,
+  SelectStatus,
   SelectStatusArray
 } from "../../types/orders.type";
 import { OrdersService } from '../../services/orders.service';
@@ -72,6 +77,10 @@ interface OrdersEditForm {
   carrier_invoice_nr: FormControl<string | null>;
   carrier_invoice_due_date: FormControl<string>;
   carrier_invoice_day_left: FormControl<number>;
+  carrier_payment_status: FormControl<boolean | null>;
+  selling_price: FormControl<number | null>;
+  revenue: FormControl<number | null>;
+  recommended_selling_price: FormControl<number | null>;
 }
 
 interface OrderStatusSelection extends Nameable {
@@ -168,6 +177,7 @@ export class OrdersUpdateComponent
   selectStatusArray = SelectStatusArray;
   orderLoadingType = OrderLoadingTypeArray;
   receviedSelectStatusArray = ReceviedSelectStatusArray;
+  paymentSelectStatusArray = PaymentSelectStatusArray;
   changedStatus: boolean = false;
   customers: CustomerSelections = [];
   customers$ = new EventEmitter<CustomerSelections>();
@@ -246,6 +256,10 @@ export class OrdersUpdateComponent
       validators: [Validators.required],
       nonNullable: true,
     }),
+    carrier_payment_status: new FormControl<boolean | null>(false),
+    selling_price: new FormControl<number | null>(0),
+    revenue: new FormControl<number | null>(0),
+    recommended_selling_price: new FormControl<number | null>(0),
   });
 
   status = signal<OrderStatuses>(OrderStatuses.DRAFT);
@@ -308,6 +322,16 @@ export class OrdersUpdateComponent
           this.form.controls.carrier_invoice_due_date.value,
         ),
       );
+    });
+    this.form.controls.order_price.valueChanges.subscribe(() => {
+      this.form.controls.revenue.setValue(
+        this.calculateRevenue(),
+      )
+    });
+    this.form.controls.selling_price.valueChanges.subscribe(() => {
+      this.form.controls.revenue.setValue(
+        this.calculateRevenue(),
+      )
     });
   }
   dataSource: MatTableDataSource<OrderLoadingPoints>;
@@ -435,6 +459,10 @@ export class OrdersUpdateComponent
           this.form.controls.carrier_invoice_due_date.value,
         ),
     );
+    this.form.controls.carrier_payment_status.setValue(item.carrier_payment_status ?? false);
+    this.form.controls.selling_price.setValue(item.selling_price ?? null);
+    this.form.controls.revenue.setValue(item.revenue ?? this.calculateRevenue());
+    this.form.controls.recommended_selling_price.setValue(item.recommended_selling_price ?? null);
     this.status.set(item.status.id);
     this.dataSource = new MatTableDataSource<OrderLoadingPoints>(
       item.loading_points_info || [],
@@ -445,6 +473,10 @@ export class OrdersUpdateComponent
     const currentDate = new Date();
     const diffTime = new Date(date).getTime() - currentDate.getTime();
     return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  }
+
+  calculateRevenue() {
+    return this.form.controls.order_price.value - (this.form.controls.selling_price.value ?? 0);
   }
 
   orderChangeStatus() {
@@ -690,4 +722,5 @@ export class OrdersUpdateComponent
   protected readonly OrdersSelectStatus = OrdersSelectStatus;
   protected readonly SelectStatus = SelectStatus;
   protected readonly ReceviedSelectStatus = ReceviedSelectStatus;
+  protected readonly PaymentSelectStatus = PaymentSelectStatus;
 }

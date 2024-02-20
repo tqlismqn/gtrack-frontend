@@ -50,6 +50,10 @@ export interface OrderResponse extends ModuleBaseResponse {
   carrier_invoice_nr?: string;
   carrier_invoice_due_date: string;
   carrier_invoice_day_left: number;
+  carrier_payment_status?: boolean;
+  selling_price?: number;
+  revenue?: number;
+  recommended_selling_price?: number;
 }
 
 export interface Order extends ModuleBase {
@@ -93,6 +97,10 @@ export interface Order extends ModuleBase {
   carrier_invoice_nr?: string;
   carrier_invoice_due_date: string;
   carrier_invoice_day_left: number;
+  carrier_payment_status?: boolean;
+  selling_price?: number;
+  revenue?: number;
+  recommended_selling_price?: number;
 }
 
 export interface OrderFrontendStatus extends Nameable {
@@ -168,6 +176,11 @@ export const ReceviedSelectStatus: { [key: string]: boolean } = {
   'Not Received': false,
 };
 
+export const PaymentSelectStatus: { [key: string]: boolean} = {
+  Payed: true,
+  'Not Payed': false,
+}
+
 export enum OrderLoadingType {
   fixig_belts = 'Fixing belts',
   cover = 'Cover',
@@ -187,6 +200,8 @@ export const OrdersSelectStatusArray = Object.keys(OrdersSelectStatus);
 export const ReceviedSelectStatusArray = Object.keys(ReceviedSelectStatus);
 
 export const OrderLoadingTypeArray = Object.values(OrderLoadingType);
+
+export const PaymentSelectStatusArray = Object.keys(PaymentSelectStatus);
 export interface OrderDocument {
   name: string;
   id: string;
