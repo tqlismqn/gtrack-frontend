@@ -4,8 +4,8 @@ import {
   ChangeDetectorRef,
   Component,
   computed,
-  effect,
   OnInit,
+  TemplateRef,
   ViewChild,
 } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
@@ -37,6 +37,7 @@ import {
 } from '../../../customers/types/terms-of-payment.enum';
 import { environment } from '../../../../../environments/environment';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatDialog } from '@angular/material/dialog';
 
 interface InvoicesEditForm {
   order_id: FormControl<string | null>;
@@ -77,6 +78,8 @@ export class InvoicesEditComponent
   extends EditComponentComponent<InvoiceResponse, Invoice>
   implements OnInit, AfterViewInit
 {
+  @ViewChild('ConfirmDialogComponent', { static: true })
+  ConfirmDialogComponent?: TemplateRef<any>;
   constructor(
     protected override service: InvoicesService,
     deps: EditComponentDeps,
@@ -84,6 +87,7 @@ export class InvoicesEditComponent
     route: ActivatedRoute,
     protected bankCollectionService: BankCollectionService,
     protected snackBar: MatSnackBar,
+    protected dialog: MatDialog,
   ) {
     super(service, deps, cdr, route);
     const extras = this.deps.router.getCurrentNavigation()?.extras;
@@ -159,6 +163,8 @@ export class InvoicesEditComponent
 
   protected readonly termsOfPayment = Object.values(termsOfPayment);
 
+  invoiceItems?: [InvoiceItem];
+
   get currencies() {
     return (
       this.deps.companyService.currencies?.map((currency: any) => {
@@ -196,7 +202,6 @@ export class InvoicesEditComponent
 
     if (item.customer) {
       controls.client_id?.setValue(item.customer.internal_company_id);
-      controls.order_id.disable();
       controls.client_id.enable();
     }
 
@@ -259,12 +264,25 @@ export class InvoicesEditComponent
   onOrderSelect(id?: string | null) {
     if (!id) {
       this.form.controls.client_id.enable();
-      this.form.controls.client_id.setValue(null);
       return;
     }
 
     const order = this.service.orders().find((item) => item.id === id);
     if (order) {
+      if (this.form.controls.client_id && this.ConfirmDialogComponent) {
+        const dialogRef = this.dialog.open(this.ConfirmDialogComponent, {
+          width: '400px',
+          data: { message: 'Import data from order?' },
+        });
+        dialogRef.afterClosed().subscribe((result) => {
+          if (result) {
+            const order = this.service
+              .orders()
+              .find((order) => order.id === this.form.controls.order_id.value);
+            this.importDataFromOrder(order);
+          }
+        });
+      }
       this.form.controls.customer_id.setValue(null);
       this.form.controls.client_id.disable();
       this.updateOrderView(order);
@@ -283,7 +301,6 @@ export class InvoicesEditComponent
     );
     if (customer) {
       this.form.controls.order_id.setValue(null);
-      this.form.controls.order_id.disable();
       this.form.controls.customer_id.setValue(customer.id);
       this.updateCustomerView(customer);
     }
@@ -320,6 +337,9 @@ export class InvoicesEditComponent
         (currency: any) => currency.ID === this.form.controls.currency.value,
       );
       this.form.controls.course.setValue(rate.rate);
+    });
+    this.form.controls.customer_id.valueChanges.subscribe(() => {
+      this.service.readOrders(this.form.controls.customer_id.value);
     });
     this.setItemsListeners();
   }
@@ -366,6 +386,15 @@ export class InvoicesEditComponent
   protected override get values(): any {
     const values = super.values;
     delete values['internal_invoice_id'];
+    if (this.invoiceItems) {
+      return {
+        ...super.values,
+        bank: this.bankGroup.value,
+        order_id: this.form.controls.order_id.value,
+        customer_id: this.form.controls.customer_id.value,
+        items: this.invoiceItems,
+      };
+    }
 
     return {
       ...super.values,
@@ -460,17 +489,31 @@ export class InvoicesEditComponent
         const item = this.item();
         if (item) {
           this.fetchItem(item.id);
-          this.service.readOrders();
+          this.service.readOrders(item.customer_id ?? null);
         }
       });
   }
 
+  importDataFromOrder(order: Order | undefined) {
+    if (order) {
+      this.invoiceItems = [
+        {
+          id: 1,
+          description: `Transport Services, ${order.loading_address} - ${order.unloading_address}, Ref. #${order.internal_order_id}`,
+          quantity: 1,
+          price_per_item: order.order_price,
+          price_vat: order.order_price,
+          price: order.order_price,
+        },
+      ];
+    }
+  }
   override update(): Observable<Invoice | undefined> {
     return new Observable<Invoice | undefined>((subscriber) => {
       super.update().subscribe((data) => {
         subscriber.next(data);
         subscriber.complete();
-        this.service.readOrders();
+        this.service.readOrders(data?.customer_id ?? null);
       });
     });
   }
