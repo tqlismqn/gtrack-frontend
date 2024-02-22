@@ -38,20 +38,34 @@ export class InvoicesService extends BaseModuleService<
   orders = signal<Order[]>([]);
 
   protected initOrders() {
-    this.readOrders();
+    this.readOrders(null);
     merge(
       this.ordersService.created$,
       this.ordersService.updated$,
       this.ordersService.deleted$,
     ).subscribe(() => {
-      this.readOrders();
+      this.readOrders(null);
     });
   }
 
-  public readOrders() {
-    this.ordersService.read({}, false).subscribe(([data]) => {
-      this.orders.set(data);
-    });
+  public readOrders(customer_id: string | null) {
+    let search = undefined;
+    if (customer_id) {
+      search = {
+        field: 'customer_id',
+        value: customer_id,
+      };
+    }
+    this.ordersService
+      .read(
+        {
+          search: search,
+        },
+        false,
+      )
+      .subscribe(([data]) => {
+        this.orders.set(data);
+      });
   }
 
   customers: Customer[] = [];

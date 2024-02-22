@@ -6,17 +6,13 @@ import {
   EventEmitter,
   OnDestroy,
   OnInit,
-  ViewChild,
-} from '@angular/core';
-import { CompanyService } from '../../services/company.service';
-import {
-  AdminModules,
-  Modules,
-  SuperAdminModules,
-} from '../../constants/modules';
-import { PermissionAccessType } from '../../constants/permission-access';
-import { takeUntil, tap } from 'rxjs';
-import { AuthService } from '../../modules/auth/services/auth.service';
+  ViewChild
+} from "@angular/core";
+import { CompanyService } from "../../services/company.service";
+import { AdminModules, Modules, SuperAdminModules } from "../../constants/modules";
+import { PermissionAccessType } from "../../constants/permission-access";
+import { takeUntil, tap } from "rxjs";
+import { AuthService } from "../../modules/auth/services/auth.service";
 
 type Link = {
   name: string;
@@ -34,7 +30,6 @@ export class SidenavComponent implements OnInit, OnDestroy {
 
   superAdminContainer: Link[] = [];
   adminContainer: Link[] = [];
-  invoicesContainer: Link[] = [];
 
   destroy$ = new EventEmitter();
 
@@ -67,7 +62,6 @@ export class SidenavComponent implements OnInit, OnDestroy {
   checkPermissions() {
     this.links = [];
     this.adminContainer = [];
-    this.invoicesContainer = [];
     this.superAdminContainer = [];
     if (this.checkPermission(Modules.CUSTOMERS)) {
       this.links.push({
@@ -93,19 +87,10 @@ export class SidenavComponent implements OnInit, OnDestroy {
         link: 'settings',
       });
     }
-    if (this.checkPermission(Modules.INVOICES)) {
-      this.invoicesContainer.push({
+    if (this.checkPermission(Modules.INVOICES)){
+      this.links.push({
         name: 'Invoices',
         link: 'invoices',
-      });
-    }
-    if (
-      this.checkPermission(Modules.INVOICES) &&
-      this.checkPermission(Modules.ORDERS)
-    ) {
-      this.invoicesContainer.push({
-        name: 'Orders',
-        link: 'invoices-orders',
       });
     }
     if (this.auth.isAdmin) {

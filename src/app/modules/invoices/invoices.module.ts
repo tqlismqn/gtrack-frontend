@@ -15,6 +15,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { InvoicesOrdersTableComponent } from './components/invoices-orders-table/invoices-orders-table.component';
 import { InvoicesOrdersService } from './services/invoices-orders.service';
+import { MatDialogActions, MatDialogClose, MatDialogContent, MatDialogTitle } from "@angular/material/dialog";
 
 @NgModule({
   declarations: [
@@ -34,6 +35,10 @@ import { InvoicesOrdersService } from './services/invoices-orders.service';
     CustomersModule,
     MatButtonModule,
     MatTooltipModule,
+    MatDialogTitle,
+    MatDialogContent,
+    MatDialogActions,
+    MatDialogClose
   ],
   providers: [InvoicesService, InvoicesOrdersService],
 })
