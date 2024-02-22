@@ -1,8 +1,15 @@
 @use 'src/styles/includes/colors';
 
 :host {
-  background-color: #D6E2F3;
+  background-color: colors.$color-white;
+  .logo {
+    display: grid;
+    justify-content: center;
 
+    img {
+      width: 150px;
+    }
+  }
   @mixin sidenav-item {
     padding: 5px 32px;
     color: colors.$color-black;
@@ -13,14 +20,13 @@
     }
 
     &.active {
-      background-color: #9AB1D1;
-      border-left: 8px solid #5577A6;
+      background-color: #eaeaea;
+      border-left: 8px solid #f4f4f4;
       padding-left: 24px;
     }
   }
 
   .sidenav {
-    margin-top: 72px;
     display: grid;
 
     &__item {
@@ -30,7 +36,7 @@
     &__group {
       border-radius: 0;
       box-shadow: none;
-      background-color: #D6E2F3;
+      background-color: colors.$color-white;
 
       &__inner {
         display: grid;
