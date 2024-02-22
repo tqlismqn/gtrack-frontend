@@ -15,3 +15,67 @@ body {
 * {
   box-sizing: border-box;
 }
+
+:root {
+  .mat-mdc-icon-button {
+    --mdc-icon-button-icon-color: #000;
+  }
+
+  .mat-mdc-unelevated-button.mat-primary {
+    --mdc-filled-button-container-color: #0371ff;
+  }
+
+  .mat-mdc-unelevated-button.mat-accent,
+  .mat-mdc-unelevated-button.mat-warn{
+    --mdc-filled-button-container-color: #000;
+  }
+
+  .mat-mdc-option.mdc-list-item--selected:not(.mdc-list-item--disabled) .mdc-list-item__primary-text,
+  .mat-pseudo-checkbox-minimal.mat-pseudo-checkbox-checked::after, .mat-pseudo-checkbox-minimal.mat-pseudo-checkbox-indeterminate::after{
+    color: colors.$color-black;
+  }
+  .mat-pseudo-checkbox-full.mat-pseudo-checkbox-checked, .mat-pseudo-checkbox-full.mat-pseudo-checkbox-indeterminate {
+    background-color: colors.$color-black;
+  }
+
+  .mat-calendar-body-selected {
+    background-color: colors.$color-black;
+  }
+  .mdc-checkbox .mdc-checkbox__native-control:enabled:checked ~ .mdc-checkbox__background {
+    background-color: colors.$color-black;
+    border-color: colors.$color-black;
+  }
+
+  .mdc-checkbox:not(:disabled):active .mdc-checkbox__native-control:enabled:checked ~ .mdc-checkbox__background, .mdc-checkbox:not(:disabled):active .mdc-checkbox__native-control:enabled:indeterminate ~ .mdc-checkbox__background, .mdc-checkbox:not(:disabled):active .mdc-checkbox__native-control[data-indeterminate="true"]:enabled ~ .mdc-checkbox__background {
+    background-color: colors.$color-black;
+    border-color: colors.$color-black;
+  }
+
+  .mdc-checkbox:hover .mdc-checkbox__native-control:enabled:checked ~ .mdc-checkbox__background {
+    background-color: colors.$color-black;
+    border-color: colors.$color-black;
+  }
+
+  .mdc-checkbox .mdc-checkbox__native-control:enabled:focus:checked ~ .mdc-checkbox__background, .mdc-checkbox .mdc-checkbox__native-control:enabled:focus:indeterminate ~ .mdc-checkbox__background {
+    background-color: colors.$color-black;
+    border-color: colors.$color-black;
+  }
+
+  --mdc-filled-text-field-label-text-color: #000;
+  .mat-expansion-panel:not(.mat-expanded) .mat-expansion-panel-header:not([aria-disabled="true"]):hover {
+    background-color: #f7f7f7;
+  }
+
+  .mdc-text-field--filled:not(.mdc-text-field--disabled).mdc-text-field--focused .mdc-floating-label, .mdc-text-field--filled:not(.mdc-text-field--disabled).mdc-text-field--focused .mdc-floating-label--float-above {
+    color: colors.$color-black;
+  }
+
+  .mdc-text-field--filled:not(.mdc-text-field--disabled) .mdc-line-ripple::after {
+    border-bottom-color: colors.$color-black;
+  }
+
+
+  .mat-expansion-panel-body {
+    background-color: colors.$color-white;
+  }
+}
