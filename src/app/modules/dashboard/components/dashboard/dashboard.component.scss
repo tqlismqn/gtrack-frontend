@@ -1,7 +1,8 @@
-::ng-deep .content {
-  overflow-x: scroll;
-}
 :host {
+  .table-container {
+    max-width: 90vw;
+    overflow-x: auto;
+  }
   table {
     margin: 0 32px;
     th {
