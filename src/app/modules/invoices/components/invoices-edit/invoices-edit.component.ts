@@ -3,11 +3,14 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  computed,
+  computed, ElementRef,
   OnInit,
+  QueryList,
   TemplateRef,
   ViewChild,
-} from '@angular/core';
+  ViewChildren,
+  WritableSignal
+} from "@angular/core";
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import {
   EditComponentComponent,
@@ -80,8 +83,14 @@ export class InvoicesEditComponent
 {
   @ViewChild('ConfirmDialogComponent', { static: true })
   ConfirmDialogComponent?: TemplateRef<any>;
+
+  @ViewChildren(CustomersBankCollectionComponent)
+  bankCollectionComponents: QueryList<CustomersBankCollectionComponent> =
+    new QueryList<CustomersBankCollectionComponent>();
+
+  @ViewChild('ngModel') inputElements?: QueryList<ElementRef>;
   constructor(
-    protected override service: InvoicesService,
+    override service: InvoicesService,
     deps: EditComponentDeps,
     cdr: ChangeDetectorRef,
     route: ActivatedRoute,
@@ -100,6 +109,7 @@ export class InvoicesEditComponent
       this.cdr.markForCheck();
     }
   }
+
   override form = new FormGroup<InvoicesEditForm>({
     internal_invoice_id: new FormControl<string>('', {
       nonNullable: true,
@@ -165,6 +175,8 @@ export class InvoicesEditComponent
 
   invoiceItems?: [InvoiceItem];
 
+  bankForms: FormGroup<CustomerBankForm>[] = [];
+
   get currencies() {
     return (
       this.deps.companyService.currencies?.map((currency: any) => {
@@ -172,6 +184,15 @@ export class InvoicesEditComponent
       }) ?? []
     );
   }
+
+  get firstBank(): FormGroup<CustomerBankForm> | undefined {
+    return this.bankForms[0];
+  }
+
+  get otherBanks(): FormGroup<CustomerBankForm>[] | undefined {
+    return this.bankForms.slice(1);
+  }
+
 
   updateFormView(item: Invoice) {
     const controls = this.form.controls;
@@ -234,22 +255,15 @@ export class InvoicesEditComponent
     controls.accounting_email?.setValue(item.accounting_email);
     controls.client_id?.setValue(item.internal_company_id);
     controls.terms_of_payment?.setValue(item.terms_of_payment);
+    this.setBanks(item.banks);
     this.cdr.markForCheck();
   }
 
   @ViewChild('bankCollectionComponent')
   bankCollectionComponent?: CustomersBankCollectionComponent;
 
-  updateBankView(item: CustomerBank) {
-    const controls = this.bankGroup.controls;
-    controls.bank_template?.setValue(item.bank_template);
-    controls.bic?.setValue(item.bic);
-    controls.code?.setValue(item.code);
-    controls.name?.setValue(item.name);
-    controls.iban?.setValue(item.iban);
-    controls.currency?.setValue(item.currency);
-    this.bankCollectionComponent?.checkBankSelector();
-    this.cdr.markForCheck();
+  updateBankView(item: CustomerBank[]) {
+    this.setBanks(item);
   }
 
   getCompanyName(companyId: string) {
@@ -280,6 +294,10 @@ export class InvoicesEditComponent
               .orders()
               .find((order) => order.id === this.form.controls.order_id.value);
             this.importDataFromOrder(order);
+            if (this.invoiceItems) {
+              this.items = this.invoiceItems;
+              this.cdr.markForCheck();
+            }
           }
         });
       }
@@ -303,7 +321,122 @@ export class InvoicesEditComponent
       this.form.controls.order_id.setValue(null);
       this.form.controls.customer_id.setValue(customer.id);
       this.updateCustomerView(customer);
+
     }
+  }
+
+  protected getBankFormGroup(bank: CustomerBank): FormGroup<CustomerBankForm> {
+    return new FormGroup({
+      name: new FormControl(bank.name, {
+        nonNullable: true,
+        validators: [Validators.required],
+      }),
+      code: new FormControl(bank.code, {
+        nonNullable: true,
+      }),
+      iban: new FormControl(bank.iban, {
+        nonNullable: true,
+        validators: [Validators.required],
+      }),
+      bic: new FormControl(bank.bic, {
+        nonNullable: true,
+        validators: [Validators.required],
+      }),
+      currency: new FormControl(bank.currency, {
+        nonNullable: true,
+        validators: [Validators.required],
+      }),
+      bank_template: new FormControl(
+        {
+          bic: bank.bank_template.bic,
+          name: bank.bank_template.name,
+          id: bank.bank_template.id,
+          code: bank.bank_template.code,
+          address: bank.bank_template.address,
+          city: bank.bank_template.city,
+        },
+        {
+          nonNullable: true,
+          validators: [Validators.required],
+        },
+      ),
+    });
+  }
+
+  protected getEmptyBank(): CustomerBank {
+    return {
+      name: '',
+      code: '',
+      iban: '',
+      bic: '',
+      currency: '',
+      bank_template: {
+        name: '',
+        id: '',
+        bic: '',
+        code: '',
+        address: '',
+        city: '',
+      },
+    };
+  }
+
+  protected parseBanks(banks: CustomerBank[]): CustomerBank[] {
+    for (const bank of banks) {
+      if (!bank.bank_template) {
+        bank.bank_template = {
+          name: '',
+          id: '',
+          bic: '',
+          code: '',
+          address: '',
+          city: '',
+        };
+      }
+      if (!bank.bank_template.id) {
+        bank.bank_template.id = '';
+      }
+      if (!bank.bank_template.name) {
+        bank.bank_template.name = '';
+      }
+      if (!bank.bank_template.bic) {
+        bank.bank_template.bic = '';
+      }
+      if (!bank.bic) {
+        bank.bic = '';
+      }
+      if (!bank.name) {
+        bank.name = '';
+      }
+      if (!bank.iban) {
+        bank.iban = '';
+      }
+      if (!bank.code) {
+        bank.code = '';
+      }
+      if (!bank.currency) {
+        bank.currency = '';
+      }
+    }
+
+    return banks;
+  }
+
+  protected setBanks(banks: CustomerBank[]): void {
+    banks = this.parseBanks(banks);
+
+    if (banks.length === 0) {
+      banks.push(this.getEmptyBank());
+    }
+
+    this.bankForms = [];
+    for (const bank of banks) {
+      this.bankForms.push(this.getBankFormGroup(bank));
+    }
+  }
+
+  protected get banksValue() {
+    return this.bankForms.map((item) => item.value);
   }
 
   order = computed<Order | undefined>(() => {
@@ -319,6 +452,10 @@ export class InvoicesEditComponent
 
   override ngOnInit() {
     super.ngOnInit();
+
+    if (!this.bankForms || this.bankForms.length === 0) {
+      this.setBanks([]);
+    }
 
     merge(
       this.deps.companyService.companyChanged$,
@@ -376,9 +513,12 @@ export class InvoicesEditComponent
 
   protected override get formValid(): boolean {
     let result = super.formValid;
-    this.bankGroup.markAllAsTouched();
-    result &&= this.bankGroup.valid;
-    this.bankCollectionComponent?.cdr.markForCheck();
+    for (const bankComponent of this.bankCollectionComponents) {
+      const form = bankComponent.formGroup;
+      form.markAllAsTouched();
+      result &&= form.valid;
+      bankComponent.cdr.markForCheck();
+    }
     this.cdr.markForCheck();
     return result;
   }
@@ -389,7 +529,7 @@ export class InvoicesEditComponent
     if (this.invoiceItems) {
       return {
         ...super.values,
-        bank: this.bankGroup.value,
+        bank: this.banksValue,
         order_id: this.form.controls.order_id.value,
         customer_id: this.form.controls.customer_id.value,
         items: this.invoiceItems,
@@ -398,7 +538,7 @@ export class InvoicesEditComponent
 
     return {
       ...super.values,
-      bank: this.bankGroup.value,
+      bank: this.banksValue,
       order_id: this.form.controls.order_id.value,
       customer_id: this.form.controls.customer_id.value,
     };

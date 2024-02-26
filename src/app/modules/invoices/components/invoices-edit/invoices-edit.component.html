@@ -31,6 +31,23 @@
         </mat-select>
       </mat-form-field>
 
+      <mat-form-field *ngIf="form.controls.order_id as control">
+        <mat-label>Order</mat-label>
+        <mat-select
+          [formControl]="control"
+          (selectionChange)="onOrderSelect(control.value)"
+        >
+          <mat-option [value]="null">*Empty*</mat-option>
+          <mat-option
+            *ngFor="let order of this.service.orders()"
+            [value]="order.id"
+          >{{ order.internal_order_id }} ({{
+              order.customer?.company_name
+            }})</mat-option
+          >
+        </mat-select>
+      </mat-form-field>
+
       <mat-form-field *ngIf="form.controls.vat_id as control">
         <mat-label>Vat ID</mat-label>
         <input matInput [formControl]="control" />
@@ -63,22 +80,6 @@
         >
       </mat-form-field>
 
-      <mat-form-field *ngIf="form.controls.order_id as control">
-        <mat-label>Order</mat-label>
-        <mat-select
-          [formControl]="control"
-          (selectionChange)="onOrderSelect(control.value)"
-        >
-          <mat-option [value]="null">*Empty*</mat-option>
-          <mat-option
-            *ngFor="let order of this.service.orders()"
-            [value]="order.id"
-            >{{ order.internal_order_id }} ({{
-              order.customer?.company_name
-            }})</mat-option
-          >
-        </mat-select>
-      </mat-form-field>
       <ng-template #ConfirmDialogComponent let-data>
         <h2 mat-dialog-title>Import data from order</h2>
         <mat-dialog-content>
@@ -220,11 +221,26 @@
       <h2>Banking details</h2>
 
       <app-customers-bank-collection
+        *ngIf="firstBank"
         class="customers-bank-collection"
         #bankCollectionComponent
         [banks]="bankCollectionService.items()"
-        [formGroup]="bankGroup"
+        [formGroup]="firstBank"
       ></app-customers-bank-collection>
+
+      <div class="banking-details__other">
+        <div
+          class="banking-details__other__item"
+          *ngFor="let form of otherBanks; let i = index"
+        >
+          <h3>Bank {{ i + 2 }}</h3>
+          <app-customers-bank-collection
+            class="customers-bank-collection"
+            [formGroup]="form"
+            [banks]="bankCollectionService.items()"
+          ></app-customers-bank-collection>
+        </div>
+      </div>
 
       <div
         class="items"

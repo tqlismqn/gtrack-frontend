@@ -222,6 +222,10 @@ export abstract class EditComponentComponent<
   }
 
   protected get formValid(): boolean {
+    const element = document.querySelector('.ng-invalid');
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
     this.form.markAllAsTouched();
     return this.form.valid;
   }
