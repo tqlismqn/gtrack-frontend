@@ -28,7 +28,7 @@ export class InvoicesService extends BaseModuleService<
   constructor(
     deps: BaseModuleServiceDeps,
     protected ordersService: OrdersService,
-    protected customersService: CustomersService,
+    public customersService: CustomersService,
   ) {
     super(deps, Modules.INVOICES);
     this.initOrders();

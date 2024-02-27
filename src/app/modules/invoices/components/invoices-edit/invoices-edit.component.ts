@@ -3,7 +3,7 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  computed, ElementRef,
+  computed, ElementRef, Input,
   OnInit,
   QueryList,
   TemplateRef,
@@ -29,9 +29,9 @@ import {
   CustomerBankForm,
   CustomersBankCollectionComponent,
 } from '../../../customers/components/customers-bank-collection/customers-bank-collection.component';
-import { CustomerBank } from '../../../customers/types/customers.type';
+import { Customer, CustomerBank } from "../../../customers/types/customers.type";
 import { BankCollectionService } from '../../../../services/bank-collection.service';
-import { Observable, startWith, takeUntil, tap } from 'rxjs';
+import { Observable, ReplaySubject, startWith, takeUntil, tap } from "rxjs";
 import { merge } from 'rxjs';
 import { Order } from '../../../orders/types/orders.type';
 import {
@@ -41,6 +41,7 @@ import {
 import { environment } from '../../../../../environments/environment';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
+import { BankCollection } from "../../../super-admin/types/bank-collection";
 
 interface InvoicesEditForm {
   order_id: FormControl<string | null>;
@@ -88,7 +89,6 @@ export class InvoicesEditComponent
   bankCollectionComponents: QueryList<CustomersBankCollectionComponent> =
     new QueryList<CustomersBankCollectionComponent>();
 
-  @ViewChild('ngModel') inputElements?: QueryList<ElementRef>;
   constructor(
     override service: InvoicesService,
     deps: EditComponentDeps,
@@ -108,6 +108,7 @@ export class InvoicesEditComponent
       this.form.controls.client_id.disable();
       this.cdr.markForCheck();
     }
+    this.readCustomer(1);
   }
 
   override form = new FormGroup<InvoicesEditForm>({
@@ -177,6 +178,11 @@ export class InvoicesEditComponent
 
   bankForms: FormGroup<CustomerBankForm>[] = [];
 
+  clients?: Customer[];
+
+  clientFilterControl = new FormControl<string>('');
+  clientFiltred: ReplaySubject<Customer[]> = new ReplaySubject<Customer[]>(1);
+
   get currencies() {
     return (
       this.deps.companyService.currencies?.map((currency: any) => {
@@ -240,6 +246,7 @@ export class InvoicesEditComponent
     controls.first_loading_date?.setValue(item.first_loading_date);
     controls.last_uploading_date?.setValue(item.last_uploading_date);
     controls.pick_order_date?.setValue(item.created_at.toISOString());
+    controls.currency?.setValue(item.currency);
     this.cdr.markForCheck();
 
     if (item.customer) {
@@ -457,6 +464,16 @@ export class InvoicesEditComponent
       this.setBanks([]);
     }
 
+    this.clientFilterControl.valueChanges
+      .pipe(
+        takeUntil(this.destroy$),
+        startWith(null),
+        tap((value) => {
+          this.filterClient(value);
+        }),
+      )
+      .subscribe();
+
     merge(
       this.deps.companyService.companyChanged$,
       this.deps.companyService.companiesUpdated$,
@@ -479,6 +496,36 @@ export class InvoicesEditComponent
       this.service.readOrders(this.form.controls.customer_id.value);
     });
     this.setItemsListeners();
+  }
+
+  protected filterClient(value: string | null) {
+    if (!this.clients || this.clients.length === 0) {
+      return;
+    }
+
+    if (!value || value.length === 0) {
+      this.clientFiltred.next([...this.clients]);
+      return;
+    }
+
+    value = value.toLowerCase();
+    this.clientFiltred.next(
+      this.clients.filter((client) =>
+        !value ? true : this.getClientSearch(client).indexOf(value) > -1,
+      ),
+    );
+  }
+
+  protected getClientSearch(client: Customer) {
+    return `${client.company_name} ${client.internal_company_id}`.toLowerCase();
+  }
+
+  protected readCustomer(page: number) {
+    this.service.customersService
+      .read({ pagination: { page: page, limit: 50 } }, false)
+      .subscribe(([data]) => {
+        this.clients = data;
+      });
   }
 
   bankGroup: FormGroup<CustomerBankForm> = new FormGroup<CustomerBankForm>({

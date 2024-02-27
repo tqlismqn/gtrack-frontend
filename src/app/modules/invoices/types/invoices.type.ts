@@ -81,4 +81,5 @@ export type OrderFields = Pick<
   | 'created_at'
   | 'status'
   | 'order_price'
+  | 'currency'
 >;

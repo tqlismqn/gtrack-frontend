@@ -22,12 +22,28 @@
           [formControl]="control"
           (selectionChange)="onCustomerSelect(control.value)"
         >
-          <mat-option [value]="null">*Empty*</mat-option>
+          <mat-select-trigger>
+            {{ control.value }}
+          </mat-select-trigger>
+          <mat-option>
+            <ngx-mat-select-search
+              [formControl]="clientFilterControl"
+              placeholderLabel="Search"
+            ></ngx-mat-select-search>
+          </mat-option>
+          <mat-option [value]="null"> *Empty* </mat-option>
+<!--          <mat-option-->
+<!--            *ngFor="let customer of this.service.customers"-->
+<!--            [value]="customer.internal_company_id"-->
+<!--            >{{ customer.internal_company_id }} |-->
+<!--            {{ customer.company_name }}</mat-option-->
+<!--          >-->
           <mat-option
-            *ngFor="let customer of this.service.customers"
-            [value]="customer.internal_company_id"
-            >{{ customer.internal_company_id }}</mat-option
+            *ngFor="let customer of clientFiltred | async"
+            [value]="customer.id"
           >
+            {{ customer.internal_company_id }} | {{ customer.company_name }}
+          </mat-option>
         </mat-select>
       </mat-form-field>
 
