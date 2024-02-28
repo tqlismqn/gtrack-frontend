@@ -3,14 +3,13 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  computed, ElementRef, Input,
+  computed,
   OnInit,
   QueryList,
   TemplateRef,
   ViewChild,
   ViewChildren,
-  WritableSignal
-} from "@angular/core";
+} from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import {
   EditComponentComponent,
@@ -29,9 +28,12 @@ import {
   CustomerBankForm,
   CustomersBankCollectionComponent,
 } from '../../../customers/components/customers-bank-collection/customers-bank-collection.component';
-import { Customer, CustomerBank } from "../../../customers/types/customers.type";
+import {
+  Customer,
+  CustomerBank,
+} from '../../../customers/types/customers.type';
 import { BankCollectionService } from '../../../../services/bank-collection.service';
-import { Observable, ReplaySubject, startWith, takeUntil, tap } from "rxjs";
+import { Observable, ReplaySubject, startWith, takeUntil, tap } from 'rxjs';
 import { merge } from 'rxjs';
 import { Order } from '../../../orders/types/orders.type';
 import {
@@ -41,7 +43,7 @@ import {
 import { environment } from '../../../../../environments/environment';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
-import { BankCollection } from "../../../super-admin/types/bank-collection";
+import { MatSelect } from '@angular/material/select';
 
 interface InvoicesEditForm {
   order_id: FormControl<string | null>;
@@ -85,6 +87,8 @@ export class InvoicesEditComponent
   @ViewChild('ConfirmDialogComponent', { static: true })
   ConfirmDialogComponent?: TemplateRef<any>;
 
+  @ViewChild('clientID') clientID?: MatSelect;
+
   @ViewChildren(CustomersBankCollectionComponent)
   bankCollectionComponents: QueryList<CustomersBankCollectionComponent> =
     new QueryList<CustomersBankCollectionComponent>();
@@ -108,7 +112,7 @@ export class InvoicesEditComponent
       this.form.controls.client_id.disable();
       this.cdr.markForCheck();
     }
-    this.readCustomer(1);
+    this.readCustomer(this.clientPage);
   }
 
   override form = new FormGroup<InvoicesEditForm>({
@@ -178,7 +182,9 @@ export class InvoicesEditComponent
 
   bankForms: FormGroup<CustomerBankForm>[] = [];
 
-  clients?: Customer[];
+  clients: Customer[] = [];
+
+  clientPage: number = 1;
 
   clientFilterControl = new FormControl<string>('');
   clientFiltred: ReplaySubject<Customer[]> = new ReplaySubject<Customer[]>(1);
@@ -198,7 +204,6 @@ export class InvoicesEditComponent
   get otherBanks(): FormGroup<CustomerBankForm>[] | undefined {
     return this.bankForms.slice(1);
   }
-
 
   updateFormView(item: Invoice) {
     const controls = this.form.controls;
@@ -328,7 +333,6 @@ export class InvoicesEditComponent
       this.form.controls.order_id.setValue(null);
       this.form.controls.customer_id.setValue(customer.id);
       this.updateCustomerView(customer);
-
     }
   }
 
@@ -473,7 +477,6 @@ export class InvoicesEditComponent
         }),
       )
       .subscribe();
-
     merge(
       this.deps.companyService.companyChanged$,
       this.deps.companyService.companiesUpdated$,
@@ -499,21 +502,13 @@ export class InvoicesEditComponent
   }
 
   protected filterClient(value: string | null) {
-    if (!this.clients || this.clients.length === 0) {
-      return;
-    }
-
-    if (!value || value.length === 0) {
-      this.clientFiltred.next([...this.clients]);
+    if (!value || value.length < 2) {
+      this.readCustomer(1);
       return;
     }
 
     value = value.toLowerCase();
-    this.clientFiltred.next(
-      this.clients.filter((client) =>
-        !value ? true : this.getClientSearch(client).indexOf(value) > -1,
-      ),
-    );
+    this.searchCustomer(value);
   }
 
   protected getClientSearch(client: Customer) {
@@ -524,8 +519,32 @@ export class InvoicesEditComponent
     this.service.customersService
       .read({ pagination: { page: page, limit: 50 } }, false)
       .subscribe(([data]) => {
-        this.clients = data;
+        this.clients = [...this.clients, ...data];
+        this.cdr.markForCheck();
       });
+  }
+
+  protected searchCustomer(search: string) {
+    this.service.customersService
+      .read({ search: { field: 'company_name', value: search } }, false)
+      .subscribe(([data]) => {
+        this.clients = [...data];
+        this.cdr.markForCheck();
+      });
+  }
+
+  protected registerPanelScrollEvent() {
+    this.clientID?.panel.nativeElement.addEventListener(
+      'scrollend',
+      (event: Event) =>
+        this.onScroll(event, this.clientID?.panel.nativeElement),
+    );
+  }
+  protected onScroll(event: Event, element: any) {
+    if (element.scrollHeight - element.scrollTop === element.clientHeight) {
+      this.clientPage++;
+      this.readCustomer(this.clientPage);
+    }
   }
 
   bankGroup: FormGroup<CustomerBankForm> = new FormGroup<CustomerBankForm>({

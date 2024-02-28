@@ -16,11 +16,15 @@
         >
       </mat-form-field>
 
-      <mat-form-field *ngIf="form.controls.client_id as control">
+      <mat-form-field
+        *ngIf="form.controls.client_id as control"
+      >
         <mat-label>Client ID</mat-label>
         <mat-select
+          #clientID
           [formControl]="control"
           (selectionChange)="onCustomerSelect(control.value)"
+          (opened)="registerPanelScrollEvent()"
         >
           <mat-select-trigger>
             {{ control.value }}
@@ -32,15 +36,9 @@
             ></ngx-mat-select-search>
           </mat-option>
           <mat-option [value]="null"> *Empty* </mat-option>
-<!--          <mat-option-->
-<!--            *ngFor="let customer of this.service.customers"-->
-<!--            [value]="customer.internal_company_id"-->
-<!--            >{{ customer.internal_company_id }} |-->
-<!--            {{ customer.company_name }}</mat-option-->
-<!--          >-->
           <mat-option
-            *ngFor="let customer of clientFiltred | async"
-            [value]="customer.id"
+            *ngFor="let customer of clients"
+            [value]="customer.internal_company_id"
           >
             {{ customer.internal_company_id }} | {{ customer.company_name }}
           </mat-option>
@@ -57,7 +55,7 @@
           <mat-option
             *ngFor="let order of this.service.orders()"
             [value]="order.id"
-          >{{ order.internal_order_id }} ({{
+            >{{ order.internal_order_id }} ({{
               order.customer?.company_name
             }})</mat-option
           >
