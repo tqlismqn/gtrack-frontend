@@ -16,6 +16,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { InvoicesOrdersTableComponent } from './components/invoices-orders-table/invoices-orders-table.component';
 import { InvoicesOrdersService } from './services/invoices-orders.service';
 import { MatDialogActions, MatDialogClose, MatDialogContent, MatDialogTitle } from "@angular/material/dialog";
+import { NgxMatSelectSearchModule } from "ngx-mat-select-search";
+import { MatPaginatorModule } from "@angular/material/paginator";
 
 @NgModule({
   declarations: [
@@ -38,7 +40,9 @@ import { MatDialogActions, MatDialogClose, MatDialogContent, MatDialogTitle } fr
     MatDialogTitle,
     MatDialogContent,
     MatDialogActions,
-    MatDialogClose
+    MatDialogClose,
+    NgxMatSelectSearchModule,
+    MatPaginatorModule
   ],
   providers: [InvoicesService, InvoicesOrdersService],
 })

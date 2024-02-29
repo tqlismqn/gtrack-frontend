@@ -44,6 +44,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { countries } from 'countries-list';
 import { Customer } from '../../../customers/types/customers.type';
 import { merge, startWith, takeUntil, tap } from 'rxjs';
+import { MatSnackBar } from "@angular/material/snack-bar";
 
 interface OrdersEditForm {
   internal_order_id: FormControl<number>;
@@ -164,6 +165,7 @@ export class OrdersUpdateComponent
     cdr: ChangeDetectorRef,
     route: ActivatedRoute,
     protected customersService: CustomersService,
+    protected _snackBar: MatSnackBar,
   ) {
     super(service, deps, cdr, route);
     this.dataSource = new MatTableDataSource<OrderLoadingPoints>([]);
@@ -598,6 +600,7 @@ export class OrdersUpdateComponent
       ) &&
       !this.edit
     ) {
+      this.openSnackBar('A record of this type already exists', 'Close');
       result = false;
     }
 
@@ -646,6 +649,12 @@ export class OrdersUpdateComponent
     }
 
     return result;
+  }
+
+  openSnackBar(message: string, action: string) {
+    this._snackBar.open(message, action, {
+      duration: 2000,
+    });
   }
 
   editLoadingPoint(item: any) {
@@ -707,6 +716,7 @@ export class OrdersUpdateComponent
     }
     const data = [...this.dataSource.data, this.LoadingPointsForm.value];
     this.updateLoadingPoints(data);
+    this.LoadingPointsForm.reset();
   }
 
   updateLoadingPoints(data: any) {

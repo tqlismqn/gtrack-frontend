@@ -23,7 +23,7 @@ export interface InvoiceResponse extends ModuleBaseResponse {
   currency: string;
   course: number;
   remark: string;
-  bank?: CustomerBank;
+  bank?: CustomerBank[];
   items?: InvoiceItem[];
   internal_invoice_id: number;
   paid_sum: number | null;
@@ -46,7 +46,7 @@ export interface Invoice extends ModuleBase {
   currency: string;
   course: number;
   remark: string;
-  bank?: CustomerBank;
+  bank?: CustomerBank[];
   items?: InvoiceItem[];
   internal_invoice_id: number;
   paid_sum: number | null;
@@ -69,6 +69,7 @@ export type CustomerFields = Pick<
   | 'accounting_email'
   | 'internal_company_id'
   | 'terms_of_payment'
+  | 'banks'
 >;
 
 export type OrderFields = Pick<
@@ -80,4 +81,5 @@ export type OrderFields = Pick<
   | 'created_at'
   | 'status'
   | 'order_price'
+  | 'currency'
 >;
