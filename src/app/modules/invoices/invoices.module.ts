@@ -17,6 +17,7 @@ import { InvoicesOrdersTableComponent } from './components/invoices-orders-table
 import { InvoicesOrdersService } from './services/invoices-orders.service';
 import { MatDialogActions, MatDialogClose, MatDialogContent, MatDialogTitle } from "@angular/material/dialog";
 import { NgxMatSelectSearchModule } from "ngx-mat-select-search";
+import { MatPaginatorModule } from "@angular/material/paginator";
 
 @NgModule({
   declarations: [
@@ -40,7 +41,8 @@ import { NgxMatSelectSearchModule } from "ngx-mat-select-search";
     MatDialogContent,
     MatDialogActions,
     MatDialogClose,
-    NgxMatSelectSearchModule
+    NgxMatSelectSearchModule,
+    MatPaginatorModule
   ],
   providers: [InvoicesService, InvoicesOrdersService],
 })

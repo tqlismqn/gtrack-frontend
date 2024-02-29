@@ -15,52 +15,104 @@
           >This field is <b>required</b></mat-error
         >
       </mat-form-field>
-
-      <mat-form-field
-        *ngIf="form.controls.client_id as control"
-      >
-        <mat-label>Client ID</mat-label>
-        <mat-select
-          #clientID
-          [formControl]="control"
-          (selectionChange)="onCustomerSelect(control.value)"
-          (opened)="registerPanelScrollEvent()"
+      <div class="search">
+        <mat-form-field>
+          <mat-label>Search by</mat-label>
+          <mat-select [formControl]="searchingClientFieldControl">
+            <mat-option
+              *ngFor="let option of searchableClientColumns"
+              [value]="option.value"
+            >
+              {{ option.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field
+          *ngIf="form.controls.client_id as control"
         >
-          <mat-select-trigger>
-            {{ control.value }}
-          </mat-select-trigger>
-          <mat-option>
-            <ngx-mat-select-search
-              [formControl]="clientFilterControl"
-              placeholderLabel="Search"
-            ></ngx-mat-select-search>
-          </mat-option>
-          <mat-option [value]="null"> *Empty* </mat-option>
-          <mat-option
-            *ngFor="let customer of clients"
-            [value]="customer.internal_company_id"
+          <mat-label>Client ID</mat-label>
+          <mat-select
+            #clientID
+            [formControl]="control"
+            (selectionChange)="onCustomerSelect(control.value)"
           >
-            {{ customer.internal_company_id }} | {{ customer.company_name }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
+            <mat-select-trigger>
+              {{ control.value }}
+            </mat-select-trigger>
+            <mat-option>
+              <ngx-mat-select-search
+                [formControl]="clientFilterControl"
+                placeholderLabel="Search"
+              ></ngx-mat-select-search>
+            </mat-option>
+            <mat-option [value]="null"> *Empty* </mat-option>
+            <mat-option
+              *ngFor="let customer of clients"
+              value="{{ customer.internal_company_id }} | {{
+                customer.company_name
+              }}"
+            >
+              {{ customer.internal_company_id }} | {{ customer.company_name }}
+            </mat-option>
+            <mat-paginator
+              #clientPaginator
+              [pageSizeOptions]="[5, 10, 20, 50, 100]"
+              [pageSize]="clientPagination.limit"
+              [pageIndex]="clientPagination.page - 1"
+              (page)="pageChange($event, 'client')"
+              showFirstLastButtons
+            ></mat-paginator>
+          </mat-select>
+        </mat-form-field>
+      </div>
 
-      <mat-form-field *ngIf="form.controls.order_id as control">
-        <mat-label>Order</mat-label>
-        <mat-select
-          [formControl]="control"
-          (selectionChange)="onOrderSelect(control.value)"
-        >
-          <mat-option [value]="null">*Empty*</mat-option>
-          <mat-option
-            *ngFor="let order of this.service.orders()"
-            [value]="order.id"
+      <div class="search">
+        <mat-form-field>
+          <mat-label>Search by</mat-label>
+          <mat-select [formControl]="searchingOrderFieldControl">
+            <mat-option
+              *ngFor="let option of searchableOrderColumns"
+              [value]="option.value"
+            >
+              {{ option.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field *ngIf="form.controls.order_id as control">
+          <mat-label>Order</mat-label>
+          <mat-select
+            [formControl]="control"
+            (selectionChange)="onOrderSelect(control.value)"
+          >
+            <mat-select-trigger>
+              {{ control.value }}
+            </mat-select-trigger>
+            <mat-option>
+              <ngx-mat-select-search
+                [formControl]="orderFilterControl"
+                placeholderLabel="Search"
+              ></ngx-mat-select-search>
+            </mat-option>
+            <mat-option [value]="null">*Empty*</mat-option>
+            <mat-option
+              *ngFor="let order of this.orders"
+              [value]="order.id"
             >{{ order.internal_order_id }} ({{
-              order.customer?.company_name
-            }})</mat-option
-          >
-        </mat-select>
-      </mat-form-field>
+                order.customer?.company_name
+              }})</mat-option
+            >
+            <mat-paginator
+              #orderPaginator
+              [pageSizeOptions]="[5, 10, 20, 50, 100]"
+              [pageSize]="orderPagination.limit"
+              [pageIndex]="orderPagination.page - 1"
+              (page)="pageChange($event, 'order')"
+              showFirstLastButtons
+            ></mat-paginator>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
 
       <mat-form-field *ngIf="form.controls.vat_id as control">
         <mat-label>Vat ID</mat-label>

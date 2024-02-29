@@ -44,6 +44,11 @@ import { environment } from '../../../../../environments/environment';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSelect } from '@angular/material/select';
+import { defaultSearchableFields } from "../../../base-module/constants/default-searchable-fields";
+import { Selectable } from "../../../../types/selectable.type";
+import { PaginationType } from "../../../base-module/types/pagination.type";
+import { ModuleBaseReadRequest } from "../../../base-module/types/module-base.type";
+import { MatPaginator, PageEvent } from "@angular/material/paginator";
 
 interface InvoicesEditForm {
   order_id: FormControl<string | null>;
@@ -93,6 +98,12 @@ export class InvoicesEditComponent
   bankCollectionComponents: QueryList<CustomersBankCollectionComponent> =
     new QueryList<CustomersBankCollectionComponent>();
 
+  @ViewChild('clientPaginator')
+  clientPaginator!: MatPaginator;
+
+  @ViewChild('orderPaginator')
+  orderPaginator!: MatPaginator;
+
   constructor(
     override service: InvoicesService,
     deps: EditComponentDeps,
@@ -112,7 +123,6 @@ export class InvoicesEditComponent
       this.form.controls.client_id.disable();
       this.cdr.markForCheck();
     }
-    this.readCustomer(this.clientPage);
   }
 
   override form = new FormGroup<InvoicesEditForm>({
@@ -183,11 +193,40 @@ export class InvoicesEditComponent
   bankForms: FormGroup<CustomerBankForm>[] = [];
 
   clients: Customer[] = [];
-
-  clientPage: number = 1;
+  orders: Order[] = [];
 
   clientFilterControl = new FormControl<string>('');
-  clientFiltred: ReplaySubject<Customer[]> = new ReplaySubject<Customer[]>(1);
+  searchingClientFieldControl = new FormControl<string>('internal_company_id');
+  orderFilterControl = new FormControl<string>('');
+  searchingOrderFieldControl = new FormControl<string>('internal_order_id');
+
+  searchableClientColumns: Selectable[] = [
+    {
+      name: 'ID',
+      value: 'internal_company_id',
+    },
+    {
+      name: 'Company name',
+      value: 'company_name',
+    },
+  ];
+
+  searchableOrderColumns: Selectable[] = [
+    {
+      name: 'ID',
+      value: 'internal_order_id',
+    },
+  ];
+
+  clientPagination: PaginationType = {
+    page: 1,
+    limit: 5,
+  };
+
+  orderPagination: PaginationType = {
+    page: 1,
+    limit: 5,
+  };
 
   get currencies() {
     return (
@@ -468,12 +507,29 @@ export class InvoicesEditComponent
       this.setBanks([]);
     }
 
+    this.searchingClientFieldControl.valueChanges.subscribe(() => {
+      this.clientFetch();
+    });
+
     this.clientFilterControl.valueChanges
       .pipe(
         takeUntil(this.destroy$),
         startWith(null),
         tap((value) => {
-          this.filterClient(value);
+          this.clientFetch();
+        }),
+      )
+      .subscribe();
+    this.searchingOrderFieldControl.valueChanges.subscribe(() => {
+      this.orderFetch();
+    });
+
+    this.orderFilterControl.valueChanges
+      .pipe(
+        takeUntil(this.destroy$),
+        startWith(null),
+        tap((value) => {
+          this.orderFetch();
         }),
       )
       .subscribe();
@@ -501,50 +557,80 @@ export class InvoicesEditComponent
     this.setItemsListeners();
   }
 
-  protected filterClient(value: string | null) {
-    if (!value || value.length < 2) {
-      this.readCustomer(1);
-      return;
+  pageChange(pageChange: PageEvent, type: string) {
+
+    switch (type) {
+      case 'client':
+        this.clientPagination = {
+          page: pageChange.pageIndex + 1,
+          limit: pageChange.pageSize,
+        };
+        this.clientFetch();
+        break;
+      default:
+        this.orderPagination = {
+          page: pageChange.pageIndex + 1,
+          limit: pageChange.pageSize,
+        };
+        this.orderFetch();
+        break;
+    }
+  }
+
+  protected orderFetch() {
+    const body: ModuleBaseReadRequest = {};
+    if (this.orderPagination) {
+      body.pagination = this.orderPagination;
+    }
+    if (
+      this.orderFilterControl.value &&
+      this.orderFilterControl.value?.length >= 2 &&
+      this.searchingOrderFieldControl.value
+    ) {
+      body.search = {
+        field: this.searchingOrderFieldControl.value,
+        value: this.orderFilterControl.value,
+      };
     }
 
-    value = value.toLowerCase();
-    this.searchCustomer(value);
-  }
-
-  protected getClientSearch(client: Customer) {
-    return `${client.company_name} ${client.internal_company_id}`.toLowerCase();
-  }
-
-  protected readCustomer(page: number) {
-    this.service.customersService
-      .read({ pagination: { page: page, limit: 50 } }, false)
-      .subscribe(([data]) => {
-        this.clients = [...this.clients, ...data];
+    this.service.ordersService.read(body, false).subscribe({
+      next: ([data, count]: any) => {
+        this.orderPaginator.length = count;
+        this.orders = data;
         this.cdr.markForCheck();
-      });
-  }
-
-  protected searchCustomer(search: string) {
-    this.service.customersService
-      .read({ search: { field: 'company_name', value: search } }, false)
-      .subscribe(([data]) => {
-        this.clients = [...data];
+      },
+      error: () => {
         this.cdr.markForCheck();
-      });
+      },
+    });
   }
 
-  protected registerPanelScrollEvent() {
-    this.clientID?.panel.nativeElement.addEventListener(
-      'scrollend',
-      (event: Event) =>
-        this.onScroll(event, this.clientID?.panel.nativeElement),
-    );
-  }
-  protected onScroll(event: Event, element: any) {
-    if (element.scrollHeight - element.scrollTop === element.clientHeight) {
-      this.clientPage++;
-      this.readCustomer(this.clientPage);
+  protected clientFetch() {
+    const body: ModuleBaseReadRequest = {};
+    if (this.clientPagination) {
+      body.pagination = this.clientPagination;
     }
+    if (
+      this.clientFilterControl.value &&
+      this.clientFilterControl.value?.length >= 2 &&
+      this.searchingClientFieldControl.value
+    ) {
+      body.search = {
+        field: this.searchingClientFieldControl.value,
+        value: this.clientFilterControl.value,
+      };
+    }
+
+    this.service.customersService.read(body, false).subscribe({
+      next: ([data, count]: any) => {
+        this.clientPaginator.length = count;
+        this.clients = data;
+        this.cdr.markForCheck();
+      },
+      error: () => {
+        this.cdr.markForCheck();
+      },
+    });
   }
 
   bankGroup: FormGroup<CustomerBankForm> = new FormGroup<CustomerBankForm>({
@@ -723,4 +809,6 @@ export class InvoicesEditComponent
       });
     });
   }
+
+  protected readonly searchableColumns = defaultSearchableFields;
 }
