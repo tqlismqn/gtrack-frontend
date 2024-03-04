@@ -68,12 +68,12 @@ export class AuthService {
 
   isApplicationReady(): Observable<boolean> {
     const onError = (error: any) => {
-      console.error(error);
       this._isApplicationReady = false;
       if (this._isApplicationReady$) {
         this._isApplicationReady$.next(false);
         this._isApplicationReady$.closed = true;
       }
+      this.errorHandler.handleError(error);
     };
 
     return new Observable<boolean>((subscriber) => {
