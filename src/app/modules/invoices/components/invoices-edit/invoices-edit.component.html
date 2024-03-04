@@ -36,9 +36,6 @@
             [formControl]="control"
             (selectionChange)="onCustomerSelect(control.value)"
           >
-            <mat-select-trigger>
-              {{ control.value }}
-            </mat-select-trigger>
             <mat-option>
               <ngx-mat-select-search
                 [formControl]="clientFilterControl"
@@ -48,9 +45,7 @@
             <mat-option [value]="null"> *Empty* </mat-option>
             <mat-option
               *ngFor="let customer of clients"
-              value="{{ customer.internal_company_id }} | {{
-                customer.company_name
-              }}"
+              [value]="customer.internal_company_id"
             >
               {{ customer.internal_company_id }} | {{ customer.company_name }}
             </mat-option>
@@ -84,9 +79,6 @@
             [formControl]="control"
             (selectionChange)="onOrderSelect(control.value)"
           >
-            <mat-select-trigger>
-              {{ control.value }}
-            </mat-select-trigger>
             <mat-option>
               <ngx-mat-select-search
                 [formControl]="orderFilterControl"
