@@ -37,6 +37,11 @@ export class GlobalErrorHandler implements ErrorHandler {
           });
         });
       }
+      switch (error.status) {
+        case 401:
+          this.authorizationExpiredError();
+          break;
+      }
     }
   }
 
