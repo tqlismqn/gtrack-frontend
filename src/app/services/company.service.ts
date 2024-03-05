@@ -2,7 +2,7 @@ import { EventEmitter, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Company, CompanyResponse } from '../types/company.type';
 import { environment } from '../../environments/environment';
-import { combineLatest, Observable } from 'rxjs';
+import { combineLatest, first, Observable } from 'rxjs';
 import { Permission, PermissionResponse } from '../types/permission.type';
 import { Modules } from '../constants/modules';
 import {
@@ -12,7 +12,7 @@ import {
 import { Nameable } from '../modules/base-module/types/nameable.type';
 import { SseService } from './sse.service';
 import WavePrivateChannel from 'laravel-wave/dist/echo-broadcaster/wave-private-channel';
-import { Currencies } from "../types/currencies";
+import { Currencies } from '../types/currencies';
 
 @Injectable({ providedIn: 'root' })
 export class CompanyService {
@@ -200,7 +200,9 @@ export class CompanyService {
   }
 
   public getRate(currency: Currencies) {
-    const findCurrency: any = this.currencies?.find((findCurrency: any) => findCurrency.ID === currency);
+    const findCurrency: any = this.currencies?.find(
+      (findCurrency: any) => findCurrency.ID === currency,
+    );
     return Number(findCurrency.rate);
   }
 
@@ -209,7 +211,6 @@ export class CompanyService {
     value: number,
     rate: number | undefined = undefined,
   ): number {
-
     if (!rate) {
       rate = this.getRate(to);
     }
@@ -252,19 +253,28 @@ export class CompanyService {
   sseChannel?: WavePrivateChannel;
 
   sseInit() {
-    if (this.sseChannel) {
-      this.sseChannel.stopListening(
-        '.App\\Events\\Model\\Company\\CompanyUpdate',
-      );
+    const processInit = () => {
+      if (this.sseChannel) {
+        this.sseChannel.stopListening(
+          '.App\\Events\\Model\\Company\\CompanyUpdate',
+        );
+      }
+      this.sseChannel = this.sse.echo
+        .private(`companies.${this.selectedCompany?.id}`)
+        .listen(
+          '.App\\Events\\Model\\Company\\CompanyUpdate',
+          (data: { id: string; company: CompanyResponse }) => {
+            this.updateCompaniesLocally(data.company);
+          },
+        ) as WavePrivateChannel;
+    };
+    if (this.sse.init) {
+      processInit();
+    } else {
+      this.sse.init$.pipe(first()).subscribe(() => {
+        processInit();
+      });
     }
-    this.sseChannel = this.sse.echo
-      .private(`companies.${this.selectedCompany?.id}`)
-      .listen(
-        '.App\\Events\\Model\\Company\\CompanyUpdate',
-        (data: { id: string; company: CompanyResponse }) => {
-          this.updateCompaniesLocally(data.company);
-        },
-      ) as WavePrivateChannel;
   }
 
   static selectedCompanyKey = 'selected-company-id';

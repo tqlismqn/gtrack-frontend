@@ -37,6 +37,9 @@ import { AdminUsersEditComponent } from './modules/admin/components/admin-users/
 import { isAdmin } from './guards/auth/is-admin';
 import { SuperAdminUsersTableComponent } from './modules/super-admin/components/users/super-admin-users-table/super-admin-users-table.component';
 import { SuperAdminUsersEditComponent } from './modules/super-admin/components/users/super-admin-users-edit/super-admin-users-edit.component';
+import { VerifyComponent } from './modules/auth/components/verify/verify.component';
+import { isVerified } from './guards/auth/is-verified.guard';
+import { hasClientAuthentication } from './guards/auth/has-client-authentication.guard';
 
 const modules = [
   {
@@ -157,8 +160,14 @@ const routes: Routes = [
     canActivate: [isNotAuthenticated],
   },
   {
+    path: 'verify',
+    component: VerifyComponent,
+    canActivate: [hasClientAuthentication],
+    canDeactivate: [isVerified],
+  },
+  {
     path: '',
-    canActivate: [isAuthenticated],
+    canActivate: [isAuthenticated, isVerified],
     children: [
       {
         canActivate: [isUserNotActive],

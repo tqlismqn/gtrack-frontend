@@ -1,0 +1,25 @@
+<ng-container [ngSwitch]="redirectInProcess">
+  <div class="loader" *ngSwitchCase="true">
+    <mat-spinner></mat-spinner>
+  </div>
+  <app-auth-form
+    *ngSwitchDefault
+    title="Email Verification"
+    (submit$)="sendVerificationEmail()"
+    submitTitle="Resend email"
+    [showActions]="!sent"
+    #authForm
+  >
+    <div>
+      Before you can proceed, we need to verify your email address. Please check
+      your inbox for a confirmation link
+    </div>
+
+    <div>
+      If you don't receive the email via {{ email }} within an hour, we can
+      resend it to you
+    </div>
+
+    <div *ngIf="sent"><b>Verification email was sent</b></div>
+  </app-auth-form>
+</ng-container>
