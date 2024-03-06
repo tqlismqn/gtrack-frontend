@@ -12,7 +12,13 @@
   ></mat-progress-bar>
   <h2 class="auth-form__title" *ngIf="title">{{ title }}</h2>
   <ng-content></ng-content>
-  <button mat-flat-button type="submit" color="primary" [disabled]="loading">
+  <button
+    *ngIf="showActions"
+    mat-flat-button
+    type="submit"
+    color="primary"
+    [disabled]="loading"
+  >
     {{ submitTitle }}
   </button>
 </form>

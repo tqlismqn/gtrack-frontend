@@ -15,8 +15,9 @@ import {
 } from '@angular/material/snack-bar';
 import { CompanySurveyComponent } from './components/company-survey/company-survey.component';
 import { AuthFormComponent } from './components/auth-form/auth-form.component';
-import { MatOptionModule } from "@angular/material/core";
-import { MatSelectModule } from "@angular/material/select";
+import { MatOptionModule } from '@angular/material/core';
+import { MatSelectModule } from '@angular/material/select';
+import { VerifyComponent } from './components/verify/verify.component';
 
 @NgModule({
   imports: [
@@ -30,7 +31,7 @@ import { MatSelectModule } from "@angular/material/select";
     MatButtonModule,
     MatSnackBarModule,
     MatOptionModule,
-    MatSelectModule
+    MatSelectModule,
   ],
   providers: [
     AuthService,
@@ -41,6 +42,7 @@ import { MatSelectModule } from "@angular/material/select";
     UserSurveyComponent,
     CompanySurveyComponent,
     AuthFormComponent,
+    VerifyComponent,
   ],
 })
 export class AuthModule {}

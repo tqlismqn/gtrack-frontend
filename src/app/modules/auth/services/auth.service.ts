@@ -11,6 +11,7 @@ import { CompanyService } from '../../../services/company.service';
 import { Router } from '@angular/router';
 import { GlobalErrorHandler } from '../../../errors/global-error-handler';
 import { Roles } from '../../admin/types/roles';
+import { SseService } from '../../../services/sse.service';
 
 @Injectable({
   providedIn: 'root',
@@ -28,6 +29,7 @@ export class AuthService {
     public companyService: CompanyService,
     protected router: Router,
     protected errorHandler: GlobalErrorHandler,
+    protected sseService: SseService,
   ) {
     errorHandler.auth = this;
 
@@ -92,7 +94,10 @@ export class AuthService {
               this.auth0User = auth0User;
             }
 
-            this.companyService.fetch().subscribe({
+            combineLatest([
+              this.companyService.fetch(),
+              this.sseService.initService(),
+            ]).subscribe({
               next: () => {
                 this._isApplicationReady = true;
                 if (this._isApplicationReady$) {

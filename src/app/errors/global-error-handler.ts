@@ -4,6 +4,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ErrorDialogComponent } from './error-dialog/error-dialog.component';
 import { AuthService } from '../modules/auth/services/auth.service';
+import { Router } from '@angular/router';
 
 @Injectable()
 export class GlobalErrorHandler implements ErrorHandler {
@@ -13,6 +14,7 @@ export class GlobalErrorHandler implements ErrorHandler {
     protected snackBar: MatSnackBar,
     protected ngZone: NgZone,
     protected dialog: MatDialog,
+    protected router: Router,
   ) {}
 
   openedError?: string;
@@ -26,6 +28,18 @@ export class GlobalErrorHandler implements ErrorHandler {
     }
 
     if (error instanceof HttpErrorResponse) {
+      switch (error.status) {
+        case 401:
+          if (error.error?.code === 'account_linked') {
+            this.auth?.auth0.loginWithRedirect();
+          } else if (error.error?.code === 'email_not_verified') {
+            this.router.navigate(['/verify']);
+          } else {
+            this.authorizationExpiredError();
+          }
+          return;
+      }
+
       if (error?.error?.errors) {
         //
       }
@@ -36,11 +50,6 @@ export class GlobalErrorHandler implements ErrorHandler {
             verticalPosition: 'bottom',
           });
         });
-      }
-      switch (error.status) {
-        case 401:
-          this.authorizationExpiredError();
-          break;
       }
     }
   }
