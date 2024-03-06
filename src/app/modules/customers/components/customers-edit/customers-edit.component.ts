@@ -229,7 +229,7 @@ export class CustomersEditComponent
 
     this.item.update((item) => {
       if (item) {
-        item.raiting = this.sortRaiting(item.raiting);
+        item.raiting = this.sortRaiting(item.raiting ?? []);
       }
 
       return item;

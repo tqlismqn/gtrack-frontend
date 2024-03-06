@@ -23,7 +23,7 @@ export interface CustomerResponse extends ModuleBaseResponse {
   documents: CustomerDocument[];
   terms_of_payment: TermsOfPaymentEnum;
   pallet_balance: number;
-  raiting: CustomerRaiting[];
+  raiting: CustomerRaiting[] | null;
   insurance_credit_limit: number;
   available_insurance_limit: number;
   internal_credit_limit: number;
@@ -51,7 +51,7 @@ export interface Customer extends ModuleBase {
   documents: CustomerDocument[];
   terms_of_payment: TermsOfPaymentEnum;
   pallet_balance: number;
-  raiting: CustomerRaiting[];
+  raiting: CustomerRaiting[] | null;
   insurance_credit_limit: number;
   available_insurance_limit: number;
   internal_credit_limit: number;
