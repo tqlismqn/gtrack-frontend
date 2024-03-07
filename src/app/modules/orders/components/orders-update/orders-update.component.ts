@@ -382,8 +382,13 @@ export class OrdersUpdateComponent
         .filter((point) => point.type === LoadingPointsType.Unloading)
         .pop();
     }
-    const loading_address = `${first_loading?.zip_code} ${first_loading?.city} ${first_loading?.address}`;
-    const last_address = `${last_loading?.zip_code} ${last_loading?.city} ${last_loading?.address}`;
+    let loading_address, unloading_address: string | undefined;
+    if (first_loading) {
+      loading_address = `${first_loading.zip_code} ${first_loading.city} ${first_loading.address}`;
+    }
+    if (last_loading) {
+      unloading_address = `${last_loading.zip_code} ${last_loading.city} ${last_loading.address}`;
+    }
     this.form.controls.internal_order_id.setValue(item.internal_order_id);
     this.form.controls.first_loading_date.setValue(
       first_loading?.date ?? item?.first_loading_date ?? null,
@@ -399,9 +404,7 @@ export class OrdersUpdateComponent
     this.form.controls.truck_number.setValue(item.truck_number ?? null);
     this.form.controls.trailer_number.setValue(item.trailer_number ?? null);
     this.form.controls.loading_address.setValue(loading_address ?? null);
-    this.form.controls.unloading_address.setValue(
-      last_address ?? null,
-    );
+    this.form.controls.unloading_address.setValue(unloading_address ?? null);
     this.form.controls.status.setValue(item.status.id);
     this.form.controls.loading_type.setValue(item.loading_type ?? null);
     this.form.controls.pallets.setValue(item.cargo_type ?? null);
