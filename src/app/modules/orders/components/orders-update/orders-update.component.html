@@ -305,7 +305,7 @@
           <input matInput [formControl]="control" />
         </mat-form-field>
       </div>
-      <div class="row row--stroke">
+      <div class="row row--stroke" *ngIf="false">
         <mat-form-field *ngIf="form.controls.telax_invoice_status as control">
           <mat-label>TELAX Invoice Status</mat-label>
           <mat-select [formControl]="control">
@@ -318,7 +318,7 @@
           </mat-select>
         </mat-form-field>
       </div>
-      <div class="row row--stroke">
+      <div class="row row--stroke" *ngIf="false">
         <mat-form-field *ngIf="form.controls.telax_invoice_due_date as control">
           <mat-label>TELAX Invoice Due Date</mat-label>
           <input
@@ -334,7 +334,7 @@
           <mat-datepicker #picker1></mat-datepicker>
         </mat-form-field>
       </div>
-      <div class="row row--stroke">
+      <div class="row row--stroke" *ngIf="false">
         <mat-form-field
           *ngIf="form.controls.telax_invoice_days_left as control"
         >
@@ -342,7 +342,7 @@
           <input matInput [formControl]="control" readonly />
         </mat-form-field>
       </div>
-      <div class="row row--stroke">
+      <div class="row row--stroke" *ngIf="false">
         <mat-form-field *ngIf="form.controls.tva as control">
           <mat-label>TVA 21%</mat-label>
           <mat-select [formControl]="control">
@@ -371,7 +371,7 @@
           <mat-datepicker #picker1></mat-datepicker>
         </mat-form-field>
       </div>
-      <div class="row row--stroke">
+      <div class="row row--stroke" *ngIf="false">
         <mat-form-field *ngIf="form.controls.carrier_invoice_status as control">
           <mat-label>Carrier Invoice Status</mat-label>
           <mat-select [formControl]="control">
@@ -383,13 +383,13 @@
           </mat-select>
         </mat-form-field>
       </div>
-      <div class="row row--stroke">
+      <div class="row row--stroke" *ngIf="false">
         <mat-form-field *ngIf="form.controls.carrier_invoice_nr as control">
           <mat-label>Carrier Invoice Nr.</mat-label>
           <input matInput [formControl]="control" />
         </mat-form-field>
       </div>
-      <div class="row row--stroke">
+      <div class="row row--stroke" *ngIf="false">
         <mat-form-field
           *ngIf="form.controls.carrier_invoice_due_date as control"
         >
@@ -407,7 +407,7 @@
           <mat-datepicker #picker1></mat-datepicker>
         </mat-form-field>
       </div>
-      <div class="row row--stroke">
+      <div class="row row--stroke" *ngIf="false">
         <mat-form-field
           *ngIf="form.controls.carrier_invoice_day_left as control"
         >
@@ -415,7 +415,7 @@
           <input matInput [formControl]="control" readonly />
         </mat-form-field>
       </div>
-      <div class="row row--stroke">
+      <div class="row row--stroke" *ngIf="false">
         <mat-form-field *ngIf="form.controls.carrier_payment_status as control">
           <mat-label>Carrier payment status</mat-label>
           <mat-select [formControl]="control">
@@ -981,6 +981,12 @@
               {{ element.type }}
             </td>
           </ng-container>
+          <ng-container matColumnDef="Company name">
+            <th mat-header-cell *matHeaderCellDef>Company name</th>
+            <td mat-cell *matCellDef="let element">
+              {{ element.company_name }}
+            </td>
+          </ng-container>
           <ng-container matColumnDef="Nation">
             <th mat-header-cell *matHeaderCellDef>Nation</th>
             <td mat-cell *matCellDef="let element">
@@ -997,6 +1003,12 @@
             <th mat-header-cell *matHeaderCellDef>City</th>
             <td mat-cell *matCellDef="let element">
               {{ element.city }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="Address">
+            <th mat-header-cell *matHeaderCellDef>Address</th>
+            <td mat-cell *matCellDef="let element">
+              {{ element.address }}
             </td>
           </ng-container>
           <ng-container matColumnDef="Weight">

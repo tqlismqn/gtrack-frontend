@@ -22,7 +22,7 @@ export interface CustomerBankForm {
     code: string;
     address: string;
     city: string;
-  }>;
+  } | null>;
 
   currency: FormControl<string>;
   name: FormControl<string>;
@@ -44,12 +44,14 @@ export class CustomersBankCollectionComponent
 
   @Input()
   formGroup = new FormGroup<CustomerBankForm>({
-    bank_template: new FormControl(
-      { name: '', id: '', bic: '', code: '', address: '', city: '' },
-      {
-        nonNullable: true,
-      },
-    ),
+    bank_template: new FormControl({
+      name: '',
+      id: '',
+      bic: '',
+      code: '',
+      address: '',
+      city: '',
+    }),
     bic: new FormControl<string>('', { nonNullable: true }),
     currency: new FormControl<string>('', { nonNullable: true }),
     name: new FormControl<string>('', { nonNullable: true }),
@@ -89,14 +91,21 @@ export class CustomersBankCollectionComponent
       .pipe(
         takeUntil(this.destroy$),
         tap((value) => {
-          let bank = this.banks.find((item) => item.id === value.id);
+          let bank = this.banks.find((item) => item.id === value?.id);
           if (!bank) {
-            bank = value;
+            bank = value ?? {
+              name: '',
+              id: '',
+              bic: '',
+              code: '',
+              address: '',
+              city: '',
+            };
           }
 
-          this.formGroup.controls.bic.setValue(bank.bic);
-          this.formGroup.controls.code.setValue(bank.code);
-          this.formGroup.controls.name.setValue(bank.name);
+          this.formGroup.controls.bic.setValue(bank?.bic);
+          this.formGroup.controls.code.setValue(bank?.code);
+          this.formGroup.controls.name.setValue(bank?.name);
           this.cdr.markForCheck();
         }),
       )
@@ -160,7 +169,7 @@ export class CustomersBankCollectionComponent
 
   public checkBankSelector() {
     const value = this.formGroup.controls.bank_template.value;
-    let bank = this.banks.find((item) => item.id === value.id);
+    let bank = this.banks.find((item) => item.id === value?.id);
     if (
       !bank &&
       value &&

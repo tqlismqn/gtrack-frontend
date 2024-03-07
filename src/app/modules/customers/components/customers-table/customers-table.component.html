@@ -19,10 +19,27 @@
     <th mat-header-cell *matHeaderCellDef>VAT Number</th>
     <td mat-cell *matCellDef="let element">{{ element.vat_id }}</td>
   </ng-container>
-  <ng-container matColumnDef="address">
-    <th mat-header-cell *matHeaderCellDef>Address</th>
+  <ng-container matColumnDef="nation">
+    <th mat-header-cell *matHeaderCellDef>Nation</th>
     <td mat-cell *matCellDef="let element">
-      {{ element.nation }} {{ element.zip }} {{ element.city }}
+      {{ element.nation }}
+    </td>
+  </ng-container>
+  <ng-container matColumnDef="zip_code">
+    <th mat-header-cell *matHeaderCellDef>Zip Code</th>
+    <td mat-cell *matCellDef="let element">
+      {{ element.zip }}
+    </td>
+  </ng-container>
+  <ng-container matColumnDef="city">
+    <th mat-header-cell *matHeaderCellDef>City</th>
+    <td mat-cell *matCellDef="let element">
+      {{ element.city }}
+    </td>
+  </ng-container>
+  <ng-container matColumnDef="street">
+    <th mat-header-cell *matHeaderCellDef>Street</th>
+    <td mat-cell *matCellDef="let element">
       {{ element.street }}
     </td>
   </ng-container>

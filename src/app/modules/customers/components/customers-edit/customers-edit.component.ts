@@ -352,6 +352,7 @@ export class CustomersEditComponent
       }),
       code: new FormControl(bank.code, {
         nonNullable: true,
+        validators: [Validators.required],
       }),
       iban: new FormControl(bank.iban, {
         nonNullable: true,
@@ -365,20 +366,14 @@ export class CustomersEditComponent
         nonNullable: true,
         validators: [Validators.required],
       }),
-      bank_template: new FormControl(
-        {
-          bic: bank.bank_template.bic,
-          name: bank.bank_template.name,
-          id: bank.bank_template.id,
-          code: bank.bank_template.code,
-          address: bank.bank_template.address,
-          city: bank.bank_template.city,
-        },
-        {
-          nonNullable: true,
-          validators: [Validators.required],
-        },
-      ),
+      bank_template: new FormControl({
+        bic: bank.bank_template.bic,
+        name: bank.bank_template.name,
+        id: bank.bank_template.id,
+        code: bank.bank_template.code,
+        address: bank.bank_template.address,
+        city: bank.bank_template.city,
+      }),
     });
   }
 
