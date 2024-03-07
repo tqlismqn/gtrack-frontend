@@ -44,11 +44,11 @@ import { environment } from '../../../../../environments/environment';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSelect } from '@angular/material/select';
-import { defaultSearchableFields } from "../../../base-module/constants/default-searchable-fields";
-import { Selectable } from "../../../../types/selectable.type";
-import { PaginationType } from "../../../base-module/types/pagination.type";
-import { ModuleBaseReadRequest } from "../../../base-module/types/module-base.type";
-import { MatPaginator, PageEvent } from "@angular/material/paginator";
+import { defaultSearchableFields } from '../../../base-module/constants/default-searchable-fields';
+import { Selectable } from '../../../../types/selectable.type';
+import { PaginationType } from '../../../base-module/types/pagination.type';
+import { ModuleBaseReadRequest } from '../../../base-module/types/module-base.type';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 
 interface InvoicesEditForm {
   order_id: FormControl<string | null>;
@@ -558,7 +558,6 @@ export class InvoicesEditComponent
   }
 
   pageChange(pageChange: PageEvent, type: string) {
-
     switch (type) {
       case 'client':
         this.clientPagination = {
@@ -783,6 +782,26 @@ export class InvoicesEditComponent
           this.fetchItem(item.id);
           this.service.readOrders(item.customer_id ?? null);
         }
+      });
+  }
+
+  download() {
+    this.deps.http
+      .get(
+        `${environment.apiUrl}/api/v1/invoices/download/${this.item()
+          ?.id}?company_id=${this.service.companyId}`,
+        { responseType: 'blob' },
+      )
+      .subscribe((response) => {
+        const blob = new Blob([response as BlobPart], {
+          type: 'application/octet-stream',
+        });
+
+        const a = document.createElement('a');
+        a.href = window.URL.createObjectURL(blob);
+        a.download = `Invoice ID ${this.item()?.internal_invoice_id}.pdf`;
+        a.click();
+        a.remove();
       });
   }
 
