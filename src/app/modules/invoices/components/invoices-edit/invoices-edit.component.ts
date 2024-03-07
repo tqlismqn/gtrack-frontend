@@ -383,6 +383,7 @@ export class InvoicesEditComponent
       }),
       code: new FormControl(bank.code, {
         nonNullable: true,
+        validators: [Validators.required],
       }),
       iban: new FormControl(bank.iban, {
         nonNullable: true,
@@ -396,20 +397,14 @@ export class InvoicesEditComponent
         nonNullable: true,
         validators: [Validators.required],
       }),
-      bank_template: new FormControl(
-        {
-          bic: bank.bank_template.bic,
-          name: bank.bank_template.name,
-          id: bank.bank_template.id,
-          code: bank.bank_template.code,
-          address: bank.bank_template.address,
-          city: bank.bank_template.city,
-        },
-        {
-          nonNullable: true,
-          validators: [Validators.required],
-        },
-      ),
+      bank_template: new FormControl({
+        bic: bank.bank_template.bic,
+        name: bank.bank_template.name,
+        id: bank.bank_template.id,
+        code: bank.bank_template.code,
+        address: bank.bank_template.address,
+        city: bank.bank_template.city,
+      }),
     });
   }
 
@@ -552,7 +547,7 @@ export class InvoicesEditComponent
       this.form.controls.course.setValue(rate.rate);
     });
     this.form.controls.customer_id.valueChanges.subscribe(() => {
-      this.service.readOrders(this.form.controls.customer_id.value);
+      this.orderFetch();
     });
     this.setItemsListeners();
   }

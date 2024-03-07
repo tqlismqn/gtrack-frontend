@@ -6,7 +6,7 @@
     #matSelect
   >
     <mat-select-trigger>
-      {{ control.value.name }}
+      {{ control.value?.name }}
     </mat-select-trigger>
     <mat-option>
       <ngx-mat-select-search
@@ -59,7 +59,7 @@
 
   <mat-form-field *ngIf="formGroup.controls.code as control">
     <mat-label>Code</mat-label>
-    <input matInput [formControl]="control" readonly />
+    <input matInput [formControl]="control"/>
     <mat-error *ngIf="control.hasError('required')"
       >This field is <b>required</b></mat-error
     >
@@ -76,7 +76,7 @@
 
 <mat-form-field *ngIf="formGroup.controls.bic as control">
   <mat-label>BIC / SWIFT</mat-label>
-  <input matInput [formControl]="control" readonly />
+  <input matInput [formControl]="control" />
   <mat-error *ngIf="control.hasError('required')"
     >This field is <b>required</b></mat-error
   >

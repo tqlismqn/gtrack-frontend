@@ -114,6 +114,15 @@ export enum OrderStatuses {
   LOADED = 'loaded',
   UNLOADED = 'unloaded',
   READY_FOR_INVOICE = 'ready_for_invoice',
+}
+
+enum OldOrderStatuses {
+  DRAFT = 'draft',
+  OPEN = 'open',
+  IN_PROGRESS = 'in_progress',
+  LOADED = 'loaded',
+  UNLOADED = 'unloaded',
+  READY_FOR_INVOICE = 'ready_for_invoice',
   INVOICE_SENT = 'invoice_sent',
   PAYMENT_RECEIVED = 'payment_received',
   PARTLY_PAID = 'partly_paid',
@@ -126,9 +135,18 @@ export const OrderStatusesNames: Record<OrderStatuses, string> = {
   [OrderStatuses.LOADED]: 'Loaded',
   [OrderStatuses.UNLOADED]: 'Unloaded',
   [OrderStatuses.READY_FOR_INVOICE]: 'Ready For Invoice',
-  [OrderStatuses.INVOICE_SENT]: 'Invoice Sent',
-  [OrderStatuses.PAYMENT_RECEIVED]: 'Payment Received',
-  [OrderStatuses.PARTLY_PAID]: 'Partly Paid',
+};
+
+const OldOrderStatusesNames: Record<OldOrderStatuses, string> = {
+  [OldOrderStatuses.DRAFT]: 'Draft',
+  [OldOrderStatuses.OPEN]: 'Open',
+  [OldOrderStatuses.IN_PROGRESS]: 'In Progress',
+  [OldOrderStatuses.LOADED]: 'Loaded',
+  [OldOrderStatuses.UNLOADED]: 'Unloaded',
+  [OldOrderStatuses.READY_FOR_INVOICE]: 'Ready For Invoice',
+  [OldOrderStatuses.INVOICE_SENT]: 'Invoice Sent',
+  [OldOrderStatuses.PAYMENT_RECEIVED]: 'Payment Received',
+  [OldOrderStatuses.PARTLY_PAID]: 'Partly Paid',
 };
 
 export interface OrderLoadingPoints {

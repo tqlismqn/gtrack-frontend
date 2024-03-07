@@ -34,8 +34,8 @@ import {
   ReceviedSelectStatus,
   ReceviedSelectStatusArray,
   SelectStatus,
-  SelectStatusArray
-} from "../../types/orders.type";
+  SelectStatusArray,
+} from '../../types/orders.type';
 import { OrdersService } from '../../services/orders.service';
 import { CustomersService } from '../../../customers/services/customers.service';
 import { Nameable } from '../../../base-module/types/nameable.type';
@@ -44,7 +44,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { countries } from 'countries-list';
 import { Customer } from '../../../customers/types/customers.type';
 import { merge, startWith, takeUntil, tap } from 'rxjs';
-import { MatSnackBar } from "@angular/material/snack-bar";
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 interface OrdersEditForm {
   internal_order_id: FormControl<number>;
@@ -70,14 +70,14 @@ interface OrdersEditForm {
   carrier_price: FormControl<number | null>;
   client_reference: FormControl<string | null>;
   telax_invoice_status: FormControl<boolean | null>;
-  telax_invoice_due_date: FormControl<string>;
-  telax_invoice_days_left: FormControl<number>;
-  tva: FormControl<boolean>;
+  telax_invoice_due_date: FormControl<string | null>;
+  telax_invoice_days_left: FormControl<number | null>;
+  tva: FormControl<boolean | null>;
   date_of_order_sale: FormControl<string | null>;
   carrier_invoice_status: FormControl<boolean | null>;
   carrier_invoice_nr: FormControl<string | null>;
-  carrier_invoice_due_date: FormControl<string>;
-  carrier_invoice_day_left: FormControl<number>;
+  carrier_invoice_due_date: FormControl<string | null>;
+  carrier_invoice_day_left: FormControl<number | null>;
   carrier_payment_status: FormControl<boolean | null>;
   selling_price: FormControl<number | null>;
   revenue: FormControl<number | null>;
@@ -230,34 +230,20 @@ export class OrdersUpdateComponent
     carrier_price: new FormControl<number | null>(0),
     client_reference: new FormControl<string | null>(''),
     telax_invoice_status: new FormControl<boolean | null>(false),
-    telax_invoice_due_date: new FormControl<string>(new Date().toISOString(), {
-      validators: [Validators.required],
-      nonNullable: true,
-    }),
-    telax_invoice_days_left: new FormControl<number>(0, {
-      validators: [Validators.required],
-      nonNullable: true,
-    }),
-    tva: new FormControl<boolean>(false, {
-      validators: [Validators.required],
-      nonNullable: true,
-    }),
+    telax_invoice_due_date: new FormControl<string | null>(
+      new Date().toISOString(),
+    ),
+    telax_invoice_days_left: new FormControl<number | null>(0, {}),
+    tva: new FormControl<boolean | null>(false, {}),
     date_of_order_sale: new FormControl<string | null>(
       new Date().toISOString(),
     ),
     carrier_invoice_status: new FormControl<boolean | null>(false),
     carrier_invoice_nr: new FormControl<string | null>(''),
-    carrier_invoice_due_date: new FormControl<string>(
+    carrier_invoice_due_date: new FormControl<string | null>(
       new Date().toISOString(),
-      {
-        validators: [Validators.required],
-        nonNullable: true,
-      },
     ),
-    carrier_invoice_day_left: new FormControl<number>(0, {
-      validators: [Validators.required],
-      nonNullable: true,
-    }),
+    carrier_invoice_day_left: new FormControl<number | null>(0),
     carrier_payment_status: new FormControl<boolean | null>(false),
     selling_price: new FormControl<number | null>(0),
     revenue: new FormControl<number | null>(0),
@@ -313,35 +299,19 @@ export class OrdersUpdateComponent
         this.LoadingPointsForm.controls.period.setValue('AM');
       }
     });
-    this.form.controls.telax_invoice_due_date.valueChanges.subscribe(() => {
-      this.form.controls.telax_invoice_days_left.setValue(
-        this.calculateDaysLeft(this.form.controls.telax_invoice_due_date.value),
-      );
-    });
-    this.form.controls.carrier_invoice_due_date.valueChanges.subscribe(() => {
-      this.form.controls.carrier_invoice_day_left.setValue(
-        this.calculateDaysLeft(
-          this.form.controls.carrier_invoice_due_date.value,
-        ),
-      );
-    });
     this.form.controls.order_price.valueChanges.subscribe(() => {
-      this.form.controls.revenue.setValue(
-        this.calculateRevenue(),
-      )
+      this.form.controls.revenue.setValue(this.calculateRevenue());
     });
     this.form.controls.tva.valueChanges.subscribe(() => {
       this.form.controls.recommended_selling_price.setValue(
         this.calculateRecommendedSellingPrice(),
-      )
+      );
     });
     this.form.controls.selling_price.valueChanges.subscribe(() => {
-      this.form.controls.revenue.setValue(
-        this.calculateRevenue(),
-      )
+      this.form.controls.revenue.setValue(this.calculateRevenue());
       this.form.controls.recommended_selling_price.setValue(
         this.calculateRecommendedSellingPrice(),
-      )
+      );
     });
   }
   dataSource: MatTableDataSource<OrderLoadingPoints>;
@@ -390,9 +360,11 @@ export class OrdersUpdateComponent
 
   displayedColumns = [
     'Type',
+    'Company name',
     'Nation',
     'Zip Code',
     'City',
+    'Address',
     'Weight',
     'Date',
     'Edit',
@@ -410,6 +382,8 @@ export class OrdersUpdateComponent
         .filter((point) => point.type === LoadingPointsType.Unloading)
         .pop();
     }
+    const loading_address = `${first_loading?.zip_code} ${first_loading?.city} ${first_loading?.address}`;
+    const last_address = `${last_loading?.zip_code} ${last_loading?.city} ${last_loading?.address}`;
     this.form.controls.internal_order_id.setValue(item.internal_order_id);
     this.form.controls.first_loading_date.setValue(
       first_loading?.date ?? item?.first_loading_date ?? null,
@@ -424,9 +398,9 @@ export class OrdersUpdateComponent
     );
     this.form.controls.truck_number.setValue(item.truck_number ?? null);
     this.form.controls.trailer_number.setValue(item.trailer_number ?? null);
-    this.form.controls.loading_address.setValue(first_loading?.address ?? null);
+    this.form.controls.loading_address.setValue(loading_address ?? null);
     this.form.controls.unloading_address.setValue(
-      last_loading?.address ?? null,
+      last_address ?? null,
     );
     this.form.controls.status.setValue(item.status.id);
     this.form.controls.loading_type.setValue(item.loading_type ?? null);
@@ -447,8 +421,7 @@ export class OrdersUpdateComponent
       item.telax_invoice_due_date,
     );
     this.form.controls.telax_invoice_days_left.setValue(
-      item.telax_invoice_days_left ??
-        this.calculateDaysLeft(this.form.controls.telax_invoice_due_date.value),
+      item.telax_invoice_days_left ?? null,
     );
     this.form.controls.tva.setValue(item.tva ?? false);
     this.form.controls.date_of_order_sale.setValue(
@@ -464,15 +437,18 @@ export class OrdersUpdateComponent
       item.carrier_invoice_due_date,
     );
     this.form.controls.carrier_invoice_day_left.setValue(
-      item.carrier_invoice_day_left ??
-        this.calculateDaysLeft(
-          this.form.controls.carrier_invoice_due_date.value,
-        ),
+      item.carrier_invoice_day_left ?? null,
     );
-    this.form.controls.carrier_payment_status.setValue(item.carrier_payment_status ?? false);
+    this.form.controls.carrier_payment_status.setValue(
+      item.carrier_payment_status ?? false,
+    );
     this.form.controls.selling_price.setValue(item.selling_price ?? null);
-    this.form.controls.revenue.setValue(item.revenue ?? this.calculateRevenue());
-    this.form.controls.recommended_selling_price.setValue(item.recommended_selling_price ?? this.calculateRecommendedSellingPrice());
+    this.form.controls.revenue.setValue(
+      item.revenue ?? this.calculateRevenue(),
+    );
+    this.form.controls.recommended_selling_price.setValue(
+      item.recommended_selling_price ?? this.calculateRecommendedSellingPrice(),
+    );
     this.status.set(item.status.id);
     this.dataSource = new MatTableDataSource<OrderLoadingPoints>(
       item.loading_points_info || [],
@@ -486,18 +462,22 @@ export class OrdersUpdateComponent
   }
 
   calculateRevenue() {
-    return this.form.controls.order_price.value - (this.form.controls.selling_price.value ?? 0);
+    return (
+      this.form.controls.order_price.value -
+      (this.form.controls.selling_price.value ?? 0)
+    );
   }
 
   calculateRecommendedSellingPrice(): number {
-    let recommendedSellingPrice: number = Number(this.form.controls.selling_price.value) ?? 0;
+    let recommendedSellingPrice: number =
+      Number(this.form.controls.selling_price.value) ?? 0;
     if (this.form.controls.tva.value) {
       recommendedSellingPrice += this.calculateTVA(recommendedSellingPrice);
     }
     return Number(recommendedSellingPrice.toFixed(2));
   }
 
-  calculateTVA(selling_price:number): number{
+  calculateTVA(selling_price: number): number {
     return Number((selling_price * 0.21).toFixed(2));
   }
 
@@ -592,15 +572,6 @@ export class OrdersUpdateComponent
   get validLoadingPoints() {
     let result = true;
     if (!this.LoadingPointsForm.valid) {
-      result = false;
-    }
-    if (
-      this.dataSource.data.find(
-        (point) => point.type === this.LoadingPointsForm.controls.type.value,
-      ) &&
-      !this.edit
-    ) {
-      this.openSnackBar('A record of this type already exists', 'Close');
       result = false;
     }
 
