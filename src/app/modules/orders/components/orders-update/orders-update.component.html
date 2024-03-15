@@ -692,6 +692,15 @@
           (files$)="onFileChange('invoice_file', $event)"
         ></app-file-upload>
       </mat-grid-tile>
+      <mat-grid-tile>
+        <button
+          type="button"
+          mat-flat-button
+          color="accent"
+          (click)="downloadPDF()">
+          Download order PDF
+        </button>
+      </mat-grid-tile>
     </mat-grid-list>
     <button
       type="button"

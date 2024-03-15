@@ -352,7 +352,7 @@ export class InvoicesEditComponent
           }
         });
       }
-      this.form.controls.customer_id.setValue(null);
+      this.form.controls.customer_id.setValue(order.customer_id);
       this.form.controls.client_id.disable();
       this.updateOrderView(order);
     }
