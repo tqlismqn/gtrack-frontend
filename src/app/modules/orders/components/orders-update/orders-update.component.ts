@@ -572,6 +572,26 @@ export class OrdersUpdateComponent
       });
   }
 
+  downloadPDF() {
+    this.deps.http
+      .get(
+        `${environment.apiUrl}/api/v1/orders/downloadPDF/${this.item()
+          ?.id}?company_id=${this.service.companyId}`,
+        { responseType: 'blob' },
+      )
+      .subscribe((response) => {
+        const blob = new Blob([response as BlobPart], {
+          type: 'application/octet-stream',
+        });
+
+        const a = document.createElement('a');
+        a.href = window.URL.createObjectURL(blob);
+        a.download = `Order ID ${this.item()?.internal_order_id}.pdf`;
+        a.click();
+        a.remove();
+      });
+  }
+
   get validLoadingPoints() {
     let result = true;
     if (!this.LoadingPointsForm.valid) {

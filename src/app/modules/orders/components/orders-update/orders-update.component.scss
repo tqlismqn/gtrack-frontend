@@ -33,8 +33,11 @@
       margin-top: 32px;
     }
 
-    app-file-upload {
-      width: 100%;
+    mat-grid-tile {
+      app-file-upload,
+      button {
+        width: 100%;
+      }
     }
 
     .loading_points {
