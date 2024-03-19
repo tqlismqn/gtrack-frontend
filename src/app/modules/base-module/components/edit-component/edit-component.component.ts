@@ -99,7 +99,17 @@ export abstract class EditComponentComponent<
   }
 
   ngOnInit() {
-    //
+    this.service.updated$.subscribe((data: string) => {
+      this.service.processUpdate(data);
+    });
+
+    this.service.created$.subscribe((data: string) => {
+      this.service.processCreate(data);
+    });
+
+    this.service.deleted$.subscribe((data: string) => {
+      this.service.processDelete(data);
+    });
   }
 
   ngAfterViewInit() {

@@ -99,6 +99,18 @@ export class TableComponent<B extends { id: string }, F extends { id: string }>
   ngOnInit() {
     this.fetch();
 
+    this.service.updated$.subscribe((data: string) => {
+      this.fetch();
+    });
+
+    this.service.created$.subscribe((data: string) => {
+      this.fetch();
+    });
+
+    this.service.deleted$.subscribe((data: string) => {
+      this.fetch();
+    });
+
     this.sortingFieldControl.valueChanges
       .pipe(
         tap((value) => {

@@ -124,13 +124,36 @@ export abstract class BaseModuleService<
   }
 
   sseInit() {
-    if (this.isSuperAdminModule) {
-      this.sseInitSuperAdminModule();
-    } else if (this.isAdminModule) {
-      this.sseInitAdminModule();
-    } else {
-      this.sseInitModule();
-    }
+    // if (this.isSuperAdminModule) {
+    //   this.sseInitSuperAdminModule();
+    // } else if (this.isAdminModule) {
+    //   this.sseInitAdminModule();
+    // } else {
+    //   this.sseInitModule();
+    // }
+    this.deps.sse.echo
+      .private(`Module.${this.companyId}`)
+      .listen(
+        '.App\\Events\\Model\\ModuleUpdate',
+        (data: { id: string; module: string; action: string }) => {
+          console.log(data);
+          this.updated$.emit(data.id);
+        },
+      )
+      .listen(
+        '.App\\Events\\Model\\ModuleCreate',
+        (data: { id: string; module: string; action: string }) => {
+          console.log(data);
+          this.created$.emit(data.id);
+        },
+      )
+      .listen(
+        '.App\\Events\\Model\\ModuleDelete',
+        (data: { id: string; module: string; action: string }) => {
+          console.log(data);
+          this.deleted$.emit(data.id);
+        },
+      );
   }
 
   processUpdate(id: string) {
