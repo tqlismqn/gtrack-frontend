@@ -137,18 +137,21 @@ export abstract class BaseModuleService<
         '.App\\Events\\Model\\ModuleUpdate',
         (data: { id: string; module: string; action: string }) => {
           console.log(data);
+          this.updated$.emit(data.id);
         },
       )
       .listen(
         '.App\\Events\\Model\\ModuleCreate',
         (data: { id: string; module: string; action: string }) => {
           console.log(data);
+          this.created$.emit(data.id);
         },
       )
       .listen(
         '.App\\Events\\Model\\ModuleDelete',
         (data: { id: string; module: string; action: string }) => {
           console.log(data);
+          this.deleted$.emit(data.id);
         },
       );
   }
