@@ -27,9 +27,7 @@
             </mat-option>
           </mat-select>
         </mat-form-field>
-        <mat-form-field
-          *ngIf="form.controls.client_id as control"
-        >
+        <mat-form-field *ngIf="form.controls.client_id as control">
           <mat-label>Client ID</mat-label>
           <mat-select
             #clientID
@@ -86,10 +84,8 @@
               ></ngx-mat-select-search>
             </mat-option>
             <mat-option [value]="null">*Empty*</mat-option>
-            <mat-option
-              *ngFor="let order of this.orders"
-              [value]="order.id"
-            >{{ order.internal_order_id }} ({{
+            <mat-option *ngFor="let order of this.orders" [value]="order.id"
+              >{{ order.internal_order_id }} ({{
                 order.customer?.company_name
               }})</mat-option
             >
@@ -104,7 +100,6 @@
           </mat-select>
         </mat-form-field>
       </div>
-
 
       <mat-form-field *ngIf="form.controls.vat_id as control">
         <mat-label>Vat ID</mat-label>
@@ -477,10 +472,18 @@
   </div>
 
   <ng-container actions>
-    <button type="button" mat-flat-button color="accent" (click)="send()">
+    <button
+      type="button"
+      mat-flat-button
+      color="accent"
+      (click)="send()"
+      [disabled]="true"
+    >
       Send
     </button>
-    <button type="button" mat-flat-button color="accent">Print</button>
+    <button type="button" mat-flat-button color="accent" [disabled]="true">
+      Print
+    </button>
     <button type="button" mat-flat-button color="accent" (click)="download()">
       Download
     </button>
