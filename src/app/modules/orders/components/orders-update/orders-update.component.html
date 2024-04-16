@@ -96,6 +96,7 @@
             label="Attach Order"
             [uploadedFileName]="item()?.order_file?.name"
             (files$)="onFileChange('order_file', $event)"
+            [disabled]="true"
           ></app-file-upload>
         </mat-grid-tile>
         <mat-grid-tile>
@@ -103,6 +104,7 @@
             label="Attach CMR"
             [uploadedFileName]="item()?.cmr_file?.name"
             (files$)="onFileChange('cmr_file', $event)"
+            [disabled]="true"
           ></app-file-upload>
         </mat-grid-tile>
         <mat-grid-tile>
@@ -118,6 +120,7 @@
             label="Attach Invoice"
             [uploadedFileName]="item()?.invoice_file?.name"
             (files$)="onFileChange('invoice_file', $event)"
+            [disabled]="true"
           ></app-file-upload>
         </mat-grid-tile>
         <mat-grid-tile>
@@ -137,6 +140,7 @@
         color="accent"
         class="download-docs"
         (click)="downloadAll()"
+        [disabled]="true"
       >
         Download All Available Docs
       </button>
