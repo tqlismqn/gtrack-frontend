@@ -183,7 +183,6 @@ export class OrdersUpdateComponent
   changedStatus: boolean = false;
   customers: CustomerSelections = [];
   customers$ = new EventEmitter<CustomerSelections>();
-  show_full_form: boolean = false;
 
   countries = Object.keys(countries);
 
