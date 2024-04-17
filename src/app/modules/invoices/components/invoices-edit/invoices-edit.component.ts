@@ -199,6 +199,21 @@ export class InvoicesEditComponent
   searchingClientFieldControl = new FormControl<string>('internal_company_id');
   orderFilterControl = new FormControl<string>('');
   searchingOrderFieldControl = new FormControl<string>('internal_order_id');
+  typeOfDiscount = new FormControl<string | null>('');
+  discount = new FormControl<number | null>(null);
+
+  typeOfDiscountColumns: Selectable[] = [
+    {
+      name: '%',
+      value: 'percent',
+    },
+    ...(this.deps.companyService.currencies?.map((currency: any) => {
+      return {
+        name: currency.ID,
+        value: currency.rate,
+      };
+    }) as any),
+  ];
 
   searchableClientColumns: Selectable[] = [
     {
@@ -280,6 +295,10 @@ export class InvoicesEditComponent
       controls.client_id?.setValue(item.order.customer.internal_company_id);
       controls.order_id.enable();
       controls.client_id.disable();
+    }
+    if(item.discount){
+      this.typeOfDiscount.setValue(item.discount.type_of_discount);
+      this.discount.setValue(item.discount.discount);
     }
 
     this.cdr.markForCheck();
@@ -545,6 +564,17 @@ export class InvoicesEditComponent
         (currency: any) => currency.ID === this.form.controls.currency.value,
       );
       this.form.controls.course.setValue(rate.rate);
+
+      this.typeOfDiscountColumns = [
+        {
+          name: '%',
+          value: 'percent',
+        },
+        {
+          name: this.form.controls.currency.value,
+          value: this.form.controls.currency.value,
+        },
+      ];
     });
     this.form.controls.customer_id.valueChanges.subscribe(() => {
       this.orderFetch();
@@ -672,22 +702,22 @@ export class InvoicesEditComponent
   protected override get values(): any {
     const values = super.values;
     delete values['internal_invoice_id'];
-    if (this.invoiceItems) {
-      return {
-        ...super.values,
-        bank: this.banksValue,
-        order_id: this.form.controls.order_id.value,
-        customer_id: this.form.controls.customer_id.value,
-        items: this.invoiceItems,
-      };
-    }
-
-    return {
+    const other_values = {
       ...super.values,
       bank: this.banksValue,
       order_id: this.form.controls.order_id.value,
       customer_id: this.form.controls.customer_id.value,
-    };
+    }
+
+    if(this.discount.value) {
+      Object.assign(other_values, {discount: { type_of_discount: this.typeOfDiscount.value, discount: this.discount.value}})
+    }
+
+    if (this.invoiceItems) {
+      Object.assign(other_values, {items: this.invoiceItems})
+    }
+    console.log(other_values);
+    return other_values;
   }
 
   itemsGroup: FormGroup<InvoicesItemFormControl> =
