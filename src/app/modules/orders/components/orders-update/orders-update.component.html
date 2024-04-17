@@ -8,41 +8,44 @@
   [history]="item()?.history"
 >
   <div class="order_edit_form">
-    <div class="row">
-      <mat-form-field *ngIf="form.controls.internal_order_id as control">
-        <mat-label>Order number</mat-label>
-        <input matInput [formControl]="control" readonly />
+    <div class="left-block">
+      <div class="row">
+        <mat-form-field *ngIf="form.controls.internal_order_id as control">
+          <mat-label>Order number</mat-label>
+          <input matInput [formControl]="control" readonly />
+          <mat-error *ngIf="control.hasError('required')"
+            >This field is <b>required</b></mat-error
+          >
+        </mat-form-field>
+        <button color="primary" mat-icon-button type="button">
+          <mat-icon fontIcon="file_copy"></mat-icon>
+        </button>
+      </div>
+
+      <mat-form-field *ngIf="form.controls.status as control">
+        <mat-label>Order Status</mat-label>
+        <mat-select
+          [formControl]="control"
+          (selectionChange)="orderChangeStatus()"
+        >
+          <mat-option
+            *ngFor="let status of statusSelections()"
+            [value]="status.id"
+          >
+            {{ status.name }}
+          </mat-option>
+        </mat-select>
         <mat-error *ngIf="control.hasError('required')"
           >This field is <b>required</b></mat-error
         >
       </mat-form-field>
-      <button color="primary" mat-icon-button type="button">
-        <mat-icon fontIcon="file_copy"></mat-icon>
-      </button>
-    </div>
 
-    <mat-form-field *ngIf="form.controls.status as control">
-      <mat-label>Order Status</mat-label>
-      <mat-select
-        [formControl]="control"
-        (selectionChange)="orderChangeStatus()"
-      >
-        <mat-option
-          *ngFor="let status of statusSelections()"
-          [value]="status.id"
-        >
-          {{ status.name }}
-        </mat-option>
-      </mat-select>
-      <mat-error *ngIf="control.hasError('required')"
-        >This field is <b>required</b></mat-error
-      >
-    </mat-form-field>
-
-    <div
-      class="draft_status"
-      *ngIf="form.controls.status.value === OrderStatuses.DRAFT"
-    >
+      <div class="row row--stroke">
+        <mat-form-field *ngIf="form.controls.order_price as control">
+          <mat-label>Price</mat-label>
+          <input type="number" matInput [formControl]="control" step="0.01" />
+        </mat-form-field>
+      </div>
       <div class="row row--equal">
         <mat-form-field *ngIf="form.controls.first_loading_date as control">
           <mat-label>First Loading Date</mat-label>
@@ -74,12 +77,76 @@
           <mat-datepicker #picker2></mat-datepicker>
         </mat-form-field>
       </div>
-      <div class="row row--stroke">
-        <mat-form-field *ngIf="form.controls.order_price as control">
-          <mat-label>Price</mat-label>
-          <input type="number" matInput [formControl]="control" step="0.01" />
-        </mat-form-field>
+      <div class="loaded/unloaded_status" *ngIf="changedStatus">
+        <div class="row row--stroke">
+          <mat-form-field *ngIf="form.controls.change_status as control">
+            <mat-label>Reason for status change</mat-label>
+            <input matInput [formControl]="control" />
+          </mat-form-field>
+        </div>
+        <app-file-upload
+          label="Attach change of status file"
+          [uploadedFileName]="item()?.change_status_file?.name"
+          (files$)="onFileChange('change_status_file', $event)"
+        ></app-file-upload>
       </div>
+      <mat-grid-list cols="1" rowHeight="60px">
+        <mat-grid-tile>
+          <app-file-upload
+            label="Attach Order"
+            [uploadedFileName]="item()?.order_file?.name"
+            (files$)="onFileChange('order_file', $event)"
+            [disabled]="true"
+          ></app-file-upload>
+        </mat-grid-tile>
+        <mat-grid-tile>
+          <app-file-upload
+            label="Attach CMR"
+            [uploadedFileName]="item()?.cmr_file?.name"
+            (files$)="onFileChange('cmr_file', $event)"
+            [disabled]="true"
+          ></app-file-upload>
+        </mat-grid-tile>
+        <mat-grid-tile>
+          <app-file-upload
+            label="Attach Pallets"
+            [uploadedFileName]="item()?.pallets_file?.name"
+            (files$)="onFileChange('pallets_file', $event)"
+            [disabled]="true"
+          ></app-file-upload>
+        </mat-grid-tile>
+        <mat-grid-tile>
+          <app-file-upload
+            label="Attach Invoice"
+            [uploadedFileName]="item()?.invoice_file?.name"
+            (files$)="onFileChange('invoice_file', $event)"
+            [disabled]="true"
+          ></app-file-upload>
+        </mat-grid-tile>
+        <mat-grid-tile>
+          <button
+            type="button"
+            mat-flat-button
+            color="accent"
+            (click)="downloadPDF()"
+          >
+            Download order PDF
+          </button>
+        </mat-grid-tile>
+      </mat-grid-list>
+      <button
+        type="button"
+        mat-flat-button
+        color="accent"
+        class="download-docs"
+        (click)="downloadAll()"
+        [disabled]="true"
+      >
+        Download All Available Docs
+      </button>
+    </div>
+
+    <div class="right-block">
       <div class="row row--stroke">
         <mat-form-field *ngIf="form.controls.disponent_id as control">
           <mat-label>Disponent</mat-label>
@@ -125,49 +192,6 @@
         <button color="primary" mat-icon-button type="button">
           <mat-icon fontIcon="file_copy"></mat-icon>
         </button>
-      </div>
-    </div>
-
-    <div
-      class="open_status"
-      *ngIf="form.controls.status.value === OrderStatuses.OPEN"
-    >
-      <div class="row row--stroke">
-        <mat-form-field *ngIf="form.controls.order_price as control">
-          <mat-label>Price</mat-label>
-          <input type="number" matInput [formControl]="control" step="0.01" />
-        </mat-form-field>
-      </div>
-      <div class="row row--equal">
-        <mat-form-field *ngIf="form.controls.first_loading_date as control">
-          <mat-label>First Loading Date</mat-label>
-          <input
-            matInput
-            [matDatepicker]="picker1"
-            [formControl]="control"
-            readonly
-          />
-          <mat-datepicker-toggle
-            matIconSuffix
-            [for]="picker1"
-          ></mat-datepicker-toggle>
-          <mat-datepicker #picker1></mat-datepicker>
-        </mat-form-field>
-
-        <mat-form-field *ngIf="form.controls.last_uploading_date as control">
-          <mat-label>Last Uploading Date</mat-label>
-          <input
-            matInput
-            [matDatepicker]="picker2"
-            [formControl]="control"
-            readonly
-          />
-          <mat-datepicker-toggle
-            matIconSuffix
-            [for]="picker2"
-          ></mat-datepicker-toggle>
-          <mat-datepicker #picker2></mat-datepicker>
-        </mat-form-field>
       </div>
       <div class="row">
         <mat-form-field *ngIf="form.controls.loading_address as control">
@@ -215,9 +239,6 @@
           <input matInput [formControl]="control" />
         </mat-form-field>
       </div>
-    </div>
-
-    <div *ngIf="form.controls.status.value === OrderStatuses.IN_PROGRESS">
       <div class="row row--stroke">
         <mat-form-field *ngIf="form.controls.customer_id as control">
           <mat-label>Carrier</mat-label>
@@ -230,7 +251,7 @@
             </mat-option>
           </mat-select>
           <mat-error *ngIf="control.hasError('required')"
-            >This field is <b>required</b></mat-error
+          >This field is <b>required</b></mat-error
           >
         </mat-form-field>
       </div>
@@ -274,31 +295,12 @@
           <input type="number" matInput [formControl]="control" step="0.01" />
         </mat-form-field>
       </div>
-    </div>
-
-    <div class="loaded/unloaded_status" *ngIf="changedStatus">
-      <div class="row row--stroke">
-        <mat-form-field *ngIf="form.controls.change_status as control">
-          <mat-label>Reason for status change</mat-label>
-          <input matInput [formControl]="control" />
-        </mat-form-field>
-      </div>
-      <app-file-upload
-        label="Attach change of status file"
-        [uploadedFileName]="item()?.change_status_file?.name"
-        (files$)="onFileChange('change_status_file', $event)"
-      ></app-file-upload>
-    </div>
-    <div *ngIf="form.controls.status.value === OrderStatuses.READY_FOR_INVOICE">
       <div class="row row--stroke">
         <mat-form-field *ngIf="form.controls.cmr as control">
           <mat-label>CMR</mat-label>
           <input matInput [formControl]="control" />
         </mat-form-field>
       </div>
-    </div>
-
-    <div>
       <div class="row row--stroke">
         <mat-form-field *ngIf="form.controls.client_reference as control">
           <mat-label>Client reference</mat-label>
@@ -378,7 +380,7 @@
             <mat-option
               *ngFor="let status of receviedSelectStatusArray"
               [value]="ReceviedSelectStatus[status]"
-              >{{ status }}</mat-option
+            >{{ status }}</mat-option
             >
           </mat-select>
         </mat-form-field>
@@ -419,302 +421,35 @@
         <mat-form-field *ngIf="form.controls.carrier_payment_status as control">
           <mat-label>Carrier payment status</mat-label>
           <mat-select [formControl]="control">
-            <mat-option *ngFor="let status of paymentSelectStatusArray" [value]="PaymentSelectStatus[status]">{{ status }}</mat-option>
+            <mat-option
+              *ngFor="let status of paymentSelectStatusArray"
+              [value]="PaymentSelectStatus[status]"
+            >{{ status }}</mat-option
+            >
           </mat-select>
         </mat-form-field>
       </div>
       <div class="row row--stroke">
         <mat-form-field *ngIf="form.controls.selling_price as control">
           <mat-label>Selling Price</mat-label>
-          <input matInput [formControl]="control" type="number" step="0.01">
+          <input matInput [formControl]="control" type="number" step="0.01" />
         </mat-form-field>
       </div>
       <div class="row row--stroke">
         <mat-form-field *ngIf="form.controls.revenue as control">
           <mat-label>Revenue</mat-label>
-          <input matInput [formControl]="control" type="number" step="0.01">
+          <input matInput [formControl]="control" type="number" step="0.01" />
         </mat-form-field>
       </div>
       <div class="row row--stroke">
-        <mat-form-field *ngIf="form.controls.recommended_selling_price as control">
+        <mat-form-field
+          *ngIf="form.controls.recommended_selling_price as control"
+        >
           <mat-label>Recommended Selling Price + TVA21%</mat-label>
-          <input matInput [formControl]="control" type="number" step="0.01" >
+          <input matInput [formControl]="control" type="number" step="0.01" />
         </mat-form-field>
       </div>
     </div>
-
-    <button
-      type="button"
-      mat-flat-button
-      color="basic"
-      (click)="show_full_form = true"
-      [disabled]="show_full_form"
-    >
-      Show full form
-    </button>
-
-    <div class="hiden_fields" *ngIf="show_full_form">
-      <div
-        class="draft_status"
-        *ngIf="form.controls.status.value !== OrderStatuses.DRAFT"
-      >
-        <div class="row row--stroke">
-          <mat-form-field *ngIf="form.controls.disponent_id as control">
-            <mat-label>Disponent</mat-label>
-            <mat-select [formControl]="control">
-              <mat-option *ngFor="let user of users" [value]="user.id">
-                {{ user.name }}
-              </mat-option>
-            </mat-select>
-            <mat-error *ngIf="control.hasError('required')"
-              >This field is <b>required</b></mat-error
-            >
-          </mat-form-field>
-        </div>
-        <div class="row row--stroke">
-          <mat-form-field
-            *ngIf="form.controls.delivery_responsible_id as control"
-          >
-            <mat-label>Delivery Responsible(Verfolger)</mat-label>
-            <mat-select [formControl]="control">
-              <mat-option *ngFor="let user of users" [value]="user.id">
-                {{ user.name }}
-              </mat-option>
-            </mat-select>
-            <mat-error *ngIf="control.hasError('required')"
-              >This field is <b>required</b></mat-error
-            >
-          </mat-form-field>
-        </div>
-      </div>
-
-      <div
-        class="open_status"
-        *ngIf="form.controls.status.value !== OrderStatuses.OPEN"
-      >
-        <div class="row row--stroke">
-          <mat-form-field *ngIf="form.controls.order_price as control">
-            <mat-label>Price</mat-label>
-            <input type="number" matInput [formControl]="control" step="0.01" />
-          </mat-form-field>
-        </div>
-        <div class="row row--equal">
-          <mat-form-field *ngIf="form.controls.first_loading_date as control">
-            <mat-label>First Loading Date</mat-label>
-            <input
-              matInput
-              [matDatepicker]="picker1"
-              [formControl]="control"
-              readonly
-            />
-            <mat-datepicker-toggle
-              matIconSuffix
-              [for]="picker1"
-            ></mat-datepicker-toggle>
-            <mat-datepicker #picker1></mat-datepicker>
-          </mat-form-field>
-
-          <mat-form-field *ngIf="form.controls.last_uploading_date as control">
-            <mat-label>Last Uploading Date</mat-label>
-            <input
-              matInput
-              [matDatepicker]="picker2"
-              [formControl]="control"
-              readonly
-            />
-            <mat-datepicker-toggle
-              matIconSuffix
-              [for]="picker2"
-            ></mat-datepicker-toggle>
-            <mat-datepicker #picker2></mat-datepicker>
-          </mat-form-field>
-        </div>
-        <div class="row">
-          <mat-form-field *ngIf="form.controls.loading_address as control">
-            <mat-label>Loading Address</mat-label>
-            <input matInput [formControl]="control" />
-          </mat-form-field>
-          <button color="primary" mat-icon-button type="button">
-            <mat-icon fontIcon="file_copy"></mat-icon>
-          </button>
-        </div>
-        <div class="row">
-          <mat-form-field *ngIf="form.controls.unloading_address as control">
-            <mat-label>Unloading Address</mat-label>
-            <input matInput [formControl]="control" />
-          </mat-form-field>
-          <button color="primary" mat-icon-button type="button">
-            <mat-icon fontIcon="file_copy"></mat-icon>
-          </button>
-        </div>
-        <div class="row row--stroke">
-          <mat-form-field *ngIf="form.controls.cargo_type as control">
-            <mat-label>Cargo type</mat-label>
-            <input matInput [formControl]="control" />
-          </mat-form-field>
-        </div>
-        <div class="row row--stroke">
-          <mat-form-field *ngIf="form.controls.pallets as control">
-            <mat-label>Pallets</mat-label>
-            <input matInput [formControl]="control" />
-          </mat-form-field>
-        </div>
-        <div class="row row--stroke">
-          <mat-form-field *ngIf="form.controls.loading_type as control">
-            <mat-label>Loading type</mat-label>
-            <mat-select [formControl]="control" multiple>
-              <mat-option
-                *ngFor="let type of orderLoadingType"
-                [value]="type"
-                >{{ type }}</mat-option
-              >
-            </mat-select>
-          </mat-form-field>
-        </div>
-        <div class="row row--stroke">
-          <mat-form-field *ngIf="form.controls.trailer_type as control">
-            <mat-label>Trailer type</mat-label>
-            <input matInput [formControl]="control" />
-          </mat-form-field>
-        </div>
-      </div>
-
-      <div *ngIf="form.controls.status.value !== OrderStatuses.IN_PROGRESS">
-        <div class="row row--stroke">
-          <mat-form-field *ngIf="form.controls.customer_id as control">
-            <mat-label>Carrier</mat-label>
-            <mat-select [formControl]="control">
-              <mat-option
-                *ngFor="let customer of customers"
-                [value]="customer.id"
-              >
-                ({{ customer.internal_company_id }}) {{ customer.company_name }}
-              </mat-option>
-            </mat-select>
-            <mat-error *ngIf="control.hasError('required')"
-              >This field is <b>required</b></mat-error
-            >
-          </mat-form-field>
-        </div>
-        <div class="row">
-          <mat-form-field *ngIf="form.controls.truck_number as control">
-            <mat-label>Truck Number</mat-label>
-            <input matInput [formControl]="control" />
-          </mat-form-field>
-          <button color="primary" mat-icon-button type="button">
-            <mat-icon fontIcon="file_copy"></mat-icon>
-          </button>
-        </div>
-
-        <div class="row">
-          <mat-form-field *ngIf="form.controls.trailer_number as control">
-            <mat-label>Trailer Number</mat-label>
-            <input matInput [formControl]="control" />
-          </mat-form-field>
-          <button color="primary" mat-icon-button type="button">
-            <mat-icon fontIcon="file_copy"></mat-icon>
-          </button>
-        </div>
-
-        <div class="row row--stroke">
-          <mat-form-field *ngIf="form.controls.empty_km as control">
-            <mat-label>Empty KM</mat-label>
-            <input matInput [formControl]="control" />
-          </mat-form-field>
-        </div>
-
-        <div class="row row--stroke">
-          <mat-form-field *ngIf="form.controls.total_km as control">
-            <mat-label>Total KM</mat-label>
-            <input matInput [formControl]="control" />
-          </mat-form-field>
-        </div>
-
-        <div class="row row--stroke">
-          <mat-form-field *ngIf="form.controls.carrier_price as control">
-            <mat-label>Carrier price</mat-label>
-            <input type="number" matInput [formControl]="control" step="0.01" />
-          </mat-form-field>
-        </div>
-      </div>
-
-      <div class="loaded/unloaded_status" *ngIf="!changedStatus">
-        <div class="row row--stroke">
-          <mat-form-field *ngIf="form.controls.change_status as control">
-            <mat-label>Reason for status change</mat-label>
-            <input matInput [formControl]="control" />
-          </mat-form-field>
-        </div>
-        <app-file-upload
-          label="Attach change of status file"
-          [uploadedFileName]="item()?.change_status_file?.name"
-          (files$)="onFileChange('change_status_file', $event)"
-        ></app-file-upload>
-      </div>
-      <div
-        *ngIf="form.controls.status.value !== OrderStatuses.READY_FOR_INVOICE"
-      >
-        <div class="row row--stroke">
-          <mat-form-field *ngIf="form.controls.cmr as control">
-            <mat-label>CMR</mat-label>
-            <input matInput [formControl]="control" />
-          </mat-form-field>
-        </div>
-      </div>
-    </div>
-    <mat-grid-list cols="1" rowHeight="60px">
-      <mat-grid-tile>
-        <app-file-upload
-          label="Attach Order"
-          [uploadedFileName]="item()?.order_file?.name"
-          (files$)="onFileChange('order_file', $event)"
-          [disabled]="true"
-        ></app-file-upload>
-      </mat-grid-tile>
-      <mat-grid-tile>
-        <app-file-upload
-          label="Attach CMR"
-          [uploadedFileName]="item()?.cmr_file?.name"
-          (files$)="onFileChange('cmr_file', $event)"
-          [disabled]="true"
-        ></app-file-upload>
-      </mat-grid-tile>
-      <mat-grid-tile>
-        <app-file-upload
-          label="Attach Pallets"
-          [uploadedFileName]="item()?.pallets_file?.name"
-          (files$)="onFileChange('pallets_file', $event)"
-          [disabled]="true"
-        ></app-file-upload>
-      </mat-grid-tile>
-      <mat-grid-tile>
-        <app-file-upload
-          label="Attach Invoice"
-          [uploadedFileName]="item()?.invoice_file?.name"
-          (files$)="onFileChange('invoice_file', $event)"
-          [disabled]="true"
-        ></app-file-upload>
-      </mat-grid-tile>
-      <mat-grid-tile>
-        <button
-          type="button"
-          mat-flat-button
-          color="accent"
-          (click)="downloadPDF()">
-          Download order PDF
-        </button>
-      </mat-grid-tile>
-    </mat-grid-list>
-    <button
-      type="button"
-      mat-flat-button
-      color="accent"
-      class="download-docs"
-      (click)="downloadAll()"
-      [disabled]="true"
-    >
-      Download All Available Docs
-    </button>
     <div class="loading_points">
       <form
         [formGroup]="LoadingPointsForm"
