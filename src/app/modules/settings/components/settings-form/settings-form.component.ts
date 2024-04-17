@@ -43,6 +43,7 @@ export class SettingsFormComponent implements OnInit, OnDestroy {
       validators: [Validators.required],
       nonNullable: true,
     }),
+    conditions_terms: new FormControl<string | null>(''),
   });
 
   currenciesForm: FormGroup;
@@ -136,6 +137,9 @@ export class SettingsFormComponent implements OnInit, OnDestroy {
       this.form.controls.name.setValue(this.company.name);
       this.form.controls.employees_number.setValue(
         this.company.employees_number,
+      );
+      this.form.controls.conditions_terms.setValue(
+        this.company.conditions_terms ?? null,
       );
       this.cdr.markForCheck();
     }

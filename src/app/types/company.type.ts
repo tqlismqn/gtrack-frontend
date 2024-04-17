@@ -9,6 +9,7 @@ export interface Company {
   website: string;
   owner: boolean;
   currencies: Currencies[];
+  conditions_terms: string | null;
   access: {
     read_access: PermissionAccess;
     write_access: PermissionAccess;
@@ -23,6 +24,7 @@ export interface CompanyResponse {
   website: string;
   owner: boolean;
   currencies: Currencies[];
+  conditions_terms: string | null;
   access: {
     read_access: PermissionAccess;
     write_access: PermissionAccess;

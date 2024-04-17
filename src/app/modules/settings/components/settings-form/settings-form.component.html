@@ -28,6 +28,11 @@
         </mat-error>
       </mat-form-field>
 
+      <mat-form-field *ngIf="form.controls.conditions_terms as control">
+        <mat-label>Conditions terms</mat-label>
+        <textarea matInput [formControl]="control"></textarea>
+      </mat-form-field>
+
       <button
         type="submit"
         mat-flat-button
