@@ -27,6 +27,7 @@ export interface InvoiceResponse extends ModuleBaseResponse {
   items?: InvoiceItem[];
   internal_invoice_id: number;
   paid_sum: number | null;
+  discount?: InvoiceDiscount;
 }
 
 export interface Invoice extends ModuleBase {
@@ -50,6 +51,7 @@ export interface Invoice extends ModuleBase {
   items?: InvoiceItem[];
   internal_invoice_id: number;
   paid_sum: number | null;
+  discount?: InvoiceDiscount;
 }
 
 export interface InvoiceItem {
@@ -59,6 +61,11 @@ export interface InvoiceItem {
   price_per_item: number;
   price_vat: number;
   price: number;
+}
+
+export interface InvoiceDiscount {
+  type_of_discount: string;
+  discount: number;
 }
 
 export type CustomerFields = Pick<
