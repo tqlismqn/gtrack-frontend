@@ -82,6 +82,8 @@ interface OrdersEditForm {
   selling_price: FormControl<number | null>;
   revenue: FormControl<number | null>;
   recommended_selling_price: FormControl<number | null>;
+  order_issued_by_id: FormControl<string | null>;
+  supplier_id: FormControl<string | null>;
 }
 
 interface OrderStatusSelection extends Nameable {
@@ -247,6 +249,8 @@ export class OrdersUpdateComponent
     selling_price: new FormControl<number | null>(0),
     revenue: new FormControl<number | null>(0),
     recommended_selling_price: new FormControl<number | null>(0),
+    order_issued_by_id: new FormControl<string | null>(''),
+    supplier_id: new FormControl<string | null>(''),
   });
 
   status = signal<OrderStatuses>(OrderStatuses.DRAFT);
@@ -451,6 +455,10 @@ export class OrdersUpdateComponent
     this.form.controls.recommended_selling_price.setValue(
       item.recommended_selling_price ?? this.calculateRecommendedSellingPrice(),
     );
+    this.form.controls.order_issued_by_id.setValue(
+      item.order_issued_by_id ?? null,
+    );
+    this.form.controls.supplier_id.setValue(item.supplier_id ?? null);
     this.status.set(item.status.id);
     this.dataSource = new MatTableDataSource<OrderLoadingPoints>(
       item.loading_points_info || [],

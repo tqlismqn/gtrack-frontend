@@ -54,6 +54,8 @@ export interface OrderResponse extends ModuleBaseResponse {
   selling_price?: number;
   revenue?: number;
   recommended_selling_price?: number;
+  order_issued_by_id?: string;
+  supplier_id?: string;
 }
 
 export interface Order extends ModuleBase {
@@ -101,6 +103,8 @@ export interface Order extends ModuleBase {
   selling_price?: number;
   revenue?: number;
   recommended_selling_price?: number;
+  order_issued_by_id?: string;
+  supplier_id?: string;
 }
 
 export interface OrderFrontendStatus extends Nameable {

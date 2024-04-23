@@ -148,6 +148,32 @@
 
     <div class="right-block">
       <div class="row row--stroke">
+        <mat-form-field *ngIf="form.controls.order_issued_by_id as control">
+          <mat-label>Order issued by</mat-label>
+          <mat-select [formControl]="control">
+            <mat-option
+              *ngFor="let customer of customers"
+              [value]="customer.id"
+            >
+              {{ customer.company_name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="row row--stroke">
+        <mat-form-field *ngIf="form.controls.supplier_id as control">
+          <mat-label>Supplier</mat-label>
+          <mat-select [formControl]="control">
+            <mat-option
+              *ngFor="let customer of customers"
+              [value]="customer.id"
+            >
+              {{ customer.company_name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="row row--stroke">
         <mat-form-field *ngIf="form.controls.disponent_id as control">
           <mat-label>Disponent</mat-label>
           <mat-select [formControl]="control">
@@ -174,24 +200,6 @@
             >This field is <b>required</b></mat-error
           >
         </mat-form-field>
-      </div>
-      <div class="row">
-        <mat-form-field *ngIf="form.controls.loading_address as control">
-          <mat-label>Loading Address</mat-label>
-          <input matInput [formControl]="control" />
-        </mat-form-field>
-        <button color="primary" mat-icon-button type="button">
-          <mat-icon fontIcon="file_copy"></mat-icon>
-        </button>
-      </div>
-      <div class="row">
-        <mat-form-field *ngIf="form.controls.unloading_address as control">
-          <mat-label>Unloading Address</mat-label>
-          <input matInput [formControl]="control" />
-        </mat-form-field>
-        <button color="primary" mat-icon-button type="button">
-          <mat-icon fontIcon="file_copy"></mat-icon>
-        </button>
       </div>
       <div class="row">
         <mat-form-field *ngIf="form.controls.loading_address as control">
@@ -251,7 +259,7 @@
             </mat-option>
           </mat-select>
           <mat-error *ngIf="control.hasError('required')"
-          >This field is <b>required</b></mat-error
+            >This field is <b>required</b></mat-error
           >
         </mat-form-field>
       </div>
@@ -380,7 +388,7 @@
             <mat-option
               *ngFor="let status of receviedSelectStatusArray"
               [value]="ReceviedSelectStatus[status]"
-            >{{ status }}</mat-option
+              >{{ status }}</mat-option
             >
           </mat-select>
         </mat-form-field>
@@ -424,7 +432,7 @@
             <mat-option
               *ngFor="let status of paymentSelectStatusArray"
               [value]="PaymentSelectStatus[status]"
-            >{{ status }}</mat-option
+              >{{ status }}</mat-option
             >
           </mat-select>
         </mat-form-field>
