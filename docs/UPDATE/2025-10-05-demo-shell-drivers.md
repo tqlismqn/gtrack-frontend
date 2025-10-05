@@ -1,0 +1,4 @@
+- feat(demo): add animated demo shell with slide-out sidebar and Drivers module
+- routes: /public/demo/ (hash #/dashboard … #/drivers)
+- features: dark/light, filters, summary, bulk ops, drivers card w/ docs+salary, add form, uuid polyfill
+- note: demo хранит данные в localStorage (v4), все имена вымышленные.
