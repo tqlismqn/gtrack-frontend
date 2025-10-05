@@ -2,14 +2,11 @@ name: Lockfile Sync
 on:
   push:
     branches: [ "main" ]
-    paths:
-      - "package.json"
+    paths: [ "package.json" ]
   workflow_dispatch:
-
 permissions:
   contents: write
   pull-requests: write
-
 jobs:
   sync:
     runs-on: ubuntu-latest
@@ -20,7 +17,7 @@ jobs:
         with: { node-version: "20" }
       - name: Use npm@10
         run: npm i -g npm@10
-      - name: Regenerate lockfile only
+      - name: Regenerate lockfile (no install)
         run: |
           rm -rf node_modules
           npm install --package-lock-only
@@ -29,7 +26,7 @@ jobs:
         with:
           commit-message: "chore(lock): sync package-lock.json with package.json"
           title: "chore(lock): sync package-lock.json"
-          body: "Auto-generated lockfile update after package.json changes."
+          body: "Auto-generated after deps overrides (rimraf@^5, glob@^10, minimatch@^9)."
           branch: chore/lockfile-sync
           add-paths: |
             package-lock.json

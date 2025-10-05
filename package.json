@@ -2,8 +2,13 @@
   "name": "g-track-frontend",
   "version": "0.0.0",
   "engines": {
-    "node": "20.x",
-    "npm": ">=10.2.3"
+    "node": "20.x"
+  },
+  "packageManager": "npm@10",
+  "overrides": {
+    "rimraf": "^5.0.10",
+    "glob": "^10.4.5",
+    "minimatch": "^9.0.5"
   },
   "scripts": {
     "ng": "ng",

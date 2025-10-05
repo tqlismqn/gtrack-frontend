@@ -1,0 +1,3 @@
+- chore(deps): rimraf→^5; force glob→^10 & minimatch→^9 (removes inflight)
+- build: pin Node 20.x (.nvmrc + engines)
+- ci: lockfile-sync workflow to keep npm ci green
