@@ -2,7 +2,7 @@
   "name": "g-track-frontend",
   "version": "0.0.0",
   "engines": {
-    "node": ">=20.10.0",
+    "node": "20.x",
     "npm": ">=10.2.3"
   },
   "scripts": {
@@ -12,7 +12,8 @@
     "build-stage": "ng build --configuration staging",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "lint": "ng lint"
+    "lint": "ng lint --quiet=false",
+    "lint:ci": "ng lint --quiet"
   },
   "private": true,
   "dependencies": {
@@ -37,17 +38,18 @@
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^20.2.0",
-    "@angular-eslint/builder": "^20.2.0",
-    "@angular-eslint/eslint-plugin": "^20.2.0",
-    "@angular-eslint/eslint-plugin-template": "^20.2.0",
-    "@angular-eslint/schematics": "^20.2.0",
+    "@angular-eslint/builder": "^20.0.0",
+    "@angular-eslint/eslint-plugin": "^20.0.0",
+    "@angular-eslint/eslint-plugin-template": "^20.0.0",
+    "@angular-eslint/schematics": "^20.0.0",
     "@angular-eslint/template-parser": "^20.2.0",
     "@angular/cli": "^20.2.0",
     "@angular/compiler-cli": "^20.2.0",
     "@types/jasmine": "^5.1.4",
-    "@typescript-eslint/eslint-plugin": "^6.13.2",
-    "@typescript-eslint/parser": "^6.13.2",
-    "eslint": "^8.55.0",
+    "@typescript-eslint/eslint-plugin": "^8.10.0",
+    "@typescript-eslint/parser": "^8.10.0",
+    "angular-eslint": "^20.0.0",
+    "eslint": "^9.12.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.0.1",
     "jasmine-core": "^5.1.1",
