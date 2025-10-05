@@ -1,0 +1,7 @@
+targetRepo: tqlismqn/gtrack-docs
+targetBranch: main
+targetDir: import/gtrack-app-demo
+include:
+  - docs/**
+notes: |
+  Авто-импорт из GTrack-App-Demo.
