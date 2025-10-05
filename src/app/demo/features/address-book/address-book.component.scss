@@ -1,0 +1,19 @@
+.address-card {
+  background: var(--card);
+  color: var(--ink);
+  border-radius: 1.5rem;
+  box-shadow: 0 20px 40px rgba(15, 18, 34, 0.08);
+}
+
+.address-table {
+  width: 100%;
+}
+
+th {
+  color: var(--muted);
+  font-weight: 500;
+}
+
+mat-chip {
+  margin-right: 0.5rem;
+}

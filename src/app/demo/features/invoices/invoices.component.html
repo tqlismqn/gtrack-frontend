@@ -1,0 +1,41 @@
+<mat-card class="invoices-card">
+  <mat-card-title>Инвойсы</mat-card-title>
+  <mat-card-content>
+    <table mat-table [dataSource]="data">
+      <ng-container matColumnDef="number">
+        <th mat-header-cell *matHeaderCellDef>№</th>
+        <td mat-cell *matCellDef="let row">{{ row.number }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="customer">
+        <th mat-header-cell *matHeaderCellDef>Клиент</th>
+        <td mat-cell *matCellDef="let row">{{ row.customer }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="amount">
+        <th mat-header-cell *matHeaderCellDef>Сумма (CZK)</th>
+        <td mat-cell *matCellDef="let row">{{ row.amount | number }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef>Статус</th>
+        <td mat-cell *matCellDef="let row">
+          <mat-icon
+            class="status-icon"
+            [ngClass]="{
+              'status-paid': row.status === 'Оплачен',
+              'status-late': row.status === 'Просрочен',
+              'status-pending': row.status === 'В работе'
+            }"
+          >
+            {{ getStatusIcon(row.status) }}
+          </mat-icon>
+          {{ row.status }}
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+  </mat-card-content>
+</mat-card>

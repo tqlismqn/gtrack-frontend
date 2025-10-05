@@ -1,0 +1,26 @@
+.invoices-card {
+  background: var(--card);
+  color: var(--ink);
+  border-radius: 1.5rem;
+  box-shadow: 0 20px 40px rgba(15, 18, 34, 0.08);
+}
+
+table {
+  width: 100%;
+}
+
+.status-icon {
+  margin-right: 0.5rem;
+}
+
+.status-icon.status-paid {
+  color: var(--ok);
+}
+
+.status-icon.status-late {
+  color: var(--bad);
+}
+
+.status-icon.status-pending {
+  color: var(--warn);
+}

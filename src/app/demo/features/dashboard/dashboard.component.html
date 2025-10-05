@@ -1,0 +1,24 @@
+<section class="dashboard">
+  <article class="welcome">
+    <h1>Добро пожаловать в демо-панель</h1>
+    <p>
+      Здесь собраны ключевые метрики и быстрые ссылки на управление перевозками.
+      Используйте боковое меню для переключения разделов.
+    </p>
+  </article>
+
+  <div class="cards">
+    <mat-card class="metric-card" *ngFor="let metric of [
+      { icon: 'local_shipping', label: 'Активные водители', value: '24' },
+      { icon: 'inventory', label: 'Заказы в работе', value: '18' },
+      { icon: 'receipt_long', label: 'Новых инвойсов', value: '6' },
+      { icon: 'gpp_bad', label: 'Просроченные документы', value: '3' }
+    ]">
+      <mat-icon>{{ metric.icon }}</mat-icon>
+      <div>
+        <span class="value">{{ metric.value }}</span>
+        <span class="label">{{ metric.label }}</span>
+      </div>
+    </mat-card>
+  </div>
+</section>

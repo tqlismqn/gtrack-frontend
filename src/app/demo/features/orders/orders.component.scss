@@ -1,0 +1,11 @@
+.orders-card {
+  background: var(--card);
+  color: var(--ink);
+  border-radius: 1.5rem;
+  box-shadow: 0 12px 30px rgba(15, 18, 34, 0.08);
+}
+
+mat-nav-list a.mat-list-item {
+  border-radius: 1rem;
+  margin-bottom: 0.5rem;
+}

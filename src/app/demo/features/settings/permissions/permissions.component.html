@@ -1,0 +1,26 @@
+<mat-card class="permissions-card" *ngIf="form as formRef">
+  <mat-card-title>Права доступа</mat-card-title>
+  <mat-card-content>
+    <div class="columns">
+      <div class="column">
+        <h3>Роли</h3>
+        <mat-checkbox formControlName="isAdmin">Admin</mat-checkbox>
+        <mat-checkbox formControlName="isSuperAdmin">SuperAdmin</mat-checkbox>
+      </div>
+      <div class="column" formGroupName="access">
+        <h3>Доступ к разделам</h3>
+        <mat-checkbox formControlName="orders">Orders</mat-checkbox>
+        <mat-checkbox formControlName="invoices">Invoices</mat-checkbox>
+        <mat-checkbox formControlName="drivers">Drivers</mat-checkbox>
+        <mat-checkbox formControlName="settings">Settings</mat-checkbox>
+      </div>
+    </div>
+
+    <section class="summary">
+      <h4>Текущий профиль</h4>
+      <mat-chip-set>
+        <mat-chip *ngFor="let item of summary" color="primary" selected>{{ item }}</mat-chip>
+      </mat-chip-set>
+    </section>
+  </mat-card-content>
+</mat-card>

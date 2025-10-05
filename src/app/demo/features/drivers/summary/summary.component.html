@@ -1,0 +1,11 @@
+<section class="summary-chips" *ngIf="summary">
+  <mat-chip-set>
+    <mat-chip selected color="primary">Всего: {{ summary.total }}</mat-chip>
+    <mat-chip selected class="chip-active">Активные: {{ summary.active }}</mat-chip>
+    <mat-chip selected class="chip-leave">В отпуске: {{ summary.onLeave }}</mat-chip>
+    <mat-chip selected class="chip-inactive">Неактивные: {{ summary.inactive }}</mat-chip>
+    <mat-chip selected class="chip-ok">Документы OK: {{ summary.docsOk }}</mat-chip>
+    <mat-chip selected class="chip-warn">Документы ⚠️: {{ summary.docsWarn }}</mat-chip>
+    <mat-chip selected class="chip-bad">Документы ⛔️: {{ summary.docsBad }}</mat-chip>
+  </mat-chip-set>
+</section>

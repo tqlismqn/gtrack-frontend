@@ -1,0 +1,67 @@
+.table-card {
+  background: var(--card);
+  border-radius: 1.5rem;
+  box-shadow: 0 24px 60px rgba(15, 18, 34, 0.12);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.table-header {
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.bulk-actions button {
+  margin-left: 0.5rem;
+}
+
+.drivers-table {
+  width: 100%;
+}
+
+.drivers-table tr.selected {
+  background: rgba(90, 87, 255, 0.08);
+}
+
+.cell-name {
+  display: flex;
+  flex-direction: column;
+}
+
+.cell-name small {
+  color: var(--muted);
+}
+
+.doc-chip {
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.doc-chip.ok {
+  background: rgba(22, 163, 74, 0.12);
+  color: var(--ok);
+}
+
+.doc-chip.warn {
+  background: rgba(245, 158, 11, 0.12);
+  color: var(--warn);
+}
+
+.doc-chip.bad {
+  background: rgba(239, 68, 68, 0.12);
+  color: var(--bad);
+}
+
+.table-footer {
+  text-align: center;
+  padding: 1.5rem;
+  color: var(--muted);
+}

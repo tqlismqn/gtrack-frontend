@@ -1,0 +1,4 @@
+- feat(demo): добавлен Angular-роут /demo с оболочкой и модулем Drivers
+- UX: выезжающее меню, тёмная тема, анимации, Material
+- DataPort: DRIVERS_DATA (LocalStorage сейчас, API позже)
+- Seed: 9 фиктивных записей; локальное хранение v4

@@ -1,0 +1,129 @@
+<mat-card class="drawer-card" *ngIf="driver || adding">
+  <header class="drawer-header">
+    <div *ngIf="!adding && driver as current; else addTitle">
+      <h3>{{ current.fullName }}</h3>
+      <p>{{ current.email }} · {{ current.phone }}</p>
+    </div>
+    <ng-template #addTitle>
+      <div>
+        <h3>Добавить водителя</h3>
+      </div>
+    </ng-template>
+    <div class="header-actions">
+      <button mat-stroked-button color="primary" *ngIf="driver" (click)="shiftDocs.emit()">
+        <mat-icon>schedule</mat-icon>
+        Сдвинуть сроки
+      </button>
+      <button mat-icon-button (click)="close.emit()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+  </header>
+
+  <ng-container *ngIf="adding; else viewMode">
+    <form [formGroup]="form" (ngSubmit)="submit()" class="add-form">
+      <div class="grid">
+        <mat-form-field appearance="fill">
+          <mat-label>ФИО</mat-label>
+          <input matInput formControlName="fullName" required />
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Родное число</mat-label>
+          <input matInput formControlName="rc" required />
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>E-mail</mat-label>
+          <input matInput formControlName="email" required />
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Телефон</mat-label>
+          <input matInput formControlName="phone" required />
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Статус</mat-label>
+          <mat-select formControlName="status">
+            <mat-option value="Active">Active</mat-option>
+            <mat-option value="OnLeave">OnLeave</mat-option>
+            <mat-option value="Inactive">Inactive</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Гражданство</mat-label>
+          <mat-select formControlName="citizenship">
+            <mat-option value="CZ">CZ</mat-option>
+            <mat-option value="EU">EU</mat-option>
+            <mat-option value="Non-EU">Non-EU</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Локация</mat-label>
+          <mat-select formControlName="workplace">
+            <mat-option value="Praha">Praha</mat-option>
+            <mat-option value="Kladno">Kladno</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Дата найма</mat-label>
+          <input matInput formControlName="hireDate" type="date" />
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Контракт</mat-label>
+          <mat-select formControlName="contractType">
+            <mat-option value="Срочный">Срочный</mat-option>
+            <mat-option value="Бессрочный">Бессрочный</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="form-checkboxes">
+        <mat-checkbox formControlName="pasSouhlas">Pas &amp; souhlas</mat-checkbox>
+        <mat-checkbox formControlName="propiskaCZ">Прописка CZ</mat-checkbox>
+      </div>
+      <footer class="form-footer">
+        <span class="hint">Документы и зарплата будут заполнены автоматически.</span>
+        <span class="spacer"></span>
+        <button mat-stroked-button type="button" (click)="close.emit()">Отмена</button>
+        <button mat-flat-button color="primary" type="submit">Сохранить</button>
+      </footer>
+    </form>
+  </ng-container>
+
+  <ng-template #viewMode>
+    <mat-tab-group *ngIf="driver as current">
+      <mat-tab label="Общее">
+        <div class="tab-content">
+          <div class="info-grid">
+            <div><span class="label">Статус</span><strong>{{ current.status }}</strong></div>
+            <div><span class="label">Гражданство</span><strong>{{ current.citizenship }}</strong></div>
+            <div><span class="label">Локация</span><strong>{{ current.workplace }}</strong></div>
+            <div><span class="label">Найм</span><strong>{{ current.hireDate }}</strong></div>
+            <div><span class="label">Контракт</span><strong>{{ current.contractType }}</strong></div>
+            <div><span class="label">RC</span><strong>{{ current.rc }}</strong></div>
+            <div><span class="label">Pas &amp; souhlas</span><strong>{{ current.pasSouhlas ? 'Да' : 'Нет' }}</strong></div>
+            <div><span class="label">Прописка</span><strong>{{ current.propiskaCZ ? 'CZ' : 'Нет' }}</strong></div>
+          </div>
+        </div>
+      </mat-tab>
+      <mat-tab label="📄 Документы">
+        <div class="tab-content">
+          <ul>
+            <li *ngFor="let key of docKeys" [class]="docState(key)">
+              <span class="doc-key">{{ key | uppercase }}</span>
+              <span>{{ current.docs[key].uploaded ? 'Загружено' : 'Нет файла' }}</span>
+              <span>до {{ current.docs[key].expires | date }}</span>
+            </li>
+          </ul>
+        </div>
+      </mat-tab>
+      <mat-tab label="💰 Зарплата">
+        <div class="tab-content salary">
+          <div>Базовая: {{ current.salary.base | number }}</div>
+          <div>Бонус: {{ current.salary.bonus | number }}</div>
+          <div>Командировки: {{ current.salary.trips }}</div>
+          <div>Суточные: {{ current.salary.perDiem | number }}</div>
+          <div>Удержания: {{ current.salary.deductions | number }}</div>
+          <div class="total">Итого: {{ totalSalary | number }}</div>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+  </ng-template>
+</mat-card>

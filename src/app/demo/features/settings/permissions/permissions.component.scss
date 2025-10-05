@@ -1,0 +1,21 @@
+.permissions-card {
+  background: var(--card);
+  color: var(--ink);
+  border-radius: 1.5rem;
+  box-shadow: 0 20px 40px rgba(15, 18, 34, 0.08);
+  padding: 2rem;
+}
+
+.columns {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+}
+
+.column h3 {
+  margin-bottom: 0.75rem;
+}
+
+.summary {
+  margin-top: 2rem;
+}

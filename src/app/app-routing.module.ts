@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { APP_ROUTES } from './app.routes';
 import { LoginComponent } from './modules/auth/components/login/login.component';
 import { DashboardComponent } from './modules/dashboard/components/dashboard/dashboard.component';
 import { UserSurveyComponent } from './modules/auth/components/user-survey/user-survey.component';
@@ -117,6 +118,7 @@ moduleRoutes.push({
 });
 
 const routes: Routes = [
+  ...APP_ROUTES,
   {
     path: '',
     pathMatch: 'full',

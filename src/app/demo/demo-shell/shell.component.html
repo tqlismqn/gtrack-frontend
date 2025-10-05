@@ -1,0 +1,49 @@
+<mat-sidenav-container class="shell-container" autosize>
+  <mat-sidenav
+    #drawer
+    class="shell-sidenav"
+    [mode]="(isHandset$ | async) ? 'over' : 'side'"
+    [opened]="(isHandset$ | async) ? false : opened"
+  >
+    <div class="shell-logo">
+      <span class="logo-mark">🚚</span>
+      <div class="logo-text">
+        <strong>GTrack</strong>
+        <small>Demo Suite</small>
+      </div>
+    </div>
+    <mat-nav-list>
+      <a
+        mat-list-item
+        *ngFor="let item of menu"
+        [routerLink]="['/demo', item.path]"
+        routerLinkActive="active"
+        (click)="navigate(item.path, drawer)"
+      >
+        <mat-icon matListIcon>{{ item.icon }}</mat-icon>
+        <span matLine>{{ item.label }}</span>
+      </a>
+    </mat-nav-list>
+  </mat-sidenav>
+
+  <mat-sidenav-content class="shell-content">
+    <mat-toolbar class="topbar" color="primary">
+      <button mat-icon-button (click)="toggleSidenav(drawer)">
+        <mat-icon>menu</mat-icon>
+      </button>
+      <span class="topbar-title">Demo workspace</span>
+      <span class="spacer"></span>
+      <mat-form-field appearance="outline" class="search-field">
+        <mat-icon matPrefix>search</mat-icon>
+        <input matInput [formControl]="searchControl" placeholder="Поиск в демо" />
+      </mat-form-field>
+      <button mat-icon-button (click)="toggleTheme()" [matTooltip]="themeMode() === 'dark' ? 'Светлая тема' : 'Тёмная тема'">
+        <mat-icon>{{ themeMode() === 'dark' ? 'light_mode' : 'dark_mode' }}</mat-icon>
+      </button>
+    </mat-toolbar>
+
+    <div class="content-area">
+      <router-outlet></router-outlet>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>

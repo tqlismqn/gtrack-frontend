@@ -1,0 +1,48 @@
+.dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  color: var(--ink);
+}
+
+.welcome {
+  background: var(--card);
+  padding: 2rem;
+  border-radius: 1.5rem;
+  box-shadow: 0 20px 40px rgba(15, 18, 34, 0.08);
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+}
+
+.metric-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.5rem;
+  border-radius: 1.5rem;
+  background: var(--card);
+  color: inherit;
+}
+
+.metric-card mat-icon {
+  font-size: 32px;
+  width: 32px;
+  height: 32px;
+  color: var(--brand);
+}
+
+.metric-card .value {
+  display: block;
+  font-size: 1.75rem;
+  font-weight: 700;
+}
+
+.metric-card .label {
+  display: block;
+  font-size: 0.875rem;
+  color: var(--muted);
+}

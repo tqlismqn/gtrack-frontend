@@ -1,0 +1,14 @@
+<section class="icons-card">
+  <h3>Документы</h3>
+  <div class="icons-grid">
+    <div class="icon-item" *ngFor="let stat of stats">
+      <mat-icon>{{ stat.icon }}</mat-icon>
+      <div class="label">{{ stat.label }}</div>
+      <div class="counts">
+        <span class="ok">OK {{ stat.ok }}</span>
+        <span class="warn">⚠️ {{ stat.warn }}</span>
+        <span class="bad">⛔️ {{ stat.bad }}</span>
+      </div>
+    </div>
+  </div>
+</section>

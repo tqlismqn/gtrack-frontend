@@ -1,0 +1,47 @@
+<section class="filters">
+  <div class="row">
+    <mat-form-field appearance="fill">
+      <mat-label>Статус</mat-label>
+      <mat-select formControlName="status">
+        <mat-option *ngFor="let option of statusOptions" [value]="option.value">
+          {{ option.label }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Документы</mat-label>
+      <mat-select formControlName="docState">
+        <mat-option *ngFor="let option of docOptions" [value]="option.value">
+          {{ option.label }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Гражданство</mat-label>
+      <mat-select formControlName="citizenship">
+        <mat-option *ngFor="let option of citizenshipOptions" [value]="option.value">
+          {{ option.label }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Локация</mat-label>
+      <mat-select formControlName="workplace">
+        <mat-option *ngFor="let option of workplaceOptions" [value]="option.value">
+          {{ option.label }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <div class="row bottom">
+    <mat-slide-toggle formControlName="problemsOnly">Только с проблемами</mat-slide-toggle>
+    <button mat-stroked-button type="button" (click)="resetFilters()">
+      <mat-icon>restart_alt</mat-icon>
+      Сбросить фильтры
+    </button>
+  </div>
+</section>

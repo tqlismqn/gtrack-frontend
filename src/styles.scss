@@ -5,6 +5,26 @@ html, body {
   height: 100%;
 }
 
+:root {
+  --bg: #f6f7fb;
+  --ink: #1f2336;
+  --muted: #6d7392;
+  --card: #fff;
+  --line: #e5e7f0;
+  --brand: #5a57ff;
+  --ok: #16a34a;
+  --warn: #f59e0b;
+  --bad: #ef4444;
+}
+
+body.dark {
+  --bg: #0f1222;
+  --ink: #f6f7fb;
+  --muted: #a0a5c2;
+  --card: #1a1d2e;
+  --line: #33364d;
+}
+
 body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;

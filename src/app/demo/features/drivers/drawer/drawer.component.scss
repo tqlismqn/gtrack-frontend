@@ -1,0 +1,103 @@
+.drawer-card {
+  background: var(--card);
+  border-radius: 1.5rem;
+  box-shadow: 0 24px 60px rgba(15, 18, 34, 0.12);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.drawer-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.drawer-header h3 {
+  margin: 0;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.add-form .grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+}
+
+.form-checkboxes {
+  display: flex;
+  gap: 1rem;
+}
+
+.form-footer {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.form-footer .spacer {
+  flex: 1 1 auto;
+}
+
+.tab-content {
+  padding: 1rem 0;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 1rem;
+}
+
+.info-grid .label {
+  display: block;
+  color: var(--muted);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+li {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  border-radius: 1rem;
+  background: rgba(99, 102, 241, 0.08);
+}
+
+li.ok {
+  background: rgba(22, 163, 74, 0.12);
+}
+
+li.warn {
+  background: rgba(245, 158, 11, 0.12);
+}
+
+li.bad {
+  background: rgba(239, 68, 68, 0.12);
+}
+
+.salary {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.salary .total {
+  margin-top: 0.75rem;
+  font-weight: 700;
+}

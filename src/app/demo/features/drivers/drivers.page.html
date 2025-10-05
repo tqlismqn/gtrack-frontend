@@ -1,0 +1,59 @@
+<section class="drivers-page">
+  <header class="page-header">
+    <div>
+      <h1>Drivers Demo</h1>
+      <p>Фильтры, сводка и работа с демо-данными водителей.</p>
+    </div>
+    <div class="header-actions">
+      <button mat-raised-button color="primary" (click)="addDriver()">
+        <mat-icon>add</mat-icon>
+        Добавить
+      </button>
+      <button mat-stroked-button (click)="seedDemo()">
+        <mat-icon>auto_awesome</mat-icon>
+        Наполнить демо
+      </button>
+      <button mat-stroked-button color="warn" (click)="resetDemo()">
+        <mat-icon>restart_alt</mat-icon>
+        Сбросить
+      </button>
+      <button mat-stroked-button (click)="addRandom()">
+        <mat-icon>casino</mat-icon>
+        Случайный
+      </button>
+    </div>
+  </header>
+
+  <mat-progress-bar *ngIf="loading()" mode="indeterminate"></mat-progress-bar>
+
+  <app-drivers-summary [summary]="summary()"></app-drivers-summary>
+
+  <app-drivers-filters
+    [filters]="filters()"
+    (filtersChange)="onFiltersChange($event)"
+    (reset)="onResetFilters()"
+  ></app-drivers-filters>
+
+  <div class="grid">
+    <app-drivers-table
+      class="grid-table"
+      [drivers]="drivers()"
+      [selectedIds]="selectedIds()"
+      (selectDriver)="onSelectDriver($event)"
+      (toggleSelection)="onToggleSelection($event)"
+      (toggleSelectionAll)="onToggleAll($event)"
+      (removeSelected)="onRemoveSelected()"
+      (activateSelected)="onActivateSelected()"
+    ></app-drivers-table>
+
+    <app-drivers-icons class="grid-icons" [drivers]="drivers()"></app-drivers-icons>
+  </div>
+
+  <app-drivers-drawer
+    [driver]="selectedDriver()"
+    [adding]="adding"
+    (close)="closeDrawer()"
+    (save)="onSave($event)"
+    (shiftDocs)="shiftDocs()"
+  ></app-drivers-drawer>
+</section>
