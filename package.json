@@ -2,8 +2,14 @@
   "name": "g-track-frontend",
   "version": "0.0.0",
   "engines": {
-    "node": ">=20.10.0",
-    "npm": ">=10.2.3"
+    "node": "20.x"
+  },
+  "packageManager": "npm@10",
+  "overrides": {
+    "rimraf": "^5.0.5",
+    "glob": "^10.3.12",
+    "@humanwhocodes/object-schema": "npm:@eslint/object-schema@^2.1.0",
+    "@humanwhocodes/config-array": "npm:@eslint/config-array@^0.17.0"
   },
   "scripts": {
     "ng": "ng",
@@ -47,6 +53,7 @@
     "@types/jasmine": "^5.1.4",
     "@typescript-eslint/eslint-plugin": "^6.13.2",
     "@typescript-eslint/parser": "^6.13.2",
+    "rimraf": "^5.0.5",
     "eslint": "^8.55.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.0.1",

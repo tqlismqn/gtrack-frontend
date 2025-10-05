@@ -1,0 +1,3 @@
+- chore(deps): pin Node.js 20.x + npm@10 for Vercel and local dev (.nvmrc, engines, packageManager)
+- chore(vercel): use `npm ci --loglevel=error` to keep deploy logs clean
+- chore(deps): override rimraf/glob/@humanwhocodes to drop deprecated transitive packages
