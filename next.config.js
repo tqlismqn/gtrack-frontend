@@ -1,21 +1,12 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   async redirects() {
-    return [
-      {
-        source: '/demo',
-        destination: '/demo/',
-        permanent: true,
-      },
-    ];
+    // никаких редиректов под /demo — этим занимается middleware
+    return [];
   },
   async rewrites() {
-    return [
-      {
-        source: '/demo/:path*',
-        destination: '/demo/:path*',
-      },
-    ];
+    // никаких rewrite под /demo
+    return [];
   },
   async headers() {
     return [

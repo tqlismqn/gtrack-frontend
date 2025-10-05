@@ -1,0 +1,3 @@
+- fix(demo): edge middleware serves /public/demo/index.html and bypasses app router
+- add: floating “Demo” button (env-gated NEXT_PUBLIC_SHOW_DEMO)
+- note: no vercel.json routes; вся логика на уровне middleware Next
