@@ -1,0 +1,3 @@
+- feat(demo): data source switch for Drivers — API adapter + env toggle + mock interceptor
+- env: demoUseApi=false|true, demoApiBase="/api"
+- when demoUseApi=false → DemoApiInterceptor эмулирует /api/drivers на базе LocalStorage
