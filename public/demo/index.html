@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>G-Track Demo</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body data-theme="light">
+  <aside id="sidebar" class="sidebar sidebar--open">
+    <div class="sidebar-header">
+      <img src="./assets/logo.svg" alt="G-Track" class="logo" />
+      <button id="sidebarCollapse" class="icon-btn" aria-label="Toggle sidebar">≡</button>
+    </div>
+    <nav class="menu">
+      <a class="menu-item" href="#/dashboard">🏠 <span>Dashboard</span></a>
+      <a class="menu-item" href="#/address-book">📇 <span>Address Book</span></a>
+      <a class="menu-item" href="#/orders">📦 <span>Orders</span></a>
+      <a class="menu-item" href="#/invoices">🧾 <span>Invoices</span></a>
+      <a class="menu-item" href="#/drivers">🚚 <span>Drivers</span></a>
+      <div class="menu-group">
+        <a class="menu-item" href="#/settings">⚙️ <span>Settings</span></a>
+        <div class="submenu">
+          <span class="submenu-title">Permissions</span>
+          <a class="menu-subitem" href="#/settings?section=permissions">Admin</a>
+          <a class="menu-subitem" href="#/settings?section=permissions">SuperAdmin</a>
+        </div>
+      </div>
+    </nav>
+  </aside>
+  <header class="topbar">
+    <button id="sidebarToggle" class="icon-btn" aria-label="Toggle sidebar">≡</button>
+    <input type="search" id="globalSearch" class="search" placeholder="Search drivers…" />
+    <button id="themeToggle" class="icon-btn" aria-label="Toggle theme" data-mode="light">🌙</button>
+  </header>
+  <main id="app" class="content" role="main">
+  </main>
+  <div id="drawer" class="drawer hidden" aria-hidden="true">
+    <div id="card" class="drawer-card"></div>
+  </div>
+  <div id="toastHost" class="toasts" aria-live="polite"></div>
+  <footer class="footer">Demo v1.0 · Crafted for G-Track</footer>
+  <script src="./main.js" defer></script>
+</body>
+</html>
