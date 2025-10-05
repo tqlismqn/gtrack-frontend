@@ -10,7 +10,7 @@ const IS_DEMO_MODE = environment.demoMode || DEMO_MODE;
 
 @Injectable({ providedIn: 'root' })
 export class SseService {
-  echo!: Echo<any>;
+  echo!: Echo;
   init = false;
   init$ = new EventEmitter<void>();
 
