@@ -32,3 +32,14 @@ Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To u
 ## Further help
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+
+## Demo data source
+
+- Toggle in `src/environments/*`: `demoUseApi` (false → LocalStorage + mock API; true → DriversApiService → реальный бэк).
+- API contract (по умолчанию):
+  - `GET ${demoApiBase}/drivers` → `Driver[]`
+  - `PUT ${demoApiBase}/drivers` → bulk replace (void)
+  - `POST ${demoApiBase}/drivers` → create (returns `Driver`)
+  - `PUT ${demoApiBase}/drivers/:id` → update (returns `Driver`)
+  - `DELETE ${demoApiBase}/drivers` body `{ids: string[]}` → bulk delete (void)
+- `demoApiBase` можно перенаправить на прокси/домен бэка.
