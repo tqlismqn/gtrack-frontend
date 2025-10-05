@@ -1,3 +1,10 @@
 {
-  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
+  "version": 2,
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/index.html" }
+  ],
+  "routes": [
+    { "src": "^/demo$", "status": 308, "headers": { "Location": "/demo/" } },
+    { "src": "^/demo/(.*)$", "dest": "/demo/$1" }
+  ]
 }

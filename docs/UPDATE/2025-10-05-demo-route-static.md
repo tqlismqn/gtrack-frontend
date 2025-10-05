@@ -1,0 +1,3 @@
+- fix(demo): serve static /public/demo under /demo (Next rewrites + Vercel routes)
+- redirect: /demo → /demo/
+- note: demo — чистый статик (HTML/CSS/JS), без сторонних lib, не конфликтует с Angular/Material стэком
