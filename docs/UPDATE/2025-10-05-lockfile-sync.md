@@ -1,0 +1,3 @@
+- fix(vercel): use `npm install` during build to tolerate out-of-sync lockfile
+- ci: add lockfile-sync workflow to auto-create PR with updated package-lock.json
+- note: after merging the lockfile PR you may switch back to `npm ci` if desired
