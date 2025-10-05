@@ -3,6 +3,7 @@ import { Environment } from './environment.type';
 export const environment: Environment = {
   production: true,
   authBypass: true,
+  menuBypass: true,
   auth0: {
     domain: 'login.g-track.eu',
     clientId: 'wbhoXTThDdpAdqNV1WlGHwEJdvKdoMcB',
