@@ -3,14 +3,24 @@ on:
   pull_request:
   push:
     branches: [ "main" ]
-permissions: { contents: read }
+permissions:
+  contents: read
+
 jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with: { fetch-depth: 0 }
+
       - uses: actions/setup-node@v4
-        with: { node-version: "20" }
-      - run: npm ci --loglevel=error
-      - run: npm run lint:ci
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install deps (ci with fallback)
+        run: |
+          npm ci --loglevel=error || (echo "::warning:: npm ci failed, falling back to npm install"; npm install --no-audit --no-fund --loglevel=error)
+
+      - name: Run lint
+        run: npm run lint:ci
