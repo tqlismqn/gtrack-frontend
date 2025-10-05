@@ -9,7 +9,7 @@ import {
 import { Observable, of } from 'rxjs';
 
 import { environment } from '../../../environments/environment';
-import { Driver } from './data.port';
+import { Driver, DriverDocumentState } from './data.port';
 import {
   ensureDriversSeed,
   readDriversFromStorage,
@@ -51,12 +51,34 @@ const cloneDrivers = (drivers: Driver[]): Driver[] => drivers.map((item) => ({
   salary: { ...item.salary },
 }));
 
-const mergeDocs = (original: Driver['docs'], patch?: Partial<Driver['docs']>) => {
+type DocKey =
+  | 'passport'
+  | 'visa'
+  | 'license'
+  | 'code95'
+  | 'tachograph'
+  | 'medical'
+  | 'adr';
+type DriverDocs = Record<DocKey, DriverDocumentState>;
+type PartialDriverDocs = Partial<DriverDocs>;
+
+/** Безопасный мердж карты документов: никогда не возвращает undefined в значениях */
+function mergeDriverDocs(
+  current: DriverDocs,
+  patch?: PartialDriverDocs,
+): DriverDocs {
   if (!patch) {
-    return original;
+    return current;
   }
-  return { ...original, ...patch };
-};
+  const out: DriverDocs = { ...current };
+  for (const key of Object.keys(patch) as (keyof DriverDocs)[]) {
+    const value = patch[key];
+    if (value) {
+      out[key] = { ...(current[key] ?? ({} as DriverDocumentState)), ...value };
+    }
+  }
+  return out;
+}
 
 const mergeSalary = (original: Driver['salary'], patch?: Partial<Driver['salary']>) => {
   if (!patch) {
@@ -136,26 +158,24 @@ export class DemoApiInterceptor implements HttpInterceptor {
 
       if (method === 'PUT' || method === 'PATCH') {
         const payload = (req.body || {}) as Partial<Driver>;
-        const updatedList: Driver[] = [];
-        let updatedDriver: Driver | undefined;
-        for (const driver of getList()) {
-          if (driver.id === id) {
-            updatedDriver = {
-              ...driver,
-              ...payload,
-              docs: mergeDocs(driver.docs, payload.docs),
-              salary: mergeSalary(driver.salary, payload.salary),
-            };
-            updatedList.push(updatedDriver);
-          } else {
-            updatedList.push(driver);
-          }
-        }
-        if (!updatedDriver) {
+        const list = getList();
+        const idx = list.findIndex((driver) => driver.id === id);
+        if (idx === -1) {
           return of(new HttpResponse({ status: 404 }));
         }
-        writeDriversToStorage(updatedList);
-        return of(new HttpResponse({ status: 200, body: updatedDriver }));
+        const prev = list[idx];
+        const updated: Driver = {
+          ...prev,
+          ...payload,
+          docs: mergeDriverDocs(
+            prev.docs as DriverDocs,
+            payload.docs as PartialDriverDocs,
+          ),
+          salary: mergeSalary(prev.salary, payload.salary),
+        };
+        list[idx] = updated;
+        writeDriversToStorage(list);
+        return of(new HttpResponse({ status: 200, body: updated }));
       }
 
       if (method === 'DELETE') {
