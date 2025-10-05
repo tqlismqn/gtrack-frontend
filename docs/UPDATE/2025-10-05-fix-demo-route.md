@@ -1,0 +1,4 @@
+- fix(vercel): remove /demo rewrite to root; enable SPA fallback to index.html
+- feat(routes): ensure lazy route /demo registered
+- feat(nav): add menu links to /demo and /demo/drivers
+- note: baseHref="/"; deep linking /demo/* работает на Vercel

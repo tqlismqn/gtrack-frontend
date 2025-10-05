@@ -39,7 +39,8 @@
               "src/styles.scss"
             ],
             "scripts": [],
-            "ngswConfigPath": "ngsw-config.json"
+            "ngswConfigPath": "ngsw-config.json",
+            "baseHref": "/"
           },
           "configurations": {
             "production": {
