@@ -20,7 +20,7 @@ jobs:
         with: { node-version: "20" }
       - name: Use npm@10
         run: npm i -g npm@10
-      - name: Regenerate lockfile only
+      - name: Regenerate lockfile (no install)
         run: |
           rm -rf node_modules
           npm install --package-lock-only

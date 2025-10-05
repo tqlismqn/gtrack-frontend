@@ -1,4 +1,4 @@
 {
   "version": 2,
-  "installCommand": "npm install --no-audit --no-fund --loglevel=error"
+  "installCommand": "npm ci --loglevel=error || npm install --no-audit --no-fund --loglevel=error"
 }
