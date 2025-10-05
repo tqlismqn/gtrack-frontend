@@ -32,6 +32,7 @@ export interface CustomerBankForm {
 }
 
 @Component({
+  standalone: false,
   selector: 'app-customers-bank-collection',
   templateUrl: './customers-bank-collection.component.html',
   styleUrls: ['./customers-bank-collection.component.scss'],

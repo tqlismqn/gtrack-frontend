@@ -28,6 +28,7 @@ import { defaultSearchableFields } from '../../constants/default-searchable-fiel
 import { BaseModuleService } from '../../services/base-module-service';
 
 @Component({
+  standalone: false,
   selector: 'app-table',
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.scss'],

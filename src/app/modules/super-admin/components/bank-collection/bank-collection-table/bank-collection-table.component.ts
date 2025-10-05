@@ -10,6 +10,7 @@ import {
 import { BankCollectionService } from '../../../../../services/bank-collection.service';
 
 @Component({
+  standalone: false,
   selector: 'app-bank-collection-table',
   templateUrl: './bank-collection-table.component.html',
   styleUrls: ['./bank-collection-table.component.scss'],

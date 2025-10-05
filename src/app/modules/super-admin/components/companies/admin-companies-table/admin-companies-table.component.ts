@@ -7,6 +7,7 @@ import { AdminCompany, AdminCompanyResponse } from '../../../types/companies';
 import { AdminCompaniesService } from '../../../services/admin-companies.service';
 
 @Component({
+  standalone: false,
   selector: 'app-admin-companies-table',
   templateUrl: './admin-companies-table.component.html',
   styleUrls: ['./admin-companies-table.component.scss'],

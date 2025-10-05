@@ -26,6 +26,7 @@ type BankCollectionFormGroup = {
 };
 
 @Component({
+  standalone: false,
   selector: 'app-bank-collection-edit',
   templateUrl: './bank-collection-edit.component.html',
   styleUrls: ['./bank-collection-edit.component.scss'],

@@ -13,6 +13,7 @@ import { GlobalErrorHandler } from '../../../../errors/global-error-handler';
 import { initialQueryParams } from '../../../../../main';
 
 @Component({
+  standalone: false,
   selector: 'app-verify',
   templateUrl: './verify.component.html',
   styleUrls: ['./verify.component.scss'],

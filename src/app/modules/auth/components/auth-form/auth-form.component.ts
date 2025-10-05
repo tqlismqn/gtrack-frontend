@@ -11,6 +11,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 export type LoadingState = 'loading' | 'success' | 'error';
 
 @Component({
+  standalone: false,
   selector: 'app-auth-form',
   templateUrl: './auth-form.component.html',
   styleUrls: ['./auth-form.component.scss'],

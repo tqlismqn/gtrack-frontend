@@ -24,6 +24,7 @@ type AdminCompaniesFormGroup = {
 };
 
 @Component({
+  standalone: false,
   selector: 'app-admin-companies-edit',
   templateUrl: './admin-companies-edit.component.html',
   styleUrls: ['./admin-companies-edit.component.scss'],

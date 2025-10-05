@@ -7,6 +7,7 @@ import {
 } from '@angular/core';
 
 @Component({
+  standalone: false,
   selector: 'app-file-upload',
   templateUrl: './file-upload.component.html',
   styleUrls: ['./file-upload.component.scss'],

@@ -11,6 +11,7 @@ import { Selectable } from '../../../../types/selectable.type';
 import { PermissionsService } from '../../services/permissions.service';
 
 @Component({
+  standalone: false,
   selector: 'app-permissions-table',
   templateUrl: './permissions-table.component.html',
   styleUrls: ['./permissions-table.component.scss'],

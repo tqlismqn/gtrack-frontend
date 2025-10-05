@@ -6,6 +6,7 @@ import { Invoice, InvoiceResponse } from '../../types/invoices.type';
 import { InvoicesService } from '../../services/invoices.service';
 
 @Component({
+  standalone: false,
   selector: 'app-invoices-table',
   templateUrl: './invoices-table.component.html',
   styleUrls: ['./invoices-table.component.scss'],

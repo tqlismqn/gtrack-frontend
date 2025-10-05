@@ -3,6 +3,7 @@ import { AuthService } from '../../../auth/services/auth.service';
 import { MatTableDataSource } from "@angular/material/table";
 
 @Component({
+  standalone: false,
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],

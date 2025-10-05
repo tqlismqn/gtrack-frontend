@@ -2,134 +2,38 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  ElementRef,
-  EventEmitter,
   OnDestroy,
-  OnInit,
-  ViewChild,
-} from "@angular/core";
-import { takeUntil, tap } from "rxjs";
-import { environment } from "../../../environments/environment";
-import { AdminModules, Modules, SuperAdminModules } from "../../constants/modules";
-import { PermissionAccessType } from "../../constants/permission-access";
-import { AuthService } from "../../modules/auth/services/auth.service";
-import { CompanyService } from "../../services/company.service";
-
-type Link = {
-  name: string;
-  link: string;
-};
+} from '@angular/core';
+import { Subject, takeUntil } from 'rxjs';
+import { MenuGroup } from '../menu.config';
+import { MenuService } from '../menu.service';
 
 @Component({
+  standalone: false,
   selector: 'app-sidenav',
   templateUrl: './sidenav.component.html',
   styleUrls: ['./sidenav.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SidenavComponent implements OnInit, OnDestroy {
-  links: Link[] = [];
+export class SidenavComponent implements OnDestroy {
+  menuGroups: MenuGroup[] = [];
 
-  superAdminContainer: Link[] = [];
-  adminContainer: Link[] = [];
-
-  destroy$ = new EventEmitter();
-
-  @ViewChild('activeLink', { read: ElementRef })
-  activeLink?: ElementRef;
+  private readonly destroy$ = new Subject<void>();
 
   constructor(
-    public companyService: CompanyService,
-    protected cdr: ChangeDetectorRef,
-    protected auth: AuthService,
+    private readonly menuService: MenuService,
+    private readonly cdr: ChangeDetectorRef,
   ) {
-    companyService.companyChanged$
-      .pipe(
-        tap(() => {
-          this.checkPermissions();
-        }),
-        takeUntil(this.destroy$),
-      )
-      .subscribe();
+    this.menuService.menu$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((groups) => {
+        this.menuGroups = groups;
+        this.cdr.markForCheck();
+      });
   }
 
-  ngOnDestroy() {
-    this.destroy$.emit();
-  }
-
-  ngOnInit() {
-    this.checkPermissions();
-  }
-
-  checkPermissions() {
-    const bypass = environment.menuBypass;
-    this.links = [];
-    this.adminContainer = [];
-    this.superAdminContainer = [];
-    if (this.checkPermission(Modules.CUSTOMERS)) {
-      this.links.push({
-        name: 'Address Book',
-        link: 'customers',
-      });
-    }
-    if (this.checkPermission(Modules.PERMISSIONS)) {
-      this.links.push({
-        name: 'Permissions',
-        link: 'permissions',
-      });
-    }
-    if (this.checkPermission(Modules.ORDERS)) {
-      this.links.push({
-        name: 'Orders',
-        link: 'orders',
-      });
-    }
-    if (bypass || this.companyService.selectedCompany?.owner) {
-      this.links.push({
-        name: 'Settings',
-        link: 'settings',
-      });
-    }
-    if (this.checkPermission(Modules.INVOICES)){
-      this.links.push({
-        name: 'Invoices',
-        link: 'invoices',
-      });
-    }
-    if (bypass || this.auth.isAdmin) {
-      this.adminContainer.push({
-        name: 'Users',
-        link: AdminModules.USERS,
-      });
-      this.adminContainer.push({
-        name: 'Roles',
-        link: AdminModules.ROLES,
-      });
-    }
-    if (bypass || this.auth.isSuperAdmin) {
-      this.superAdminContainer.push({
-        name: 'Companies',
-        link: SuperAdminModules.COMPANIES,
-      });
-      this.superAdminContainer.push({
-        name: 'Users',
-        link: SuperAdminModules.USERS,
-      });
-      this.superAdminContainer.push({
-        name: 'Bank Collection',
-        link: SuperAdminModules.BANK_COLLECTIONS,
-      });
-    }
-
-    this.cdr.markForCheck();
-  }
-
-  protected checkPermission(module: Modules) {
-    return (
-      environment.menuBypass ||
-      this.companyService.haveAnyAccessTo(
-        module,
-        PermissionAccessType.READ,
-      )
-    );
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

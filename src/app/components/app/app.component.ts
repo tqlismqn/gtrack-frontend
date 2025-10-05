@@ -8,6 +8,7 @@ import { provideMomentDateAdapter } from '@angular/material-moment-adapter';
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
+  standalone: false,
   providers: [
     { provide: MAT_DATE_LOCALE, useValue: navigator.language },
     provideMomentDateAdapter(),

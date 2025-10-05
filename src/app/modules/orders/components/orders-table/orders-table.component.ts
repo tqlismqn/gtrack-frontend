@@ -6,6 +6,7 @@ import { Order, OrderResponse } from '../../types/orders.type';
 import { OrdersService } from '../../services/orders.service';
 
 @Component({
+  standalone: false,
   selector: 'app-customers-table',
   templateUrl: './orders-table.component.html',
   styleUrls: ['./orders-table.component.scss'],

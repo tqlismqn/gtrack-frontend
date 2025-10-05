@@ -1,6 +1,13 @@
 # GTrackFrontend
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 16.2.5.
+This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 20.2.0.
+
+## Angular 20 + DEMO
+
+- Angular CLI, framework packages, Material, and build tooling are upgraded to 20.x.
+- Launch the demo with `npm ci && npm start` (or `ng serve`): authentication is disabled and all sections are open for browsing.
+- Centralized menu configuration lives in `src/app/layout/menu.config.ts`.
+- Toggle demo mode via `src/app/demo.config.ts` and `src/environments/environment*.ts`.
 
 ## Development server
 

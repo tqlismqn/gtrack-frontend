@@ -22,6 +22,7 @@ import { PermissionsUtils } from '../../utils/permissions-utils';
 import { PermissionsService } from '../../services/permissions.service';
 
 @Component({
+  standalone: false,
   selector: 'app-permissions-create',
   templateUrl: './permissions-edit.component.html',
   styleUrls: ['./permissions-edit.component.scss'],

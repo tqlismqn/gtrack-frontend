@@ -1,60 +1,22 @@
 <div class="logo">
-  <a routerLink="/dashboard" href="/dashboard"
-    ><img src="assets/logo/gtrack_logo.svg" alt="Logo" width="150"
-  /></a>
+  <a routerLink="/dashboard" class="logo__link" matRipple>
+    <img src="assets/logo/gtrack_logo.svg" alt="Logo" width="150" />
+  </a>
 </div>
-<div class="sidenav">
-  <a
-    matRipple
-    routerLink="/dashboard"
-    class="sidenav__item"
-    routerLinkActive="active"
-    >Dashboard</a
-  >
-  <a
-    matRipple
-    *ngFor="let link of links"
-    [routerLink]="link.link"
-    class="sidenav__item"
-    routerLinkActive="active"
-    >{{ link.name }}</a
-  >
-
-  <ng-template
-    [ngTemplateOutlet]="sidenavGroup"
-    [ngTemplateOutletContext]="{
-      container: adminContainer,
-      title: 'Admin'
-    }"
-  ></ng-template>
-
-  <ng-template
-    [ngTemplateOutlet]="sidenavGroup"
-    [ngTemplateOutletContext]="{
-      container: superAdminContainer,
-      title: 'Super Admin'
-    }"
-  ></ng-template>
-</div>
-
-<ng-template #sidenavGroup let-container="container" let-title="title">
-  <mat-expansion-panel
-    class="sidenav__group"
-    #adminGroup
-    *ngIf="container.length > 0"
-  >
-    <mat-expansion-panel-header matRipple>{{
-      title
-    }}</mat-expansion-panel-header>
-    <div class="sidenav__group__inner">
+<nav class="sidenav" aria-label="Основное меню">
+  <ng-container *ngFor="let group of menuGroups">
+    <div class="sidenav__group">
+      <div class="sidenav__group-title">{{ group.title }}</div>
       <a
         matRipple
-        *ngFor="let link of container"
-        [routerLink]="link.link"
+        *ngFor="let item of group.items"
+        [routerLink]="item.path"
         class="sidenav__item"
         routerLinkActive="active"
-        >{{ link.name }}</a
       >
+        <mat-icon *ngIf="item.icon" aria-hidden="true">{{ item.icon }}</mat-icon>
+        <span>{{ item.label }}</span>
+      </a>
     </div>
-  </mat-expansion-panel>
-</ng-template>
+  </ng-container>
+</nav>
