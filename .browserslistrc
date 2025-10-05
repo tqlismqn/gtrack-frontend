@@ -1,0 +1,12 @@
+# This file is used by the build system to adjust CSS and JS output to support the specified browsers below.
+# See https://github.com/browserslist/browserslist#readme for more details.
+
+> 0.5%
+last 2 versions
+Firefox ESR
+not dead
+
+[development]
+last 1 Chrome version
+last 1 Firefox version
+last 1 Safari version

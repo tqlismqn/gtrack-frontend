@@ -67,6 +67,7 @@ interface CustomersEditForm {
 }
 
 @Component({
+  standalone: false,
   selector: 'app-customers-edit',
   templateUrl: './customers-edit.component.html',
   styleUrls: ['./customers-edit.component.scss'],

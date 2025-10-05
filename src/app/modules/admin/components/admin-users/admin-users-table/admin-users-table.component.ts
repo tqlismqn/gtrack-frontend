@@ -7,6 +7,7 @@ import { AdminUser, AdminUserResponse } from '../../../types/users';
 import { AdminModules } from '../../../../../constants/modules';
 
 @Component({
+  standalone: false,
   selector: 'app-admin-users-table',
   templateUrl: './admin-users-table.component.html',
   styleUrls: ['./admin-users-table.component.scss'],

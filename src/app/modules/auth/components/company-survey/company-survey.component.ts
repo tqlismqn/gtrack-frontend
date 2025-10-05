@@ -9,6 +9,7 @@ import { environment } from '../../../../../environments/environment';
 import { Currencies, CurrenciesArray } from '../../../../types/currencies';
 
 @Component({
+  standalone: false,
   selector: 'app-company-survey',
   templateUrl: './company-survey.component.html',
   styleUrls: ['./company-survey.component.scss'],

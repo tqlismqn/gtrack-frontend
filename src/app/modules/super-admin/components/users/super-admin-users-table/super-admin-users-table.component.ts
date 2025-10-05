@@ -7,6 +7,7 @@ import { SuperAdminUsersService } from '../../../services/super-admin-users.serv
 import { SuperAdminUser, SuperAdminUserResponse } from '../../../types/users';
 
 @Component({
+  standalone: false,
   selector: 'app-admin-users-table',
   templateUrl: './super-admin-users-table.component.html',
   styleUrls: ['./super-admin-users-table.component.scss'],

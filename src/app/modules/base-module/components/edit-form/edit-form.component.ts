@@ -18,6 +18,7 @@ import { ModuleBase } from '../../types/module-base.type';
 import { AddTabDirective } from '../../../customers/directives/add-tab.directive';
 
 @Component({
+  standalone: false,
   selector: 'app-edit-form',
   templateUrl: './edit-form.component.html',
   styleUrls: ['./edit-form.component.scss'],

@@ -8,6 +8,7 @@ import { CompanyService } from '../../../../services/company.service';
 import { AuthFormComponent } from '../auth-form/auth-form.component';
 
 @Component({
+  standalone: false,
   selector: 'app-user-survey',
   templateUrl: './user-survey.component.html',
   styleUrls: ['./user-survey.component.scss'],

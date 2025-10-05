@@ -22,6 +22,7 @@ type AdminUsersFormGroup = {
 };
 
 @Component({
+  standalone: false,
   selector: 'app-admin-users-edit',
   templateUrl: './admin-roles-edit.component.html',
   styleUrls: ['./admin-roles-edit.component.scss'],

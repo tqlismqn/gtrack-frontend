@@ -1,68 +1,79 @@
 @use 'src/styles/includes/colors';
 
 :host {
-  min-width: 188.5px;
+  display: flex;
+  flex-direction: column;
+  min-width: 200px;
+  height: 100%;
   background-color: colors.$color-white;
+
   .logo {
-    display: grid;
+    display: flex;
     justify-content: center;
+    padding: 20px 0 12px;
+
+    &__link {
+      display: inline-flex;
+      padding: 6px;
+      border-radius: 12px;
+      transition: background-color 0.2s ease-in-out;
+
+      &:hover {
+        background-color: rgba(3, 113, 255, 0.08);
+      }
+    }
 
     img {
-      width: 125px;
-      margin: 20px 0;
-    }
-  }
-  @mixin sidenav-item {
-    padding: 5px 32px;
-    color: colors.$color-black;
-    text-decoration: none;
-    font: {
-      size: 15px;
-      weight: 500;
-    }
-
-    &.active {
-      background-color: #eaeaea;
-      border-left: 8px solid #f4f4f4;
-      padding-left: 24px;
+      width: 150px;
     }
   }
 
   .sidenav {
-    display: grid;
-
-    &__item {
-      @include sidenav-item;
-    }
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 0 0 24px;
 
     &__group {
-      border-radius: 0;
-      box-shadow: none;
-      background-color: colors.$color-white;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
 
-      &__inner {
-        display: grid;
+    &__group-title {
+      padding: 0 24px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: rgba(colors.$color-black, 0.56);
+    }
 
-        .sidenav__item {
-          padding: 5px 40px;
+    &__item {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 24px;
+      color: colors.$color-black;
+      text-decoration: none;
+      border-radius: 0 20px 20px 0;
+      border-left: 4px solid transparent;
+      transition: background-color 0.2s ease-in-out, border-left-color 0.2s ease-in-out,
+        color 0.2s ease-in-out;
 
-          &.active {
-            padding-left: 32px;
-          }
-        }
+      mat-icon {
+        font-size: 20px;
+        line-height: 20px;
       }
 
-      mat-expansion-panel-header {
-        padding: 0;
-        --mat-expansion-header-expanded-state-height: 30px;
-        --mat-expansion-header-collapsed-state-height: 30px;
-        @include sidenav-item;
+      &:hover {
+        background-color: rgba(3, 113, 255, 0.08);
       }
 
-      ::ng-deep {
-        .mat-expansion-panel-body {
-          padding: 0;
-        }
+      &.active {
+        background-color: rgba(3, 113, 255, 0.16);
+        border-left-color: #0371ff;
+        font-weight: 600;
       }
     }
   }

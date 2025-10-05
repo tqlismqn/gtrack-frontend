@@ -1,27 +1,53 @@
-<mat-form-field
-  subscriptSizing="dynamic"
-  class="company-select"
-  *ngIf="companyService.selectedCompany"
->
-  <mat-label>Company</mat-label>
-  <mat-select
-    #select
-    [ngModel]="companyService.selectedCompany.id"
-    (ngModelChange)="companyService.selectCompanyById(select.value)"
-  >
-    <mat-option
-      [value]="company.id"
-      *ngFor="let company of companyService.companies"
-      >{{ company.name }}</mat-option
+<header class="header__container">
+  <nav class="header__menu" aria-label="Глобальная навигация">
+    <a
+      matRipple
+      *ngFor="let item of menuItems"
+      [routerLink]="item.path"
+      routerLinkActive="active"
+      class="header__menu-item"
     >
-  </mat-select>
-</mat-form-field>
-<img
-  [matMenuTriggerFor]="matMenu"
-  [src]="auth.auth0User?.picture"
-  alt
-  class="user-picture"
-/>
-<mat-menu #matMenu="matMenu">
-  <button mat-menu-item (click)="auth.logout()">Logout</button>
-</mat-menu>
+      <mat-icon *ngIf="item.icon" aria-hidden="true">{{ item.icon }}</mat-icon>
+      <span>{{ item.label }}</span>
+    </a>
+  </nav>
+  <div class="header__spacer"></div>
+  <div class="header__actions">
+    <mat-form-field
+      subscriptSizing="dynamic"
+      class="header__company-select"
+      *ngIf="companyService.selectedCompany"
+    >
+      <mat-label>Company</mat-label>
+      <mat-select
+        #select
+        [ngModel]="companyService.selectedCompany.id"
+        (ngModelChange)="companyService.selectCompanyById(select.value)"
+      >
+        <mat-option
+          [value]="company.id"
+          *ngFor="let company of companyService.companies"
+          >{{ company.name }}</mat-option
+        >
+      </mat-select>
+    </mat-form-field>
+    <button
+      mat-icon-button
+      class="header__profile"
+      type="button"
+      [matMenuTriggerFor]="matMenu"
+      aria-label="Открыть меню профиля"
+    >
+      <ng-container *ngIf="auth.auth0User?.picture; else defaultAvatar">
+        <img [src]="auth.auth0User?.picture" alt="" />
+      </ng-container>
+    </button>
+    <mat-menu #matMenu="matMenu">
+      <button mat-menu-item (click)="auth.logout()">Logout</button>
+    </mat-menu>
+  </div>
+</header>
+
+<ng-template #defaultAvatar>
+  <mat-icon aria-hidden="true">person</mat-icon>
+</ng-template>

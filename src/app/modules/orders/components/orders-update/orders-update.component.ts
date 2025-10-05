@@ -97,6 +97,7 @@ type CustomerSelection = Pick<
 
 type CustomerSelections = CustomerSelection[];
 @Component({
+  standalone: false,
   selector: 'app-orders-update',
   templateUrl: './orders-update.component.html',
   styleUrls: ['./orders-update.component.scss'],

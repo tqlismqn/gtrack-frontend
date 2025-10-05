@@ -80,6 +80,7 @@ interface InvoicesItemFormControl {
 }
 
 @Component({
+  standalone: false,
   selector: 'app-customers-edit',
   templateUrl: './invoices-edit.component.html',
   styleUrls: ['./invoices-edit.component.scss'],

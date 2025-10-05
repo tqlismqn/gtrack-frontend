@@ -20,6 +20,7 @@ import { environment } from '../../../../../environments/environment';
 import { CompanyResponse } from '../../../../types/company.type';
 
 @Component({
+  standalone: false,
   selector: 'app-settings-form',
   templateUrl: './settings-form.component.html',
   styleUrls: ['./settings-form.component.scss'],

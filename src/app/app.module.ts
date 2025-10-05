@@ -9,6 +9,7 @@ import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import {
   AuthHttpInterceptor,
   AuthModule as Auth0Module,
+  AuthService as Auth0Service,
 } from '@auth0/auth0-angular';
 import { environment } from '../environments/environment';
 import { WithCredentialsInterceptor } from './interceptors/credentials-interceptor';
@@ -38,7 +39,43 @@ import { InvoicesModule } from './modules/invoices/invoices.module';
 import { ErrorDialogComponent } from './errors/error-dialog/error-dialog.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { SettingsModule } from './modules/settings/settings.module';
-import {SuperAdminModule} from "./modules/super-admin/super-admin.module";
+import { SuperAdminModule } from './modules/super-admin/super-admin.module';
+import { MatIconModule } from '@angular/material/icon';
+import { DEMO_MODE } from './demo.config';
+import { DemoAuth0Service } from './modules/auth/services/demo-auth0.service';
+
+const IS_DEMO_MODE = environment.demoMode || DEMO_MODE;
+
+const AUTH0_CONFIG = environment.auth0;
+
+const AUTH0_IMPORTS = !IS_DEMO_MODE && AUTH0_CONFIG
+  ? [
+      Auth0Module.forRoot({
+        domain: AUTH0_CONFIG.domain,
+        clientId: AUTH0_CONFIG.clientId,
+        cacheLocation: 'localstorage',
+        authorizationParams: {
+          redirect_uri: `${window.location.origin}`,
+          audience: AUTH0_CONFIG.audience,
+          scope: 'openid profile email offline_access',
+          prompt: 'select_account',
+        },
+        useRefreshTokens: true,
+        httpInterceptor: {
+          allowedList: [
+            {
+              uri: `${environment.apiUrl}*`,
+              allowAnonymous: true,
+            },
+          ],
+        },
+      }),
+    ]
+  : [];
+
+const AUTH_PROVIDERS = !IS_DEMO_MODE && AUTH0_CONFIG
+  ? [{ provide: HTTP_INTERCEPTORS, useClass: AuthHttpInterceptor, multi: true }]
+  : [{ provide: Auth0Service, useClass: DemoAuth0Service }];
 
 @NgModule({
   declarations: [
@@ -55,26 +92,7 @@ import {SuperAdminModule} from "./modules/super-admin/super-admin.module";
     AuthModule,
     DashboardModule,
     HttpClientModule,
-    Auth0Module.forRoot({
-      domain: environment.auth0.domain,
-      clientId: environment.auth0.clientId,
-      cacheLocation: 'localstorage',
-      authorizationParams: {
-        redirect_uri: `${window.location.origin}`,
-        audience: environment.auth0.audience,
-        scope: 'openid profile email offline_access',
-        prompt: 'select_account',
-      },
-      useRefreshTokens: true,
-      httpInterceptor: {
-        allowedList: [
-          {
-            uri: `${environment.apiUrl}*`,
-            allowAnonymous: true,
-          },
-        ],
-      },
-    }),
+    ...AUTH0_IMPORTS,
     MatProgressSpinnerModule,
     MatSidenavModule,
     MatToolbarModule,
@@ -97,9 +115,10 @@ import {SuperAdminModule} from "./modules/super-admin/super-admin.module";
     MatDialogModule,
     SettingsModule,
     SuperAdminModule,
+    MatIconModule,
   ],
   providers: [
-    { provide: HTTP_INTERCEPTORS, useClass: AuthHttpInterceptor, multi: true },
+    ...AUTH_PROVIDERS,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: WithCredentialsInterceptor,

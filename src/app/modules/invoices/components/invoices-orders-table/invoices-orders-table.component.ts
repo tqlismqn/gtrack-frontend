@@ -7,6 +7,7 @@ import { InvoicesOrdersService } from '../../services/invoices-orders.service';
 import { Router } from '@angular/router';
 
 @Component({
+  standalone: false,
   selector: 'app-invoices-orders-table',
   templateUrl: './invoices-orders-table.component.html',
   styleUrls: ['./invoices-orders-table.component.scss'],

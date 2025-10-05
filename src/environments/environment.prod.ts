@@ -1,6 +1,6 @@
 import { Environment } from './environment.type';
 
-const apiBaseUrl = 'https://api-dev.g-track.eu';
+const apiBaseUrl = 'https://api.g-track.eu';
 
 export const environment: Environment = {
   production: true,

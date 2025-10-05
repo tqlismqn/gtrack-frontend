@@ -1,11 +1,11 @@
 export type Environment = {
   production: boolean;
-  authBypass: boolean;
-  menuBypass: boolean;
-  auth0: {
+  demoMode: boolean;
+  apiBaseUrl: string;
+  apiUrl: string;
+  auth0?: {
     domain: string;
     clientId: string;
     audience: string;
   };
-  apiUrl: string;
 };

@@ -7,6 +7,7 @@ import { Role, RoleResponse, Roles } from '../../../types/roles';
 import { AdminRolesService } from '../../../services/admin-roles.service';
 
 @Component({
+  standalone: false,
   selector: 'app-admin-roles-table',
   templateUrl: './admin-roles-table.component.html',
   styleUrls: ['./admin-roles-table.component.scss'],

@@ -45,6 +45,7 @@ type CustomerSelection = Pick<
 type CustomerSelections = CustomerSelection[];
 
 @Component({
+  standalone: false,
   selector: 'app-orders-create',
   templateUrl: './orders-create.component.html',
   styleUrls: ['./orders-create.component.scss'],

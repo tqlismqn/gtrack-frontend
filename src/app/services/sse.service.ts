@@ -4,10 +4,13 @@ import Echo from 'laravel-echo';
 import { environment } from '../../environments/environment';
 import { AuthService as Auth0Service } from '@auth0/auth0-angular';
 import { Observable } from 'rxjs';
+import { DEMO_MODE } from '../demo.config';
+
+const IS_DEMO_MODE = environment.demoMode || DEMO_MODE;
 
 @Injectable({ providedIn: 'root' })
 export class SseService {
-  echo!: Echo;
+  echo!: Echo<any>;
   init = false;
   init$ = new EventEmitter<void>();
 
@@ -15,6 +18,14 @@ export class SseService {
 
   initService() {
     return new Observable<void>((subscriber) => {
+      if (IS_DEMO_MODE) {
+        this.init = true;
+        this.init$.emit();
+        subscriber.next();
+        subscriber.complete();
+        return;
+      }
+
       this.auth0.isAuthenticated$.subscribe((value) => {
         if (!value) {
           return;

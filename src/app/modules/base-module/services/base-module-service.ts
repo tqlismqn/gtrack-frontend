@@ -269,7 +269,13 @@ export abstract class BaseModuleService<
               return items;
             });
 
-            subscriber.next(this.item());
+            const current = this.item();
+            if (!current) {
+              subscriber.error(new Error('Item not available after update'));
+              return;
+            }
+
+            subscriber.next(current);
             subscriber.complete();
           },
           error: (err) => {
@@ -291,7 +297,13 @@ export abstract class BaseModuleService<
           next: (response) => {
             const item = response as B;
             this.item.set(this.toDto(item));
-            subscriber.next(this.item());
+            const current = this.item();
+            if (!current) {
+              subscriber.error(new Error('Item not available after create'));
+              return;
+            }
+
+            subscriber.next(current);
             subscriber.complete();
           },
           error: (err) => {

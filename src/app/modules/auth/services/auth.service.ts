@@ -3,7 +3,7 @@ import {
   AuthService as Auth0Service,
   User as Auth0User,
 } from '@auth0/auth0-angular';
-import { combineLatest, Observable, Subject } from 'rxjs';
+import { combineLatest, Observable, Subject, of } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
 import { User, UserResponse } from '../types/user';
@@ -12,6 +12,7 @@ import { Router } from '@angular/router';
 import { GlobalErrorHandler } from '../../../errors/global-error-handler';
 import { Roles } from '../../admin/types/roles';
 import { SseService } from '../../../services/sse.service';
+import { DEMO_MODE } from '../../../demo.config';
 
 @Injectable({
   providedIn: 'root',
@@ -22,6 +23,7 @@ export class AuthService {
 
   public user?: User;
   public auth0User?: Auth0User;
+  public readonly isDemoMode = environment.demoMode || DEMO_MODE;
 
   constructor(
     public auth0: Auth0Service,
@@ -33,15 +35,22 @@ export class AuthService {
   ) {
     errorHandler.auth = this;
 
-    auth0.error$.subscribe((error) => {
-      // @ts-ignore
-      switch (error.error) {
-        case 'invalid_grant':
-        case 'login_required':
-          errorHandler.authorizationExpiredError();
-          break;
-      }
-    });
+    if (!this.isDemoMode) {
+      auth0.error$.subscribe((error) => {
+        // @ts-ignore
+        switch (error.error) {
+          case 'invalid_grant':
+          case 'login_required':
+            errorHandler.authorizationExpiredError();
+            break;
+        }
+      });
+    } else {
+      this.auth0User = {
+        name: 'Demo User',
+        email: 'demo@g-track.eu',
+      } as Auth0User;
+    }
 
     companyService.companyChanged$.subscribe(() => {
       if (!this.router.navigated) {
@@ -52,6 +61,18 @@ export class AuthService {
   }
 
   getUserInfo(): Observable<User> {
+    if (this.isDemoMode) {
+      const demoUser: User = {
+        id: 'demo-user',
+        auth0_id: 'demo',
+        first_name: 'Demo',
+        last_name: 'User',
+        is_active: true,
+      };
+      this.user = demoUser;
+      return of(demoUser);
+    }
+
     return new Observable<User>((subscriber) => {
       this.http.get(`${environment.apiUrl}/api/v1/user`).subscribe({
         next: (response) => {
@@ -69,6 +90,11 @@ export class AuthService {
   }
 
   isApplicationReady(): Observable<boolean> {
+    if (this.isDemoMode) {
+      this._isApplicationReady = true;
+      return of(true);
+    }
+
     const onError = (error: any) => {
       this._isApplicationReady = false;
       if (this._isApplicationReady$) {

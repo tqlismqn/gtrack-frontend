@@ -1,13 +1,10 @@
 import { Environment } from './environment.type';
 
+const apiBaseUrl = 'http://localhost:8000';
+
 export const environment: Environment = {
   production: false,
-  authBypass: true,
-  menuBypass: true,
-  auth0: {
-    domain: 'login.g-track.eu',
-    clientId: 'mc4F28SeMxGmtsRwoKbYWw9QkvBa7DDA',
-    audience: 'https://dev-sv3qrahltc0ebh7y.us.auth0.com/api/v2/',
-  },
-  apiUrl: 'http://localhost:8000',
+  demoMode: true,
+  apiBaseUrl,
+  apiUrl: apiBaseUrl,
 };

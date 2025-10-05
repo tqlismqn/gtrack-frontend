@@ -8,6 +8,7 @@ import { CustomersEditComponent } from '../customers-edit/customers-edit.compone
 import { CustomersService } from '../../services/customers.service';
 
 @Component({
+  standalone: false,
   selector: 'app-customers-table',
   templateUrl: './customers-table.component.html',
   styleUrls: ['./customers-table.component.scss'],

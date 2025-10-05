@@ -29,6 +29,7 @@ export class EditComponentDeps {
 }
 
 @Component({
+  standalone: false,
   selector: 'app-edit-component',
   template: '',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -126,7 +127,9 @@ export abstract class EditComponentComponent<
     }
   }
 
-  toDto = this.service.toDto;
+  get toDto() {
+    return this.service.toDto;
+  }
 
   abstract updateFormView(item: F): void;
 
