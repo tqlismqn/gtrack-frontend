@@ -1,0 +1,77 @@
+name: Docs - Export to gtrack-docs
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - "docs/**"
+      - ".github/workflows/docs-export.yml"
+      - "docs/EXPORT_MANIFEST.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+
+      - name: Check DOCS_TOKEN secret
+        run: |
+          if [ -z "${{ secrets.DOCS_TOKEN }}" ]; then
+            echo "::error:: Secret DOCS_TOKEN is not set in this repository (Settings → Secrets → Actions)."; exit 1;
+          fi
+
+      - name: Read manifest (no external yq)
+        id: manifest
+        run: |
+          get() { grep -E "^\s*$1:" docs/EXPORT_MANIFEST.yml | head -1 | awk '{print $2}'; }
+          echo "TARGET_REPO=$(get targetRepo)"   >> $GITHUB_OUTPUT
+          echo "TARGET_BRANCH=$(get targetBranch)" >> $GITHUB_OUTPUT
+          echo "TARGET_DIR=$(get targetDir)"     >> $GITHUB_OUTPUT
+
+      - name: Normalize repository value
+        id: repo
+        run: |
+          REPO="${{ steps.manifest.outputs.TARGET_REPO }}"
+          if [ -z "$REPO" ]; then echo "::error:: targetRepo is empty in docs/EXPORT_MANIFEST.yml"; exit 1; fi
+          if [[ "$REPO" != */* ]]; then REPO="${{ github.repository_owner }}/$REPO"; fi
+          echo "REPO=$REPO"; echo "REPO=$REPO" >> $GITHUB_OUTPUT
+
+      - name: Prepare temp dir
+        run: |
+          rm -rf /tmp/docs-sync && mkdir -p /tmp/docs-sync
+          rsync -a --delete ./docs/ /tmp/docs-sync/
+          find /tmp/docs-sync -type f -name ".DS_Store" -delete
+
+      - name: Checkout target repo
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ steps.repo.outputs.REPO }}
+          token: ${{ secrets.DOCS_TOKEN }}
+          ref: ${{ steps.manifest.outputs.TARGET_BRANCH }}
+          path: target
+
+      - name: Sync into import dir
+        run: |
+          mkdir -p "target/${{ steps.manifest.outputs.TARGET_DIR }}"
+          rsync -a --delete /tmp/docs-sync/ "target/${{ steps.manifest.outputs.TARGET_DIR }}/"
+
+      - name: Create PR in target repo
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.DOCS_TOKEN }}
+          path: target
+          commit-message: "docs(import): sync from GTrack-App-Demo"
+          branch: chore/docs-sync-${{ github.run_id }}
+          base: ${{ steps.manifest.outputs.TARGET_BRANCH }}
+          title: "docs(import): GTrack-App-Demo → ${{ steps.repo.outputs.REPO }} (auto-sync)"
+          body: |
+            Auto-sync from **${{ github.repository }}**.
+            Source commit: ${{ github.sha }}
+            Imported to: `${{ steps.manifest.outputs.TARGET_DIR }}`
+          labels: docs, auto-sync
+          delete-branch: true
