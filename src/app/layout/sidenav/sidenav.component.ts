@@ -6,13 +6,14 @@ import {
   EventEmitter,
   OnDestroy,
   OnInit,
-  ViewChild
+  ViewChild,
 } from "@angular/core";
-import { CompanyService } from "../../services/company.service";
+import { takeUntil, tap } from "rxjs";
+import { environment } from "../../../environments/environment";
 import { AdminModules, Modules, SuperAdminModules } from "../../constants/modules";
 import { PermissionAccessType } from "../../constants/permission-access";
-import { takeUntil, tap } from "rxjs";
 import { AuthService } from "../../modules/auth/services/auth.service";
+import { CompanyService } from "../../services/company.service";
 
 type Link = {
   name: string;
@@ -60,6 +61,7 @@ export class SidenavComponent implements OnInit, OnDestroy {
   }
 
   checkPermissions() {
+    const bypass = environment.menuBypass;
     this.links = [];
     this.adminContainer = [];
     this.superAdminContainer = [];
@@ -81,7 +83,7 @@ export class SidenavComponent implements OnInit, OnDestroy {
         link: 'orders',
       });
     }
-    if (this.companyService.selectedCompany?.owner) {
+    if (bypass || this.companyService.selectedCompany?.owner) {
       this.links.push({
         name: 'Settings',
         link: 'settings',
@@ -93,7 +95,7 @@ export class SidenavComponent implements OnInit, OnDestroy {
         link: 'invoices',
       });
     }
-    if (this.auth.isAdmin) {
+    if (bypass || this.auth.isAdmin) {
       this.adminContainer.push({
         name: 'Users',
         link: AdminModules.USERS,
@@ -103,7 +105,7 @@ export class SidenavComponent implements OnInit, OnDestroy {
         link: AdminModules.ROLES,
       });
     }
-    if (this.auth.isSuperAdmin) {
+    if (bypass || this.auth.isSuperAdmin) {
       this.superAdminContainer.push({
         name: 'Companies',
         link: SuperAdminModules.COMPANIES,
@@ -122,9 +124,12 @@ export class SidenavComponent implements OnInit, OnDestroy {
   }
 
   protected checkPermission(module: Modules) {
-    return this.companyService.haveAnyAccessTo(
-      module,
-      PermissionAccessType.READ,
+    return (
+      environment.menuBypass ||
+      this.companyService.haveAnyAccessTo(
+        module,
+        PermissionAccessType.READ,
+      )
     );
   }
 }
