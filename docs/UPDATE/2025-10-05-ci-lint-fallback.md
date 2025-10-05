@@ -1,0 +1,2 @@
+- ci: make lint workflow resilient to lockfile desync (npm ci → fallback to npm install)
+- note: после авто-PR от Lockfile Sync можно вернуть строгий `npm ci`.
